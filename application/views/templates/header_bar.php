@@ -332,9 +332,9 @@
 							<i class="fa fa-angle-down"></i>
 						</a>
 						<ul class="dropdown-menu">
+							<li><a href="<?php echo base_url('secure/user_manager/overview');?>"><i class="fa fa-dot-circle-o"></i> My Overview</a></li>
 							<li><a href="<?php echo base_url('secure/user_manager/profile');?>"><i class="fa fa-user"></i> My Profile</a></li>
 							<li><a href="<?php echo base_url('secure/user_manager/account');?>"><i class="fa fa-cog"></i> Account Settings</a></li>
-							<li><a href="#"><i class="fa fa-eye"></i> Privacy Settings</a></li>
 							<li><a href="<?php echo base_url('secure/logout');?>"><i class="fa fa-power-off"></i> Log Out</a></li>
 						</ul>
 					</li>

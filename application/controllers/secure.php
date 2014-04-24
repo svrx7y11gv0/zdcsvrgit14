@@ -118,7 +118,7 @@ class Secure extends CI_Controller {
         }
         else if($this->is_student())
         {
-            $this->profile();
+            $this->user_manager();
         }
     }
     
@@ -138,6 +138,7 @@ class Secure extends CI_Controller {
         $middleName = $this->input->post('middleName');
         $dob = $this->input->post('dob');
         $gender = $this->input->post('gender');
+        $email = $this->input->post('email');
         $phone = $this->input->post('phone');
         $address = $this->input->post('address');
         $bloodGroup = $this->input->post('bloodGroup');
@@ -146,6 +147,7 @@ class Secure extends CI_Controller {
         $category = $this->input->post('category');
         $religion = $this->input->post('religion');
         $aboutMe = $this->input->post('aboutMe');
+        $photo = "";
         
         $alphabet = lcfirst($firstName[0]);
         switch($alphabet)
@@ -244,7 +246,10 @@ class Secure extends CI_Controller {
                 $error = array('error' => $this->upload->display_errors());
                 if($error['error']=="<p>You did not select a file to upload.</p>")
                     $error['error'] = "";
-                $this->load->view('upload_form', $error);
+                else
+                {
+                    $this->session->set_flashdata('upload_error1',$error['error']);
+                }
         }
         else
         {
@@ -257,12 +262,21 @@ class Secure extends CI_Controller {
 		$this->load->library('image_lib', $config);
 
 		if ( ! $this->image_lib->resize()){
-			$this->session->set_flashdata('message', $this->image_lib->display_errors('', ''));
+			$this->session->set_flashdata('upload_error2', $this->image_lib->display_errors());
 		}
-                $data = array('upload_data' => $this->upload->data());
-
-                $this->user_manager();
+                else
+                {
+                    $photo = "/".$dir."/".$this->upload->file_name;
+                    $this->session->set_flashdata('upload_success',"Information Saved!");
+                }
+                //$data = array('upload_data' => $this->upload->data());
         }
+        if($photo=="")
+            $this->session->set_flashdata('upload_success',"Information Saved!");
+        $this->load->model('secureUsers');
+        $user_id = $this->session->userdata('id');
+        $this->secureUsers->set_user_details($user_id,$firstName,$lastName,$middleName,$dob,$gender,$email,$phone,$address,$bloodGroup,$languages,$nationality,$category,$religion,$aboutMe,$photo);
+        redirect('secure/user_manager/profile');
     }
     
     public function institute_setup()

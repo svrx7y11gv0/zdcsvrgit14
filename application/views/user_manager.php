@@ -30,19 +30,19 @@
 											</ul>
 											<div class="tab-content">
 											   <!-- OVERVIEW -->
-											   <div class="tab-pane fade" id="pro_overview">
+											   <div class="tab-pane fade <?php if(isset($mode) && $mode == "overview") echo ' in active ';?>" id="pro_overview">
 												  <div class="row">
 													<!-- PROFILE PIC -->
 													<div class="col-md-3">
 														<div class="list-group">
 														  <li class="list-group-item zero-padding">
-															<img alt="" class="img-responsive" src="<?php if($this->session->userdata('photourl')=="") echo base_url('uploads/profiles/default.png'); else echo base_url('uploads/profiles/').$this->session->userdata('photourl'); ?>">
+															<img style="margin: 0 auto;" alt="" class="img-responsive" src="<?php if($this->session->userdata('photourl')=="") echo base_url('uploads/profiles/default.png'); else echo base_url('uploads/profiles/').$this->session->userdata('photourl'); ?>">
 														  </li>
 														  <div class="list-group-item profile-details">
 																<h2><?php echo ucfirst($this->session->userdata('firstname'))." ".ucfirst($this->session->userdata('lastname'));?></h2>
 																<p><i class="fa fa-circle text-green"></i> Online</p>
 																<p><?php if(isset($user_details)) echo $user_details->about_me; ?></p>
-																<p><a href="#">www.jenniferblogs.com</a></p>
+																<p><?php if(isset($user_details) && $user_details->email!=""):?><a title="<?php echo $user_details->email;?>" href="mailto:<?php echo $user_details->email;?>"><?php if(strlen($user_details->email)>19) echo substr($user_details->email,0,19).'...'; else echo $user_details->email;?></a><?php endif; ?></p>
 																<ul class="list-inline">
 																   <li><i class="fa fa-facebook fa-2x"></i></li>
 																   <li><i class="fa fa-twitter fa-2x"></i></li>
@@ -65,7 +65,7 @@
 													<div class="col-md-9">
 														<!-- ROW 1 -->
 														<div class="row">
-															<div class="col-md-7 profile-details">																
+															<div class="col-md-12 profile-details">																
 																<h3>My Skills</h3>
 																<div class="row">
 																	<div class="col-md-4 text-center">
@@ -119,47 +119,6 @@
 																	</div>
 																</div>
 																<!-- /BUTTONS -->
-															</div>
-															<div class="col-md-5">
-																<!-- BOX -->
-																<div class="box border inverse">
-																	<div class="box-title">
-																		<h4><i class="fa fa-bars"></i>Statistics</h4>
-																		<div class="tools">
-																			<a href="#box-config" data-toggle="modal" class="config">
-																				<i class="fa fa-cog"></i>
-																			</a>
-																			<a href="javascript:;" class="reload">
-																				<i class="fa fa-refresh"></i>
-																			</a>
-																			<a href="javascript:;" class="collapse">
-																				<i class="fa fa-chevron-up"></i>
-																			</a>
-																			<a href="javascript:;" class="remove">
-																				<i class="fa fa-times"></i>
-																			</a>
-																		</div>
-																	</div>
-																	<div class="box-body big sparkline-stats">
-																		<div class="sparkline-row">
-																			<span class="title">Profile Visits</span>
-																			<span class="value">7453</span>
-																			<div class="linechart linechart-lg">1:3,2.8:4,3:3,4:3.4,5:7.5,6:2.3,7:5.4</div>
-																		</div>
-																		<div class="sparkline-row">
-																			<span class="title">Account balance</span>
-																			<span class="value"><i class="fa fa-usd"></i> 45,732</span>
-																			<span class="sparkline big" data-color="blue">16,6,23,14,12,10,15,4,19,18,4,24</span>
-																		</div>
-																		<div class="sparkline-row">
-																			<span class="title">Revenue distribution</span>
-																			<span class="value"><i class="fa fa-usd"></i> 25,674</span>
-																			<span class="sparklinepie big">16,6,23</span>
-																		</div>
-																	</div>
-																</div>
-																<!-- /BOX -->
-																<!-- /SAMPLE -->
 															</div>
 														</div>
 														<!-- /ROW 1 -->
@@ -377,8 +336,12 @@
                                                                                                                                        </div>
                                                                                                                                        <h4>Contact Information</h4>
                                                                                                                                        <div class="form-group">
+                                                                                                                                          <label class="col-md-2 control-label">Email</label> 
+                                                                                                                                          <div class="col-md-10"><input type="text" name="email" class="form-control" placeholder="Enter your email address" value="<?php if(isset($user_details)) echo $user_details->email; ?>" /><span id="email_error" class="help-block"></span></div>
+                                                                                                                                       </div>
+                                                                                                                                       <div class="form-group">
                                                                                                                                           <label class="col-md-2 control-label">Phone</label> 
-                                                                                                                                          <div class="col-md-10"><input type="text" name="phone" class="form-control" placeholder="Enter your contact numbers" value="<?php if(isset($user_details)) echo $user_details->contact_nos; ?>"><span class="help-block">Write multiple numbers separated by comma.</span></div>
+                                                                                                                                          <div class="col-md-10"><input type="text" name="phone" class="form-control" placeholder="Enter your contact numbers" value="<?php if(isset($user_details)) echo $user_details->contact_nos; ?>" /><span class="help-block">Write multiple numbers separated by comma.</span></div>
                                                                                                                                        </div>
 
                                                                                                                                        <div class="form-group">
@@ -390,7 +353,7 @@
                                                                                                                                        
                                                                                                                                        <div class="form-group">
                                                                                                                                           <label class="col-md-2 control-label">Blood Group</label> 
-                                                                                                                                          <div class="col-md-10"><input type="text" name="bloodGroup" class="form-control" id="bloodgroup"  placeholder="Enter your blood group" value="<?php if(isset($user_details)) echo $user_details->blood_group; ?>"> <span class="help-block">Your blood group is required to be known in case of emergency.</span></div>
+                                                                                                                                          <div class="col-md-10"><input type="text" name="bloodGroup" class="form-control" id="bloodgroup"  placeholder="Enter your blood group" value="<?php if(isset($user_details)) echo $user_details->blood_group; ?>" /> <span class="help-block">Your blood group is required to be known in case of emergency.</span></div>
                                                                                                                                        </div>
                                                                                                                                        
                                                                                                                                        <div class="form-group">
@@ -936,6 +899,54 @@
 		jQuery(document).ready(function() {		
 			App.setPage("user_profile");  //Set current page
 			App.init(); //Initialise plugins and elements
+                        
+                        <?php 
+                        $message_type = "";
+                        $message="";
+                        if($this->session->flashdata('upload_error1'))
+                        {
+                                $message = strip_tags($this->session->flashdata('upload_error1'))." ";
+                                $message_type = 'error';
+                        }
+                        else if($this->session->flashdata('upload_error2'))
+                        {
+                                $message .= strip_tags($this->session->flashdata('upload_error2'));
+                                $message_type = 'error';
+                        }
+                        else if($this->session->flashdata('upload_success'))
+                        {
+                                $message .= $this->session->flashdata('upload_success');
+                                $message_type = 'success';
+                        }
+                        ?>
+                        <?php if($message_type=='error'):?>
+                            var mytheme = "flat";
+                            var mypos = "messenger-on-top messenger-on-right";
+                            //Set theme
+                            Messenger.options = {
+                                    extraClasses: 'messenger-fixed '+mypos,
+                                    theme: mytheme
+                            }
+                            Messenger().post({
+                                    message: "<?php echo $message;?>",
+                                    type: "error",
+                                    showCloseButton: true
+                            });
+                        <?php endif; ?>
+                        <?php if($message_type=='success'):?>
+                            var mytheme = "flat";
+                            var mypos = "messenger-on-top messenger-on-right";
+                            //Set theme
+                            Messenger.options = {
+                                    extraClasses: 'messenger-fixed '+mypos,
+                                    theme: mytheme
+                            }
+                            Messenger().post({
+                                    message: "<?php echo $message;?>",
+                                    showCloseButton: true
+                            });
+                        <?php endif; ?>
+                        
                         jQuery('textarea.autosize').autosize();
                         jQuery('.countable').simplyCountable({maxCount:250});
                         jQuery('#bloodgroup').typeahead({
@@ -947,7 +958,21 @@
                                 local: ["African", "American", "Argentinian", "Australian", "Bangladesh(i)", "British", "Chinese", "Indian", "Indonesian", "Iranian", "Iraqi", "Irish", "Israeli", "Japanese", "Russian", "Thai"]
                         });
                         jQuery("#btn_update_profile").click(function(){
+                           var el = jQuery(this).parents(".box");
+                           App.blockUI(el);
                            var error_flag = 0;
+                           jQuery('input[name=userfile]').parent().parent().parent().removeClass("has-error");
+                           jQuery('#userfile_error').text('');
+                           jQuery('textarea[name=aboutMe]').parent().parent().removeClass("has-error");
+                           jQuery('input[name=firstName]').parent().parent().removeClass("has-error");
+                           jQuery('#firstName_error').text('');
+                           jQuery('input[name=lastName]').parent().parent().removeClass("has-error");
+                           jQuery('#lastName_error').text('');
+                           jQuery('input[name=email]').parent().parent().removeClass("has-error");
+                           jQuery('#email_error').text('');
+                           jQuery('input[name=dob]').parent().parent().removeClass("has-error");
+                           jQuery('#dob_error').text('');
+                           
                            if(jQuery('input[name=userfile]').val()!="")
                            {
                                if(jQuery('input[name=userfile]')[0].files[0].size > 2097152)
@@ -983,6 +1008,13 @@
                                jQuery('input[name=lastName]').parent().parent().addClass("has-error");
                                jQuery('#lastName_error').text('This field is required.');
                            }
+                           var re = /^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i
+                           if(!re.test(jQuery('input[name=email]').val()) && jQuery.trim(jQuery('input[name=email]').val())!="")
+                           {
+                               error_flag = 1;
+                               jQuery('input[name=email]').parent().parent().addClass("has-error");
+                               jQuery('#email_error').text('This email address is invalid.');
+                           } 
                            var re = /^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$/; // RE for birthdate (yyyy-mm-dd)
                            if(!re.test(jQuery('input[name=dob]').val()) && jQuery.trim(jQuery('input[name=dob]').val())!="")
                            {
@@ -997,7 +1029,11 @@
                            if(error_flag == 0)
                            {
                                jQuery('form#user_profile_form').submit();
-                           }    
+                           }
+                           if(error_flag!=0)
+                           {
+                               App.unblockUI(el);
+                           }
                         });
 		});
 	</script>
