@@ -9,5 +9,3 @@
         <!-- HUBSPOT MESSENGER -->
 	<script type="text/javascript" src="<?php echo base_url('resources/js/hubspot-messenger/js/messenger.min.js');?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('resources/js/hubspot-messenger/js/messenger-theme-flat.js');?>"></script>
-        <!-- GOOGLE TRANSLATE SCRIPT -->
-	<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>-->

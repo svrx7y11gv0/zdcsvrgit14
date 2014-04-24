@@ -1,18 +1,25 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Secure extends CI_Controller {
-    
+    //Effective DataBase Switching in a constructor
     public function __construct() {
         parent::__construct();
+        
+        /*--------- DISABLE CACHE TO PREVENT BACK BUTTON OF BROWSER ---------- */
         $this->output->set_header('Last-Modified:'.gmdate('D, d M Y H:i:s').'GMT');
         $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate');
         $this->output->set_header('Cache-Control: post-check=0, pre-check=0',false);
         $this->output->set_header('Pragma: no-cache');
+        
         $this->load->library('session');
+        
+        /*If session does not contain username i.e. user is not logged in and router is not login
+          then redirect to login page. */ 
         if(!$this->session->userdata('username') && $this->router->method!="login")
         {
             redirect('guest/loginpage');
         }
+        /* If institute id is not their in session then set session with posted institute id */
         if(isset($_POST['institute_id']))
         {
             $institute_id = $_POST['institute_id'];
@@ -27,12 +34,12 @@ class Secure extends CI_Controller {
                 $this->logout();
             redirect('guest/loginpage');
         }
-        
+
+        /* Fetch institute host, db, user, pass from CANN database via institute_id*/
         $this->load->database();
         $this->load->model("institutes");
-        
         $institute_data = $this->institutes->institute_info($institute_id);
-        
+        /* Switch to particular institute database */
         $params['hostname'] = $institute_data->hostname;
         $params['username'] = $institute_data->dbusername;
         $params['password'] = $institute_data->dbpassword;
@@ -40,6 +47,13 @@ class Secure extends CI_Controller {
         $params['dbdriver'] = 'mysql';
         $new_db = $this->load->database( $params, TRUE );
         $this->db = $new_db;
+        
+        /* Get Attendance Type of THE INSTITUTE and set in session */
+        $this->load->model('secureAdmin');
+        $institute_details = $this->secureAdmin->fetch_institute_details();
+        if(isset($institute_details))
+            if($institute_details->attendance_type!="")
+                $this->session->set_userdata('atttype',$institute_details->attendance_type);
     }
             
 
@@ -54,22 +68,20 @@ class Secure extends CI_Controller {
                 $this->session->sess_expire_on_close = FALSE;
                 $this->session->sess_update(); //Force an update to the session data
             }
-            $userInfo = array('id'=>$result->id,'username'=>$result->username,'firstname'=>$result->firstname,'lastname'=>$result->lastname,'type'=>$result->type,'priviledge'=>$result->priviledge,'bioid'=>$result->bioid);
+            $userInfo = array('id'=>$result->id,'username'=>$result->username,'firstname'=>$result->firstname,'lastname'=>$result->lastname,'type'=>$result->type,'privilege'=>$result->privilege,'bioid'=>$result->bioid,'photourl'=>$result->photourl);
             $this->session->set_userdata($userInfo);
-            //$this->load->view('test',$data);
+
             echo "true";
         }
         else
         {
-            /*$this->session->set_flashdata('message_fail',"User Name or Password is Not Correct.");
-            redirect('guest/loginpage');*/
             echo "false";
         }
     }
     
     public function logout()
     {
-        $userInfo = array('id'=>'','username'=>'','firstname'=>'','lastname'=>'','type'=>'','priviledge'=>'','bioid'=>'');
+        $userInfo = array('id'=>'','username'=>'','firstname'=>'','lastname'=>'','type'=>'','privilege'=>'','bioid'=>'','photourl'=>'');
         $this->session->unset_userdata($userInfo);
         $this->session->sess_destroy();
         redirect('guest/loginpage');
@@ -104,17 +116,178 @@ class Secure extends CI_Controller {
             $data['institute_details'] = $this->secureAdmin->fetch_institute_details();
             $this->load->view('institute_setup',$data);
         }
+        else if($this->is_student())
+        {
+            $this->profile();
+        }
+    }
+    
+    public function user_manager($mode = null)
+    {
+        $data['mode'] = $mode;
+        $user_id = $this->session->userdata('id');
+        $this->load->model('secureUsers');
+        $data['user_details'] = $this->secureUsers->get_user_details($user_id);
+        $this->load->view('user_manager',$data);
+    }
+    
+    public function update_profile()
+    {
+        $firstName = $this->input->post('firstName');
+        $lastName = $this->input->post('lastName');
+        $middleName = $this->input->post('middleName');
+        $dob = $this->input->post('dob');
+        $gender = $this->input->post('gender');
+        $phone = $this->input->post('phone');
+        $address = $this->input->post('address');
+        $bloodGroup = $this->input->post('bloodGroup');
+        $languages = $this->input->post('languages');
+        $nationality = $this->input->post('nationality');
+        $category = $this->input->post('category');
+        $religion = $this->input->post('religion');
+        $aboutMe = $this->input->post('aboutMe');
+        
+        $alphabet = lcfirst($firstName[0]);
+        switch($alphabet)
+        {
+            case 'a':
+                $dir = "a".rand(1,6);
+                break;
+            case 'b':
+                $dir = "b".rand(1,2);
+                break;
+            case 'c':
+                $dir = "c".rand(1,2);
+                break;
+            case 'd':
+                $dir = "d".rand(1,2);
+                break;
+            case 'e':
+                $dir = "e".rand(1,2);
+                break;
+            case 'f':
+                $dir = "f".rand(1,2);
+                break;
+            case 'g':
+                $dir = "g".rand(1,2);
+                break;
+            case 'h':
+                $dir = "h".rand(1,2);
+                break;
+            case 'i':
+                $dir = "i".rand(1,2);
+                break;
+            case 'j':
+                $dir = "j".rand(1,2);
+                break;
+            case 'k':
+                $dir = "k".rand(1,2);
+                break;
+            case 'l':
+                $dir = "l".rand(1,2);
+                break;
+            case 'm':
+                $dir = "m".rand(1,4);
+                break;
+            case 'n':
+                $dir = "n".rand(1,2);
+                break;
+            case 'o':
+                $dir = "o".rand(1,1);
+                break;
+            case 'p':
+                $dir = "p".rand(1,2);
+                break;
+            case 'q':
+                $dir = "q".rand(1,1);
+                break;
+            case 'r':
+                $dir = "r".rand(1,4);
+                break;
+            case 's':
+                $dir = "s".rand(1,4);
+                break;
+            case 't':
+                $dir = "t".rand(1,1);
+                break;
+            case 'u':
+                $dir = "u".rand(1,1);
+                break;
+            case 'v':
+                $dir = "v".rand(1,1);
+                break;
+            case 'w':
+                $dir = "w".rand(1,1);
+                break;
+            case 'x':
+                $dir = "x".rand(1,1);
+                break;
+            case 'y':
+                $dir = "y".rand(1,1);
+                break;
+            case 'z':
+                $dir = "z".rand(1,1);
+                break;
+        }
+        $this->load->helper('form');
+        
+        $config['upload_path'] = './uploads/profiles/'.$dir;
+        $config['allowed_types'] = 'gif|jpg|jpeg|png';
+        $config['max_size']	= '2048';
+        $config['overwrite'] = false;
+	$config['remove_spaces'] = true;
+
+        $this->load->library('upload', $config);
+
+        if ( ! $this->upload->do_upload())
+        {
+                $error = array('error' => $this->upload->display_errors());
+                if($error['error']=="<p>You did not select a file to upload.</p>")
+                    $error['error'] = "";
+                $this->load->view('upload_form', $error);
+        }
         else
         {
-            redirect('guest/loginpage');
+            //Image Resizing
+		$config['source_image'] = $this->upload->upload_path.$this->upload->file_name;
+		$config['maintain_ratio'] = TRUE;
+		$config['width'] = 180;
+                $config['height'] = 180;
+                
+		$this->load->library('image_lib', $config);
+
+		if ( ! $this->image_lib->resize()){
+			$this->session->set_flashdata('message', $this->image_lib->display_errors('', ''));
+		}
+                $data = array('upload_data' => $this->upload->data());
+
+                $this->user_manager();
+        }
+    }
+    
+    public function institute_setup()
+    {
+        if($this->is_admin())
+        {
+            $this->load->model('secureAdmin');
+            $data['institute_details'] = $this->secureAdmin->fetch_institute_details();
+            $this->load->view('institute_setup',$data);
+        }
+        else
+        {
+            redirect('secure');
         }
     }
     
     public function updateInstituteDetails()
     {
         $this->load->model('secureAdmin');
-        //echo $_POST['name'].$_POST['email'].$_POST['phone'].$_POST['address'];
-        $this->secureAdmin->save_institute_details($_POST['name'],$_POST['phone'],$_POST['email'],$_POST['address']);
+        if($_POST['atttype']!="")
+            $this->session->set_userdata('atttype',$_POST['atttype']);
+        if($this->secureAdmin->save_institute_details($_POST['name'],$_POST['phone'],$_POST['email'],$_POST['address'],$_POST['atttype']))
+            echo "all_good";
+        else
+            echo "Please contact support team to change attendance type";
     }
     
 }

@@ -17,15 +17,26 @@ class SecureAdmin extends CI_Model
         else
             return null;
     }
-    public function save_institute_details($name, $phone, $email, $address)
+    public function save_institute_details($name, $phone, $email, $address, $attendance_type)
     {
-        $this->db->get('institute_setup');
+        $row = $this->db->get('institute_setup')->row();
         if($this->db->affected_rows()==0)
         {
-            $this->db->insert('institute_setup',array('name'=>$name,'address'=>$address,'phone_nos'=>$phone,'email_ids'=>$email));
+            $this->db->insert('institute_setup',array('name'=>$name,'address'=>$address,'phone_nos'=>$phone,'email_ids'=>$email,'attendance_type'=>$attendance_type));
+            return 1;
         }
-        else {
-            $this->db->update('institute_setup',array('name'=>$name,'address'=>$address,'phone_nos'=>$phone,'email_ids'=>$email));
+        else 
+        {
+            if($row->attendance_type=="" || $row->attendance_type == $attendance_type)
+            {
+                $this->db->update('institute_setup',array('name'=>$name,'address'=>$address,'phone_nos'=>$phone,'email_ids'=>$email,'attendance_type'=>$attendance_type));
+                return 1;
+            }
+            else
+            {
+                $this->db->update('institute_setup',array('name'=>$name,'address'=>$address,'phone_nos'=>$phone,'email_ids'=>$email));
+                return 0;
+            }
         }
     }
 }

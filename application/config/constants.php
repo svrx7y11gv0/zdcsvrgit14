@@ -50,5 +50,15 @@ define('TEACHER_TYPE','teacher');
 define('STUDENT_TYPE','student');
 define('GUARDIAN_TYPE','guardian');
 
+define('PRV_ADMIN',99);
+define('PRV_HEAD_TEACHER',82);
+define('PRV_GFM_TEACHER',81);
+define('PRV_GEN_TEACHER',80);
+define('PRV_ACCOUNTS_HEAD',35);
+define('PRV_ACCOUNTS_CLERK',30);
+define('PRV_GUARDIAN',8);
+define('PRV_STUDENT',4);
+define('PRV_ALUMNI',2);
+
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

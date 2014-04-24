@@ -9,9 +9,18 @@ class SecureUsers extends CI_Model
     }
     function validate_user($username,$password)
     {
-        $result = $this->db->get_where('users',array('username'=>$username,'password'=>$password))->row();
+        $row = $this->db->get_where('users',array('username'=>$username,'password'=>$password))->row();
         if($this->db->affected_rows()==1)
-            return $result;
+            return $row;
+        else
+            return null;
+    }
+    function get_user_details($user_id)
+    {
+        $query = "select * from users, profiles where users.id = profiles.user_id and users.id = ".$user_id;
+        $row = $this->db->query($query)->row();
+        if($this->db->affected_rows()==1)
+            return $row;
         else
             return null;
     }

@@ -33,7 +33,7 @@
                                                     }
                                                     .goog-te-gadget-simple img
                                                     {
-                                                        margin-right: 15px;
+                                                        margin-right: 18px;
                                                     }
                                                     a.goog-te-menu-value, a.goog-te-menu-value:hover
                                                     {
@@ -47,6 +47,13 @@
 									<i class="fa fa-tachometer fa-fw"></i> <span class="menu-text">Dashboard</span>
 								</a>					
 							</li>
+                                                        <?php if($this->session->userdata('type')==ADMIN_TYPE):?>
+                                                        <li>
+								<a href="<?php echo base_url('secure/institute_setup');?>">
+									<i class="fa fa-gears fa-fw"></i> <span class="menu-text">Institute Setup</span>
+								</a>					
+							</li>
+                                                        <?php endif; ?>
 							<li class="has-sub">
 								<a href="javascript:;" class="">
 								<i class="fa fa-bookmark-o fa-fw"></i> <span class="menu-text">UI Features</span>

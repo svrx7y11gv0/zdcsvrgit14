@@ -55,7 +55,7 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-md-4 col-md-offset-4">
-							<div class="login-box-plain">
+							<div class="box border login-box-plain">
 								<h2 class="bigintro" style="margin-top:0px">Sign In</h2>
 								<div class="divide-40"></div>
 								<form id="login_form" role="form" method="post" action="<?php echo base_url('secure/login');?>">
@@ -217,6 +217,8 @@
 	
 	<!-- UNIFORM -->
 	<script type="text/javascript" src="<?php echo base_url('resources/js/uniform/jquery.uniform.min.js');?>"></script>
+        <!-- BLOCK UI -->
+	<script type="text/javascript" src="<?php echo base_url('resources/js/jQuery-BlockUI/jquery.blockUI.min.js');?>"></script>
         <!-- JQUERY CooKie Plugin -->
         <script src="<?php echo base_url('resources/js/jquery.cookie.js');?>"></script>
 	<!-- CUSTOM SCRIPT -->
@@ -244,6 +246,8 @@ jQuery(document).ready(function(){
         window.location.href="< ?php echo base_url('secure');?>";*/
 
     jQuery("#login_form").submit(function(){
+                   var el = jQuery(this).parents(".box");
+                   App.blockUI(el);
                    message="";
                    jQuery("ul#messenger-on-top-right li.messenger-message-slot").text("");
                    if(jQuery.trim(jQuery("#InputUsername1").val())=="")
@@ -258,6 +262,7 @@ jQuery(document).ready(function(){
                    }
                    if(message!="")
                    {
+                        App.unblockUI(el);
                         var hubspot_messenger = '<div class="messenger-message message alert error message-error alert-error messenger-will-hide-after">\
                                                              <button type="button" class="messenger-close" data-dismiss="alert">×</button>\
                                                              <div class="messenger-message-inner">'+message+'</div>\
@@ -290,9 +295,11 @@ jQuery(document).ready(function(){
                                                      </div>';
                                     jQuery("ul#messenger-on-top-right li.messenger-message-slot").append(hubspot_messenger);
                                 }
+                                App.unblockUI(el);
                             }
                        });
                    }
+                   
                    return false;
     });
                

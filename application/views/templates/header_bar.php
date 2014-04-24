@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta charset="utf-8">
-	<title>Cloud Admin | Blank Page</title>
+	<title>Edbeans - All in one place</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 	<meta name="description" content="">
 	<meta name="author" content="">
@@ -15,6 +15,8 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('resources/js/hubspot-messenger/css/messenger.min.css');?>" />
         <link rel="stylesheet" type="text/css" href="<?php echo base_url('resources/js/hubspot-messenger/css/messenger-spinner.min.css');?>" />
         <link rel="stylesheet" type="text/css" href="<?php echo base_url('resources/js/hubspot-messenger/css/messenger-theme-flat.min.css');?>" />
+        <!-- UNIFORM -->
+        <link rel="stylesheet" type="text/css" href="<?php echo base_url('resources/js/uniform/css/uniform.default.min.css');?>">
         
 	<link href="<?php echo base_url('resources/font-awesome/css/font-awesome.min.css');?>" rel="stylesheet">
 	<!-- DATE RANGE PICKER -->
@@ -325,13 +327,13 @@
 					<!-- BEGIN USER LOGIN DROPDOWN -->
 					<li class="dropdown user" id="header-user">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<img alt="" src="<?php echo base_url('resources/img/avatars/avatar3.jpg');?>" />
-							<span class="username">John Doe</span>
+							<img alt="" src="<?php if($this->session->userdata('photourl')=="") echo base_url('uploads/profiles/default.png'); else echo base_url('uploads/profiles/').$this->session->userdata('photourl'); ?>" />
+							<span class="username"><?php echo ucfirst($this->session->userdata('firstname'))." ".ucfirst($this->session->userdata('lastname'));?></span>
 							<i class="fa fa-angle-down"></i>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="#"><i class="fa fa-user"></i> My Profile</a></li>
-							<li><a href="#"><i class="fa fa-cog"></i> Account Settings</a></li>
+							<li><a href="<?php echo base_url('secure/user_manager/profile');?>"><i class="fa fa-user"></i> My Profile</a></li>
+							<li><a href="<?php echo base_url('secure/user_manager/account');?>"><i class="fa fa-cog"></i> Account Settings</a></li>
 							<li><a href="#"><i class="fa fa-eye"></i> Privacy Settings</a></li>
 							<li><a href="<?php echo base_url('secure/logout');?>"><i class="fa fa-power-off"></i> Log Out</a></li>
 						</ul>
