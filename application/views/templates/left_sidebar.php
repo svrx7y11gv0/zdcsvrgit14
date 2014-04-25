@@ -9,6 +9,9 @@
 							<input class="search" type="text" placeholder="Search"><i class="fa fa-search search-icon"></i>
 						</div>
 						<!-- /SEARCH BAR -->
+                                                
+                                                <?php if($this->session->userdata('multilanguage')=='T'):?>
+                                                <!-- GOOGLE MULTILANGUAGE TRANSLATE -->
                                                 <div class="google_translate_outer">
                                                     <div id="google_translate_element"></div>
                                                     <script type="text/javascript">
@@ -40,6 +43,7 @@
                                                         text-decoration: none;
                                                     }
                                                 </style>
+                                                <?php endif; ?>
 						<!-- SIDEBAR MENU -->
 						<ul>
 							<li>

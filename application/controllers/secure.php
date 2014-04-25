@@ -304,4 +304,32 @@ class Secure extends CI_Controller {
             echo "Please contact support team to change attendance type";
     }
     
+    public function update_account()
+    {
+        $currUsername = $this->input->post('currUsername');
+        $currPassword = $this->input->post('currPassword');
+        $multilanguage = $this->input->post('multilanguage');
+        
+        if($this->input->post('newUsername'))
+            $newUsername = $this->input->post('newUsername');
+        else
+            $newUsername = null;
+        
+        if($this->input->post('newPassword'))
+            $newPassword = $this->input->post('newPassword');
+        else
+            $newPassword = null;
+        
+        $this->load->model('secureUsers');
+        $user_id = $this->session->userdata('id');
+        if($this->secureUsers->update_account($user_id,$currUsername,$currPassword,$multilanguage,$newUsername,$newPassword))
+        {
+            echo "all_good";
+        }
+        else
+        {
+            echo "Your Username or Password did not match our records";
+        }
+    }
+    
 }

@@ -99,6 +99,33 @@ class SecureUsers extends CI_Model
             }
         }
     }
+    
+    function update_account($user_id,$currUsername,$currPassword,$multilanguage,$newUsername,$newPassword)
+    {
+        $row = $this->db->get_where('users',array('id'=>$user_id,'username'=>$currUsername,'password'=>$currPassword))->row();
+        if($this->db->affected_rows()==0)
+            return 0;
+        else
+        {
+            $data = array(
+               'multilanguage' => $multilanguage,
+            );
+            if(isset($newUsername))
+            {
+                $data['username'] = $newUsername;
+                $this->session->set_userdata('username',$newUsername);
+            }
+            if(isset($newPassword))
+            {
+                $data['password'] = $newPassword;
+            }
+            $this->db->where('id',$user_id);
+            $this->db->update('users',$data);
+            
+            $this->session->set_userdata('multilanguage',$multilanguage);
+            return 1;
+        }
+    }
 }
 
 
