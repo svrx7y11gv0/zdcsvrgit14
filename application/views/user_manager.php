@@ -26,7 +26,7 @@
                                                                                            <li><a href="#pro_help" data-toggle="tab"><i class="fa fa-question"></i> <span class="hidden-inline-mobile"> Help</span></a></li>
 											   <li <?php if(isset($mode) && $mode == "account") echo ' class="active" ';?> ><a href="#acc_edit" data-toggle="tab"><i class="fa fa-cogs"></i> <span class="hidden-inline-mobile"> Edit Account</span></a></li>
 											   <li <?php if($mode == null || $mode == "profile") echo ' class="active" ';?> ><a href="#pro_edit" data-toggle="tab"><i class="fa fa-edit"></i> <span class="hidden-inline-mobile"> Edit Profile</span></a></li>
-											   <li><a href="#pro_overview" data-toggle="tab"><i class="fa fa-dot-circle-o"></i> <span class="hidden-inline-mobile"> Overview</span></a></li>
+											   <li <?php if(isset($mode) && $mode == "overview") echo ' class="active" ';?> ><a href="#pro_overview" data-toggle="tab"><i class="fa fa-dot-circle-o"></i> <span class="hidden-inline-mobile"> Overview</span></a></li>
 											</ul>
 											<div class="tab-content">
 											   <!-- OVERVIEW -->
@@ -401,7 +401,77 @@
 											   
 											   <!-- EDIT ACCOUNT -->
 											   <div class="tab-pane fade <?php if(isset($mode) && $mode == "account") echo ' in active ';?>" id="acc_edit">
-												  
+												  <form class="form-horizontal" id="user_account_form" method="post" action="<?php echo base_url('secure/update_account');?>">
+													<div class="row">
+														 <div class="col-md-12">
+															
+                                                                                                                                <div class="col-md-12">
+                                                                                                                                       <div class="panel panel-default">
+                                                                                                                                            <div class="panel-heading">
+                                                                                                                                                    <h3 class="panel-title">Demo Notes</h3>
+                                                                                                                                            </div>
+                                                                                                                                            <div class="panel-body">
+                                                                                                                                                    <ul>
+                                                                                                                                                            <li>The server is not configured for uploads. This is for demonstration purpose only.</li>
+                                                                                                                                                            <li>The maximum file size for uploads is unlimited.</li>
+                                                                                                                                                            <li>You can <strong>drag &amp; drop</strong> files from your desktop.</li>
+                                                                                                                                                    </ul>
+                                                                                                                                            </div>
+                                                                                                                                       </div>
+                                                                                                                                       <h4>Account Information</h4>
+                                                                                                                                       <div class="form-group">
+                                                                                                                                          <label class="col-md-2 control-label">Current Username *</label> 
+                                                                                                                                          <div class="col-md-10">
+                                                                                                                                              <input type="text" name="curr_username" class="form-control" value="<?php echo $this->session->userdata('username'); ?>">
+                                                                                                                                              <span id="curr_username_error" class="help-block"></span>
+                                                                                                                                          </div>
+                                                                                                                                       </div>
+                                                                                                                                       <div class="form-group">
+                                                                                                                                          <label class="col-md-2 control-label">New Username</label> 
+                                                                                                                                          <div class="col-md-10">
+                                                                                                                                              <input type="text" name="new_username" class="form-control" >
+                                                                                                                                              <span id="new_username_error" class="help-block"></span>
+                                                                                                                                          </div>
+                                                                                                                                       </div>
+                                                                                                                                       <div class="form-group">
+                                                                                                                                          <label class="col-md-2 control-label">Your Current Password *</label> 
+                                                                                                                                          <div class="col-md-10">
+                                                                                                                                              <input type="password" name="curr_password" class="form-control" >
+                                                                                                                                              <span id="curr_pass_error" class="help-block"></span>
+                                                                                                                                          </div>
+                                                                                                                                       </div>
+                                                                                                                                       <div class="form-group">
+                                                                                                                                          <label class="col-md-2 control-label">New Password</label> 
+                                                                                                                                          <div class="col-md-10">
+                                                                                                                                              <input type="password" name="new_password" class="form-control" >
+                                                                                                                                              <span id="new_pass_error" class="help-block">Keep this field blank for not changing the password.</span>
+                                                                                                                                          </div>
+                                                                                                                                       </div>
+                                                                                                                                       <div class="form-group">
+                                                                                                                                          <label class="col-md-2 control-label">Confirm New Password</label> 
+                                                                                                                                          <div class="col-md-10">
+                                                                                                                                              <input type="password" name="con_new_password" class="form-control" >
+                                                                                                                                              <span id="con_new_pass_error" class="help-block">Keep this field blank for not changing the password.</span>
+                                                                                                                                          </div>
+                                                                                                                                       </div>
+                                                                                                                                       <div class="form-group">
+                                                                                                                                          <label class="col-md-2 control-label">Multi-Language Support</label> 
+                                                                                                                                          <div class="col-md-4">
+                                                                                                                                                        <label class="radio">
+                                                                                                                                                               <input type="radio" name="multilanguage" value="T" data-title="Enable" class="uniform"  <?php if(isset($user_details) && $user_details->multilanguage == 'T') echo " checked "; ?> />
+                                                                                                                                                        Enable
+                                                                                                                                                        </label>
+                                                                                                                                                        <label class="radio">
+                                                                                                                                                               <input type="radio" name="multilanguage" value="F" data-title="Disable" class="uniform"  <?php if(isset($user_details) && $user_details->multilanguage == 'F') echo " checked "; ?> />
+                                                                                                                                                        Disable
+                                                                                                                                                        </label>														  
+                                                                                                                                          </div>
+                                                                                                                                       </div>
+                                                                                                                                       <div class="form-actions clearfix"> <input type="submit" value="Update Account" id="btn_update_account" class="btn btn-primary pull-right"> </div>
+                                                                                                                                </div>
+                                                                                                                 </div>
+                                                                                                        </div>
+                                                                                                  </form>
 											   </div>
 											   <!-- /EDIT ACCOUNT -->
                                                                                            

@@ -68,7 +68,7 @@ class Secure extends CI_Controller {
                 $this->session->sess_expire_on_close = FALSE;
                 $this->session->sess_update(); //Force an update to the session data
             }
-            $userInfo = array('id'=>$result->id,'username'=>$result->username,'firstname'=>$result->firstname,'lastname'=>$result->lastname,'type'=>$result->type,'privilege'=>$result->privilege,'bioid'=>$result->bioid,'photourl'=>$result->photourl);
+            $userInfo = array('id'=>$result->id,'username'=>$result->username,'firstname'=>$result->firstname,'lastname'=>$result->lastname,'type'=>$result->type,'privilege'=>$result->privilege,'bioid'=>$result->bioid,'multilanguage'=>$result->multilanguage,'photourl'=>$result->photourl);
             $this->session->set_userdata($userInfo);
 
             echo "true";
@@ -81,7 +81,7 @@ class Secure extends CI_Controller {
     
     public function logout()
     {
-        $userInfo = array('id'=>'','username'=>'','firstname'=>'','lastname'=>'','type'=>'','privilege'=>'','bioid'=>'','photourl'=>'');
+        $userInfo = array('id'=>'','username'=>'','firstname'=>'','lastname'=>'','type'=>'','privilege'=>'','bioid'=>'','multilanguage'=>'','photourl'=>'');
         $this->session->unset_userdata($userInfo);
         $this->session->sess_destroy();
         redirect('guest/loginpage');

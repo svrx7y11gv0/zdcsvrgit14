@@ -197,8 +197,8 @@
                                                                                     <!-- STYLER -->
 
                                                                                     <!-- /STYLER -->
-                                                                                    <!-- BREADCRUMBS -->
+                                                                                    <!-- BREADCRUMBS 
                                                                                     <div style="display:block; height:12px;"></div>
-                                                                                    <div class="ci_breadcrumb"><?php echo "<i class='fa fa-home'></i> &nbsp;". set_breadcrumb(); ?></div>
+                                                                                    <div class="ci_breadcrumb">< ?php echo "<i class='fa fa-home'></i> &nbsp;". set_breadcrumb(); ?></div>
                                                                                     <div style="display:block; height:10px;"></div>
-                                                                                    <!-- /BREADCRUMBS -->
+                                                                                     /BREADCRUMBS -->

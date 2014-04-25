@@ -8,6 +8,13 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 	<!-- STYLESHEETS --><!--[if lt IE 9]><script src="<?php echo base_url('resources/js/flot/excanvas.min.js');?>"></script><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script><![endif]-->
+        <!-- INITIAL CSS ADDON -->
+        <style>
+        #main-content
+        {
+            margin-top: 50px;
+        }
+        </style>
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url('resources/css/cloud-admin.css');?>" >
 	<link rel="stylesheet" type="text/css"  href="<?php echo base_url('resources/css/themes/default.css');?>" id="skin-switcher" >
 	<link rel="stylesheet" type="text/css"  href="<?php echo base_url('resources/css/responsive.css');?>" >
