@@ -545,7 +545,7 @@
 																	  </div>
                                                                                                                                           <div class="panel panel-default">
 																		 <div class="panel-heading">
-																			<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1_4"><strong> 81 -- Privilege value of a Class Teacher or GFM</strong></a> </h3>
+																			<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1_4"><strong> 81 -- Privilege value of a Class Teacher</strong></a> </h3>
 																		 </div>
 																		 <div id="collapse1_4" class="panel-collapse collapse">
 																			<div class="panel-body"> 
@@ -561,7 +561,7 @@
 																	  </div>
                                                                                                                                           <div class="panel panel-default">
 																		 <div class="panel-heading">
-																			<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1_5"><strong> 80 -- Privilege value of NON Class Teacher</strong></a> </h3>
+																			<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1_5"><strong> 80 -- Privilege value of Subject Teacher</strong></a> </h3>
 																		 </div>
 																		 <div id="collapse1_5" class="panel-collapse collapse">
 																			<div class="panel-body"> 
@@ -604,7 +604,7 @@
 																	  </div>
                                                                                                                                           <div class="panel panel-default">
 																		 <div class="panel-heading">
-																			<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1_8"><strong> 8 -- Privilege value of Guardian</strong></a> </h3>
+																			<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1_8"><strong> 8 -- Privilege value of Guardian / Parent</strong></a> </h3>
 																		 </div>
 																		 <div id="collapse1_8" class="panel-collapse collapse">
 																			<div class="panel-body"> 
@@ -614,6 +614,32 @@
                                                                                                                                                                 <li>Approve / Reject events / notifications.</li>
                                                                                                                                                                 <li>Approve / Reject consents.</li>
                                                                                                                                                                 <li>Monitor ward's attendance, performance and tasks.</li>
+                                                                                                                                                            </ul> 
+																			 </div>
+																		 </div>
+																	  </div>
+                                                                                                                                          <div class="panel panel-default">
+																		 <div class="panel-heading">
+																			<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1_9"><strong> 4 -- Privilege value of Student</strong></a> </h3>
+																		 </div>
+																		 <div id="collapse1_9" class="panel-collapse collapse">
+																			<div class="panel-body"> 
+                                                                                                                                                            Privilege value of 4 gives student following rights: 
+                                                                                                                                                            <ul>
+                                                                                                                                                                
+                                                                                                                                                            </ul> 
+																			 </div>
+																		 </div>
+																	  </div>
+                                                                                                                                          <div class="panel panel-default">
+																		 <div class="panel-heading">
+																			<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse1_10"><strong> 2 -- Privilege value of Alumni</strong></a> </h3>
+																		 </div>
+																		 <div id="collapse1_10" class="panel-collapse collapse">
+																			<div class="panel-body"> 
+                                                                                                                                                            Privilege value of 2 gives alumni following rights: 
+                                                                                                                                                            <ul>
+                                                                                                                                                                
                                                                                                                                                             </ul> 
 																			 </div>
 																		 </div>
