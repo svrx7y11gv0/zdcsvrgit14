@@ -39,5 +39,46 @@ class SecureAdmin extends CI_Model
             }
         }
     }
+    
+    public function get_departments()
+    {
+        $query = $this->db->get('departments');
+        if($this->db->affected_rows()==0)
+        {
+            return null;
+        }
+        else
+            return $query->result_array();
+    }
+    
+    public function get_department_classes($dept_id)
+    {
+        $this->db->select('*');
+        $this->db->from('classes');
+        $this->db->join('department_classes', 'classes.class_code = department_classes.class_code');
+        $this->db->where(array('department_classes.dept_id'=>$dept_id));
+        $query = $this->db->get();
+        if($this->db->affected_rows()==0)
+        {
+            return null;
+        }
+        else
+            return $query->result_array();
+    }
+    
+    public function get_department_teachers($dept_id)
+    {
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->join('department_teachers', 'users.bioid = department_teachers.bioid');
+        $this->db->where(array('department_teachers.dept_id'=>$dept_id));
+        $query = $this->db->get();
+        if($this->db->affected_rows()==0)
+        {
+            return null;
+        }
+        else
+            return $query->result_array();
+    }
 }
 ?>

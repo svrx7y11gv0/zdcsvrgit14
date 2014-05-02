@@ -39,7 +39,7 @@
 															<img style="margin: 0 auto;" alt="" class="img-responsive" src="<?php if($this->session->userdata('photourl')=="") echo base_url('uploads/profiles/default.png'); else echo base_url('uploads/profiles/').$this->session->userdata('photourl'); ?>">
 														  </li>
 														  <div class="list-group-item profile-details">
-																<h2><?php echo ucfirst($this->session->userdata('firstname'))." ".ucfirst($this->session->userdata('lastname'));?></h2>
+																<h4><?php echo ucfirst($this->session->userdata('firstname'))." ".ucfirst($this->session->userdata('lastname'));?></h4>
 																<p><i class="fa fa-circle text-green"></i> Online</p>
 																<p><?php if(isset($user_details)) echo $user_details->about_me; ?></p>
 																<p><?php if(isset($user_details) && $user_details->email!=""):?><a title="<?php echo $user_details->email;?>" href="mailto:<?php echo $user_details->email;?>"><?php if(strlen($user_details->email)>19) echo substr($user_details->email,0,19).'...'; else echo $user_details->email;?></a><?php endif; ?></p>
@@ -368,7 +368,15 @@
                                                                                                                                        
                                                                                                                                        <div class="form-group">
                                                                                                                                           <label class="col-md-2 control-label">Category</label> 
-                                                                                                                                          <div class="col-md-10"><input type="text" name="category" class="form-control" placeholder="Enter your category" value="<?php if(isset($user_details)) echo $user_details->category; ?>" <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> /></div>
+                                                                                                                                          <div class="col-md-10">
+                                                                                                                                              <!-- <input type="text" name="category" class="form-control" placeholder="Enter your category" value="< ?php if(isset($user_details)) echo $user_details->category; ?>" < ?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> /> -->
+                                                                                                                                              <select name="category" class="form-control" <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?>>
+                                                                                                                                                  <option value="">Select your category</option>
+                                                                                                                                                  <option value="open" <?php if(isset($user_details)) if($user_details->category=="open") echo " selected "; ?>>OPEN / GENERAL</option>
+                                                                                                                                                  <option value="obc" <?php if(isset($user_details)) if($user_details->category=="obc") echo " selected "; ?>>OBC</option>
+                                                                                                                                                  <option value="others" <?php if(isset($user_details)) if($user_details->category=="others") echo " selected "; ?>>SC/ST/NT/SBC/VJ/TFWS</option>
+                                                                                                                                              </select>
+                                                                                                                                          </div>
                                                                                                                                        </div>
                                                                                                                                        
                                                                                                                                        <div class="form-group">
@@ -1032,7 +1040,7 @@
                            jQuery('input[name=email]').parent().parent().removeClass("has-error");
                            jQuery('#email_error').text('');
                            jQuery('input[name=dob]').parent().parent().removeClass("has-error");
-                           jQuery('#dob_error').text('');
+                           jQuery('#dob_error').text('yyyy-mm-dd');
                            
                            if(jQuery('input[name=userfile]').val()!="")
                            {

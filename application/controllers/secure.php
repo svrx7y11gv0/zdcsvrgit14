@@ -86,7 +86,40 @@ class Secure extends CI_Controller {
         $this->session->sess_destroy();
         redirect('guest/loginpage');
     }
+    /*********************************************************************/
+    /************************** PRIVILEGES CHECKER ***********************/
+    /*********************************************************************/
+    //Check Administrator Level Privilege
+    public function is_PRV_admin()
+    {
+        if($this->session->userdata('privilege')==PRV_ADMIN)
+            return true;
+    }
+    //Check Head Teacher Level Privilege
+    public function is_PRV_head_teacher()
+    {
+        if($this->session->userdata('privilege')==PRV_HEAD_TEACHER)
+            return true;
+    }
+    //Check GFM/Class Teacher Level Privilege
+    public function is_PRV_GFM_teacher()
+    {
+        if($this->session->userdata('privilege')==PRV_GFM_TEACHER)
+            return true;
+    }
+    //Check General/Subject Teacher Level Privilege
+    public function is_PRV_GENERAL_teacher()
+    {
+        if($this->session->userdata('privilege')==PRV_GEN_TEACHER)
+            return true;
+    }
+    /*********************************************************************/
+    /*********************** END PRIVILEGES CHECKER **********************/
+    /*********************************************************************/
     
+    /*********************************************************************/
+    /************************ USER TYPE CHECKER  *************************/
+    /*********************************************************************/
     public function is_admin()
     {
         if($this->session->userdata('type')==ADMIN_TYPE)
@@ -107,6 +140,9 @@ class Secure extends CI_Controller {
         if($this->session->userdata('type')==GUARDIAN_TYPE)
             return true;
     }
+    /*********************************************************************/
+    /********************** END USER TYPE CHECKER  ***********************/
+    /*********************************************************************/
     
     public function index()
     {
@@ -116,7 +152,7 @@ class Secure extends CI_Controller {
             $data['institute_details'] = $this->secureAdmin->fetch_institute_details();
             $this->load->view('institute_setup',$data);
         }
-        else if($this->is_student())
+        else
         {
             $this->user_manager();
         }
@@ -295,13 +331,20 @@ class Secure extends CI_Controller {
     
     public function updateInstituteDetails()
     {
-        $this->load->model('secureAdmin');
-        if($_POST['atttype']!="")
-            $this->session->set_userdata('atttype',$_POST['atttype']);
-        if($this->secureAdmin->save_institute_details($_POST['name'],$_POST['phone'],$_POST['email'],$_POST['address'],$_POST['atttype']))
-            echo "all_good";
+        if($this->is_admin())
+        {
+            $this->load->model('secureAdmin');
+            if($_POST['atttype']!="")
+                $this->session->set_userdata('atttype',$_POST['atttype']);
+            if($this->secureAdmin->save_institute_details($_POST['name'],$_POST['phone'],$_POST['email'],$_POST['address'],$_POST['atttype']))
+                echo "all_good";
+            else
+                echo "Please contact support team to change attendance type";
+        }
         else
-            echo "Please contact support team to change attendance type";
+        {
+            redirect('secure');
+        }
     }
     
     public function update_account()
@@ -329,6 +372,25 @@ class Secure extends CI_Controller {
         else
         {
             echo "Your Username or Password did not match our records";
+        }
+    }
+    
+    public function view_departments()
+    {
+        if($this->is_PRV_admin())
+        {
+            $this->load->model('secureAdmin');
+            $data['departments'] = $this->secureAdmin->get_departments();
+            if(isset($data['departments']))
+            {
+                $data['department_classes'] = $this->secureAdmin->get_department_classes($data['departments'][0]['id']);
+                $data['department_teachers'] = $this->secureAdmin->get_department_teachers($data['departments'][0]['id']);
+            }
+            $this->load->view('view_departments',$data);
+        }
+        else
+        {
+            redirect('secure');
         }
     }
     
