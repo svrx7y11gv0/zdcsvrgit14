@@ -126,6 +126,31 @@ class SecureUsers extends CI_Model
             return 1;
         }
     }
+    
+    //Fetching all classes
+    function get_classes()
+    {
+        $query = $this->db->get('classes');
+        if($this->db->affected_rows()==0)
+        {
+            return null;
+        }
+        else
+            return $query->result_array();
+    }
+    
+    //Fetching all teachers
+    function get_teachers()
+    {
+        $query = $this->db->get_where('users',array('type'=>TEACHER_TYPE));
+        if($this->db->affected_rows()==0)
+        {
+            return null;
+        }
+        else
+            return $query->result_array();
+    }
+    
 }
 
 

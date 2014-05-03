@@ -71,7 +71,7 @@ class SecureAdmin extends CI_Model
         $this->db->select('*');
         $this->db->from('users');
         $this->db->join('department_teachers', 'users.bioid = department_teachers.bioid');
-        $this->db->where(array('department_teachers.dept_id'=>$dept_id));
+        $this->db->where(array('department_teachers.dept_id'=>$dept_id,'users.type'=>TEACHER_TYPE));
         $query = $this->db->get();
         if($this->db->affected_rows()==0)
         {
@@ -79,6 +79,29 @@ class SecureAdmin extends CI_Model
         }
         else
             return $query->result_array();
+    }
+    
+    function add_department($deptname,$multi_classes,$multi_teachers)
+    {
+        $query = $this->db->get_where('departments',array('department_name'=>$deptname));
+        if($this->db->affected_rows()!=0)
+        {
+            return $deptname." department already exists in database";
+        }
+        else
+        {
+            $this->db->insert('departments',array('department_name'=>$deptname));
+            $dept_id = $this->db->insert_id();
+            for($i=0; $i<count($multi_classes) ; $i++)
+            {
+                $this->db->insert('department_classes',array('dept_id'=>$dept_id,'class_code'=>$multi_classes[$i]));
+            }
+            for($i=0; $i<count($multi_teachers) ; $i++)
+            {
+                $this->db->insert('department_teachers',array('dept_id'=>$dept_id,'bioid'=>$multi_teachers[$i]));
+            }
+            return "all_good";
+        }
     }
 }
 ?>

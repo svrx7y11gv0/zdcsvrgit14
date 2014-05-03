@@ -386,7 +386,48 @@ class Secure extends CI_Controller {
                 $data['department_classes'] = $this->secureAdmin->get_department_classes($data['departments'][0]['id']);
                 $data['department_teachers'] = $this->secureAdmin->get_department_teachers($data['departments'][0]['id']);
             }
+
             $this->load->view('view_departments',$data);
+        }
+        else
+        {
+            redirect('secure');
+        }
+    }
+    
+    public function create_department()
+    {
+        if($this->is_PRV_admin())
+        {
+            $this->load->model('secureUsers');
+            $data['classes'] = $this->secureUsers->get_classes();
+            $data['teachers'] = $this->secureUsers->get_teachers();
+             $this->load->view('create_department',$data);
+        }
+        else
+        {
+            redirect('secure');
+        }
+    }
+    
+    public function add_department()
+    {
+        if($this->is_PRV_admin())
+        {
+            $deptname = $this->input->post('deptname');
+            $multi_classes = $this->input->post('multi_classes');
+            $multi_teachers = $this->input->post('multi_teachers');
+            $this->load->model('secureAdmin');
+            $data = $this->secureAdmin->add_department($deptname,$multi_classes,$multi_teachers);
+            if($data=="all_good")
+            {
+                $this->session->set_flashdata('success_msg','Department Successfully Created');
+            }
+            else
+            {
+                $this->session->set_flashdata('error_msg',$data);
+            }
+            redirect('secure/create_department');
         }
         else
         {

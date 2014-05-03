@@ -65,7 +65,7 @@
 								</a>
 								<ul class="sub">
                                                                         <li><a class="" href="<?php echo base_url('secure/view_departments');?>"><span class="sub-menu-text">View Departments</span></a></li>
-									<li><a class="" href="buttons_icons.html"><span class="sub-menu-text">Create New Department</span></a></li>
+									<li><a class="" href="<?php echo base_url('secure/create_department');?>"><span class="sub-menu-text">Create New Department</span></a></li>
 									<li><a class="" href="sliders_progress.html"><span class="sub-menu-text">Edit Department</span></a></li>
 								</ul>
 							</li>
