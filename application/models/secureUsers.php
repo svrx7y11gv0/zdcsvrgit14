@@ -17,8 +17,12 @@ class SecureUsers extends CI_Model
     }
     function get_user_details($user_id)
     {
-        $query = "select * from users, profiles where users.id = profiles.user_id and users.id = ".$user_id;
-        $row = $this->db->query($query)->row();
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->join('profiles', 'users.id = profiles.user_id','left');
+        $this->db->where(array('users.id'=>$user_id));
+        $query = $this->db->get();
+        $row = $query->row();
         if($this->db->affected_rows()==1)
             return $row;
         else
@@ -62,6 +66,7 @@ class SecureUsers extends CI_Model
                'firstname' => $firstName,
                 'middlename' => $middleName,
                 'lastname' => $lastName,
+                'contact_nos' => $phone,
                'email' => $email ,
             );
             if($photo!="")
@@ -80,7 +85,6 @@ class SecureUsers extends CI_Model
                 'gender' => $gender,
                 'dob' => $dob,
                 'address' => $address,
-                'contact_nos' => $phone,
                 'blood_group' => $bloodGroup,
                 'languages' => $languages,
                 'nationality' => $nationality,
@@ -143,6 +147,23 @@ class SecureUsers extends CI_Model
     function get_teachers()
     {
         $query = $this->db->get_where('users',array('type'=>TEACHER_TYPE));
+        if($this->db->affected_rows()==0)
+        {
+            return null;
+        }
+        else
+            return $query->result_array();
+    }
+    
+    function get_students_intime_details($class_code,$date)
+    {
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->join($class_code, "users.bioid = ".$class_code.".bio_id");
+        $this->db->group_by(array("users.id")); 
+        $this->db->having(array($class_code.'.date'=>$date,$class_code.'.slot'=>'1','users.type'=>STUDENT_TYPE));
+        $this->db->order_by("time", "asc"); 
+        $query = $this->db->get();
         if($this->db->affected_rows()==0)
         {
             return null;
