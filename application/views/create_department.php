@@ -62,44 +62,41 @@
 											<div class="box-body big">
                                                                                             <form class="form-horizontal" id="department_form" name="department_form" method="post" action="<?php echo base_url('secure/add_department');?>">
 													<div class="row">
-														 <div class="col-md-12">
-															
-                                                                                                                                <div class="col-md-12">
-                                                                                                                                       <div class="form-group">
-                                                                                                                                          <label class="col-md-2 control-label">Department Name *</label> 
-                                                                                                                                          <div class="col-md-10">
-                                                                                                                                              <input type="text" name="deptname" class="form-control" placeholder="Enter Department Name" />
-                                                                                                                                              <span id="deptname_error" class="help-block"></span>
-                                                                                                                                          </div>
-                                                                                                                                       </div>
-                                                                                                                                       <div class="form-group">
-                                                                                                                                           <label class="col-md-2 control-label">Add Classes</label> 
-                                                                                                                                            <div class="col-md-10">
-                                                                                                                                                <select id="multi_classes" name="multi_classes[]" data-placeholder="Choose Classes..." class="chosen-select form-control" multiple>
-                                                                                                                                                    <?php if(isset($classes)):?>
-                                                                                                                                                        <?php foreach($classes as $class):?>
-                                                                                                                                                            <option value="<?php echo $class['class_code'];?>"><?php echo $class['class']." ".$class['section']; ?></option>
-                                                                                                                                                        <?php endforeach;?>
-                                                                                                                                                    <?php endif; ?>
-                                                                                                                                                </select>
-                                                                                                                                                <span class="help-block">Press and hold Ctrl key + Click on class for adding multiple classes in one go.</span>
-                                                                                                                                            </div>
-                                                                                                                                       </div>
-                                                                                                                                        <div class="form-group">
-                                                                                                                                            <label class="col-md-2 control-label">Add Teachers</label> 
-                                                                                                                                            <div class="col-md-10">
-                                                                                                                                                <select id="multi_teachers" name="multi_teachers[]" data-placeholder="Add Teachers..." class="chosen-select form-control" multiple>
-                                                                                                                                                    <?php if(isset($teachers)):?>
-                                                                                                                                                        <?php foreach($teachers as $teacher):?>
-                                                                                                                                                            <option value="<?php echo $teacher['bioid'];?>"><?php echo ucfirst($teacher['firstname'])." ".ucfirst($teacher['middlename']." ".ucfirst($teacher['lastname']));?></option>
-                                                                                                                                                        <?php endforeach;?>
-                                                                                                                                                    <?php endif; ?>
-                                                                                                                                                </select>
-                                                                                                                                                <span class="help-block">Press and hold Ctrl key + Click on class for adding multiple teachers in one go.</span>
-                                                                                                                                            </div>
-                                                                                                                                        </div>
-                                                                                                                                </div>
-                                                                                                                 </div>
+                                                                                                            <div class="col-md-12">
+                                                                                                                   <div class="form-group">
+                                                                                                                      <label class="col-md-2 control-label">Department Name *</label> 
+                                                                                                                      <div class="col-md-10">
+                                                                                                                          <input type="text" name="deptname" class="form-control" placeholder="Enter Department Name" />
+                                                                                                                          <span id="deptname_error" class="help-block"></span>
+                                                                                                                      </div>
+                                                                                                                   </div>
+                                                                                                                   <div class="form-group">
+                                                                                                                       <label class="col-md-2 control-label">Add Classes</label> 
+                                                                                                                        <div class="col-md-10">
+                                                                                                                            <select id="multi_classes" name="multi_classes[]" data-placeholder="Choose Classes..." class="chosen-select form-control" multiple>
+                                                                                                                                <?php if(isset($classes)):?>
+                                                                                                                                    <?php foreach($classes as $class):?>
+                                                                                                                                        <option value="<?php echo $class['class_code'];?>"><?php echo $class['class']." ".$class['section']; ?></option>
+                                                                                                                                    <?php endforeach;?>
+                                                                                                                                <?php endif; ?>
+                                                                                                                            </select>
+                                                                                                                            <span class="help-block">Press and hold Ctrl key + Click on class for adding multiple classes in one go.</span>
+                                                                                                                        </div>
+                                                                                                                   </div>
+                                                                                                                    <div class="form-group">
+                                                                                                                        <label class="col-md-2 control-label">Add Teachers</label> 
+                                                                                                                        <div class="col-md-10">
+                                                                                                                            <select id="multi_teachers" name="multi_teachers[]" data-placeholder="Add Teachers..." class="chosen-select form-control" multiple>
+                                                                                                                                <?php if(isset($teachers)):?>
+                                                                                                                                    <?php foreach($teachers as $teacher):?>
+                                                                                                                                        <option value="<?php echo $teacher['bioid'];?>"><?php echo ucfirst($teacher['firstname'])." ".ucfirst($teacher['middlename']." ".ucfirst($teacher['lastname']));?></option>
+                                                                                                                                    <?php endforeach;?>
+                                                                                                                                <?php endif; ?>
+                                                                                                                            </select>
+                                                                                                                            <span class="help-block">Press and hold Ctrl key + Click on class for adding multiple teachers in one go.</span>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                            </div>
                                                                                                         </div>
                                                                                             </form>
                                                                                             <div class="form-actions clearfix"> <input type="submit" value="Create Department" id="btn_create_dept" class="btn btn-primary pull-right"> </div>

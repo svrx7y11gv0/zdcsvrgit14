@@ -383,8 +383,18 @@ class Secure extends CI_Controller {
             $data['departments'] = $this->secureAdmin->get_departments();
             if(isset($data['departments']))
             {
-                $data['department_classes'] = $this->secureAdmin->get_department_classes($data['departments'][0]['id']);
-                $data['department_teachers'] = $this->secureAdmin->get_department_teachers($data['departments'][0]['id']);
+                if($this->input->post('thisdeptid'))
+                {
+                    $data['thisdeptid'] = $this->input->post('thisdeptid');
+                    $data['department_classes'] = $this->secureAdmin->get_department_classes($this->input->post('thisdeptid'));
+                    $data['department_teachers'] = $this->secureAdmin->get_department_teachers($this->input->post('thisdeptid'));
+                }
+                else
+                {
+                    $data['thisdeptid'] = $data['departments'][0]['id'];
+                    $data['department_classes'] = $this->secureAdmin->get_department_classes($data['departments'][0]['id']);
+                    $data['department_teachers'] = $this->secureAdmin->get_department_teachers($data['departments'][0]['id']);
+                }
             }
 
             $this->load->view('view_departments',$data);
@@ -433,6 +443,30 @@ class Secure extends CI_Controller {
         {
             redirect('secure');
         }
+    }
+    
+    public function monitor_intime()
+    {
+        $this->load->model('secureUsers');
+        $data['classes'] = $this->secureUsers->get_classes();
+        if(isset($data['classes']))
+            {
+                if($this->input->post('thisclasscode'))
+                {
+                    $data['thisdate'] = date_create($this->input->post('thisdate'));
+                    $data['thisdate'] = date_format($data['thisdate'],'Y-m-d');
+                    $data['thisclasscode'] = $this->input->post('thisclasscode');
+                    $data['students_intime_details'] = $this->secureUsers->get_students_intime_details($this->input->post('thisclasscode'),$data['thisdate']);
+                    //var_dump($data);
+                }
+                else
+                {
+                    $data['thisdate'] = date("Y-m-d");
+                    $data['thisclasscode'] = $data['classes'][0]['class_code'];
+                    $data['students_intime_details'] = $this->secureUsers->get_students_intime_details($data['classes'][0]['class_code'],$data['thisdate']);
+                }
+            }
+        $this->load->view('monitor_intime',$data);
     }
     
 }
