@@ -9,6 +9,16 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('resources/js/datatables/media/css/jquery.dataTables.min.css');?>" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('resources/js/datatables/media/assets/css/datatables.min.css');?>" />
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('resources/js/datatables/extras/TableTools/media/css/TableTools.min.css');?>" />
+<style>
+    ul.pagination li
+    {
+        cursor: pointer;
+    }
+    #datatable1_filter input
+    {
+        height: 28px;
+    }
+</style>
 									<div class="clearfix">
 										<h3 class="content-title pull-left">Monitor In-Time</h3>
 									</div>
@@ -48,7 +58,7 @@
                                                                                                                             </div>
                                                                                                                     </div>
                                                                                                                     <div class="form-group">
-                                                                                                                        <label class="col-md-2 control-label">Select Classes</label> 
+                                                                                                                        <label class="col-md-2 control-label">Select Class</label> 
                                                                                                                          <div class="col-md-10">
                                                                                                                              <select id="class_code" name="thisclasscode" data-placeholder="Choose a Class..." class="form-control">
                                                                                                                                  <?php if(isset($classes)):?>

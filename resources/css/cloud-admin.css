@@ -6491,7 +6491,7 @@ fieldset[disabled] .btn-yellow.active {
   margin-top: 20px;
 }
 .date-range .btn-group .btn {
-  margin-top: -8px;
+  margin-top: 0px;
   padding: 8px;
 }
 .date-range .reportrange {

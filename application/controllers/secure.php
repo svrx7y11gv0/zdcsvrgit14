@@ -469,4 +469,29 @@ class Secure extends CI_Controller {
         $this->load->view('monitor_intime',$data);
     }
     
+    public function intime_stats()
+    {
+        $this->load->model('secureUsers');
+        $data['classes'] = $this->secureUsers->get_classes();
+        if(isset($data['classes']))
+        {
+            $data['thisclasscode'] = $data['classes'][0]['class_code'];
+            $data['students'] = $this->secureUsers->get_students_ofa_class($data['classes'][0]['class_code']);
+        }
+        $this->load->view('intime_stats',$data);
+    }
+    
+    public function get_students_ofa_class()
+    {
+        $this->load->model('secureUsers');
+        
+        echo json_encode($this->secureUsers->get_students_ofa_class($this->input->post('class_code')));
+    }
+    
+    public function get_intime_ofa_student()
+    {
+        $this->load->model('secureUsers');
+        echo json_encode($this->secureUsers->get_intime_ofa_student($this->input->post('class_code'),$this->input->post('bio_id'),$this->input->post('date_from'),$this->input->post('date_to')));
+    }
+    
 }

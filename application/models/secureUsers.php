@@ -172,6 +172,30 @@ class SecureUsers extends CI_Model
             return $query->result_array();
     }
     
+    function get_students_ofa_class($class_code)
+    {
+        $this->db->select('id,firstname,middlename,lastname,bioid');
+        $query = $this->db->get_where('users',array('class_code'=>$class_code,'type'=>STUDENT_TYPE));
+        if($this->db->affected_rows()==0)
+        {
+            return null;
+        }
+        else
+            return $query->result_array();
+    }
+    
+    function get_intime_ofa_student($class_code,$bio_id,$date_from,$date_to)
+    {
+        $query = "select `date` as x, `time` as y from `".$class_code."` group by `bio_id`,`date` having `bio_id` = ".$bio_id." and `date` BETWEEN '".$date_from."' AND '".$date_to."' order by `date`, `time` ASC";
+        $result = $this->db->query($query);
+        if($this->db->affected_rows()==0)
+        {
+            return null;
+        }
+        else
+            return $result->result_array();
+    }
+    
 }
 
 

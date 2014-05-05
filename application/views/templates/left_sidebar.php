@@ -85,6 +85,11 @@
 									<i class="fa fa-clock-o fa-fw"></i> <span class="menu-text">Monitor In-Time</span>
 								</a>					
 							</li>
+                                                        <li>
+								<a href="<?php echo base_url('secure/intime_stats');?>">
+									<i class="fa fa-bar-chart-o fa-fw"></i> <span class="menu-text">In-Time Statistics</span>
+								</a>					
+							</li>
                                                         <?php endif; ?>
                                                         
 							<li class="has-sub">
