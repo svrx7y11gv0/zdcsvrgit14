@@ -87,7 +87,12 @@
 							</li>
                                                         <li>
 								<a href="<?php echo base_url('secure/intime_stats');?>">
-									<i class="fa fa-bar-chart-o fa-fw"></i> <span class="menu-text">In-Time Statistics</span>
+									<i class="fa fa-download fa-fw"></i> <span class="menu-text">In-Time Statistics</span>
+								</a>					
+							</li>
+                                                        <li>
+								<a href="<?php echo base_url('secure/outtime_stats');?>">
+									<i class="fa fa-upload fa-fw"></i> <span class="menu-text">Out-Time Statistics</span>
 								</a>					
 							</li>
                                                         <?php endif; ?>

@@ -195,6 +195,18 @@ class SecureUsers extends CI_Model
             return $result->result_array();
     }
     
+    function get_outtime_ofa_student($class_code,$bio_id,$date_from,$date_to)
+    {
+        $query = "select `date` as x, `out_time` as y from `".$class_code."` group by `bio_id`,`date` having `bio_id` = ".$bio_id." and `date` BETWEEN '".$date_from."' AND '".$date_to."' order by `date` ASC";
+        $result = $this->db->query($query);
+        if($this->db->affected_rows()==0)
+        {
+            return null;
+        }
+        else
+            return $result->result_array();
+    }
+    
 }
 
 
