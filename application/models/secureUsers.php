@@ -155,14 +155,13 @@ class SecureUsers extends CI_Model
             return $query->result_array();
     }
     
-    function get_students_intime_details($class_code,$date)
+    function get_students_inouttime_details($class_code,$date)
     {
         $this->db->select('*');
         $this->db->from('users');
         $this->db->join($class_code, "users.bioid = ".$class_code.".bio_id");
         $this->db->group_by(array("users.id")); 
-        $this->db->having(array($class_code.'.date'=>$date,$class_code.'.slot'=>'1','users.type'=>STUDENT_TYPE));
-        $this->db->order_by("time", "asc"); 
+        $this->db->having(array($class_code.'.date'=>$date,'users.type'=>STUDENT_TYPE));
         $query = $this->db->get();
         if($this->db->affected_rows()==0)
         {
@@ -186,7 +185,7 @@ class SecureUsers extends CI_Model
     
     function get_intime_ofa_student($class_code,$bio_id,$date_from,$date_to)
     {
-        $query = "select `date` as x, `time` as y from `".$class_code."` group by `bio_id`,`date` having `bio_id` = ".$bio_id." and `date` BETWEEN '".$date_from."' AND '".$date_to."' order by `date`, `time` ASC";
+        $query = "select `date` as x, `in_time` as y from `".$class_code."` group by `bio_id`,`date` having `bio_id` = ".$bio_id." and `date` BETWEEN '".$date_from."' AND '".$date_to."' order by `date` ASC";
         $result = $this->db->query($query);
         if($this->db->affected_rows()==0)
         {

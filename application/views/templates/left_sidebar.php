@@ -81,8 +81,8 @@
                                                         
                                                         <?php if($prv==PRV_ADMIN || $prv==PRV_HEAD_TEACHER || $prv==PRV_GFM_TEACHER || $prv==PRV_GEN_TEACHER):?>
                                                         <li>
-								<a href="<?php echo base_url('secure/monitor_intime');?>">
-									<i class="fa fa-clock-o fa-fw"></i> <span class="menu-text">Monitor In-Time</span>
+								<a href="<?php echo base_url('secure/monitor_inouttime');?>">
+									<i class="fa fa-clock-o fa-fw"></i> <span class="menu-text">Monitor In & Out-Time</span>
 								</a>					
 							</li>
                                                         <li>

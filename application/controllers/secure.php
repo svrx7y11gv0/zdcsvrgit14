@@ -445,7 +445,7 @@ class Secure extends CI_Controller {
         }
     }
     
-    public function monitor_intime()
+    public function monitor_inouttime()
     {
         $this->load->model('secureUsers');
         $data['classes'] = $this->secureUsers->get_classes();
@@ -456,17 +456,17 @@ class Secure extends CI_Controller {
                     $data['thisdate'] = date_create($this->input->post('thisdate'));
                     $data['thisdate'] = date_format($data['thisdate'],'Y-m-d');
                     $data['thisclasscode'] = $this->input->post('thisclasscode');
-                    $data['students_intime_details'] = $this->secureUsers->get_students_intime_details($this->input->post('thisclasscode'),$data['thisdate']);
+                    $data['students_inouttime_details'] = $this->secureUsers->get_students_inouttime_details($this->input->post('thisclasscode'),$data['thisdate']);
                     //var_dump($data);
                 }
                 else
                 {
                     $data['thisdate'] = date("Y-m-d");
                     $data['thisclasscode'] = $data['classes'][0]['class_code'];
-                    $data['students_intime_details'] = $this->secureUsers->get_students_intime_details($data['classes'][0]['class_code'],$data['thisdate']);
+                    $data['students_inouttime_details'] = $this->secureUsers->get_students_inouttime_details($data['classes'][0]['class_code'],$data['thisdate']);
                 }
             }
-        $this->load->view('monitor_intime',$data);
+        $this->load->view('monitor_inouttime',$data);
     }
     
     public function intime_stats()
