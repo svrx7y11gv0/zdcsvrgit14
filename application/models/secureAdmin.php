@@ -103,5 +103,23 @@ class SecureAdmin extends CI_Model
             return "all_good";
         }
     }
+    
+    function update_department($dept_id,$multi_classes,$multi_teachers)
+    {
+        $this->db->where(array('dept_id'=>$dept_id));
+        $this->db->delete('department_classes');
+        $this->db->where(array('dept_id'=>$dept_id));
+        $this->db->delete('department_teachers');
+        
+        for($i=0; $i<count($multi_classes) ; $i++)
+        {
+            $this->db->insert('department_classes',array('dept_id'=>$dept_id,'class_code'=>$multi_classes[$i]));
+        }
+        for($i=0; $i<count($multi_teachers) ; $i++)
+        {
+            $this->db->insert('department_teachers',array('dept_id'=>$dept_id,'bioid'=>$multi_teachers[$i]));
+        }
+        return "all_good";
+    }
 }
 ?>

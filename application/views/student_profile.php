@@ -5,9 +5,9 @@
 <!-- TYPEAHEAD CSS -->
 <link rel="stylesheet" type="text/css" href="<?php echo base_url('resources/js/typeahead/typeahead.css');?>">
                                                                         <div class="clearfix">
-										<h3 class="content-title pull-left">My Profile</h3>
+										<h3 class="content-title pull-left"><?php if(isset($student_details)) echo ucfirst($student_details->firstname)."'s Profile"; ?></h3>
 									</div>
-									<div class="description">User Profile, Skills, Activities and other Statistics</div>
+									<div class="description">Profile, Skills, Activities and other Statistics</div>
 								</div>
 							</div>
 						</div>
@@ -18,31 +18,30 @@
 								<!-- BOX -->
 								<div class="box border">
 									<div class="box-title">
-										<h4><i class="fa fa-user"></i><span class="hidden-inline-mobile">Hello, <?php echo ucfirst($this->session->userdata('firstname')); ?>!</span></h4>
+										<h4><i class="fa fa-user"></i><span class="hidden-inline-mobile"><?php if(isset($student_details)) echo ucfirst($student_details->firstname)."'s Profile"; ?></span></h4>
 									</div>
 									<div class="box-body">
 										<div class="tabbable header-tabs user-profile">
 											<ul class="nav nav-tabs">
                                                                                            <li><a href="#pro_help" data-toggle="tab"><i class="fa fa-question"></i> <span class="hidden-inline-mobile"> Help</span></a></li>
-											   <li <?php if(isset($mode) && $mode == "account") echo ' class="active" ';?> ><a href="#acc_edit" data-toggle="tab"><i class="fa fa-cogs"></i> <span class="hidden-inline-mobile"> Edit Account</span></a></li>
-											   <li <?php if($mode == null || $mode == "profile") echo ' class="active" ';?> ><a href="#pro_edit" data-toggle="tab"><i class="fa fa-edit"></i> <span class="hidden-inline-mobile"> Edit Profile</span></a></li>
-											   <li <?php if(isset($mode) && $mode == "overview") echo ' class="active" ';?> ><a href="#pro_overview" data-toggle="tab"><i class="fa fa-dot-circle-o"></i> <span class="hidden-inline-mobile"> Overview</span></a></li>
+											   <li><a href="#pro_edit" data-toggle="tab"><i class="fa fa-edit"></i> <span class="hidden-inline-mobile"> Edit Profile</span></a></li>
+											   <li class="active"><a href="#pro_overview" data-toggle="tab"><i class="fa fa-dot-circle-o"></i> <span class="hidden-inline-mobile"> Overview</span></a></li>
 											</ul>
 											<div class="tab-content">
 											   <!-- OVERVIEW -->
-											   <div class="tab-pane fade <?php if(isset($mode) && $mode == "overview") echo ' in active ';?>" id="pro_overview">
+											   <div class="tab-pane fade in active" id="pro_overview">
 												  <div class="row">
 													<!-- PROFILE PIC -->
 													<div class="col-md-3">
 														<div class="list-group">
 														  <li class="list-group-item zero-padding">
-															<img style="margin: 0 auto;" alt="" class="img-responsive" src="<?php if($this->session->userdata('photourl')=="") echo base_url('uploads/profiles/default.png'); else echo base_url('uploads/profiles/').$this->session->userdata('photourl'); ?>">
+															<img style="margin: 0 auto;" alt="" class="img-responsive" src="<?php if(isset($student_details)) if($student_details->photourl=="") echo base_url('uploads/profiles/default.png'); else echo base_url('uploads/profiles/').$student_details->photourl; ?>">
 														  </li>
 														  <div class="list-group-item profile-details">
-																<h4><?php echo ucfirst($this->session->userdata('firstname'))." ".ucfirst($this->session->userdata('lastname'));?></h4>
+																<h4><?php if(isset($student_details)) echo ucfirst($student_details->firstname)." ".ucfirst($student_details->lastname);?></h4>
 																<p><i class="fa fa-circle text-green"></i> Online</p>
-																<p><?php if(isset($user_details)) echo $user_details->about_me; ?></p>
-																<p><?php if(isset($user_details) && $user_details->email!=""):?><a title="<?php echo $user_details->email;?>" href="mailto:<?php echo $user_details->email;?>"><?php if(strlen($user_details->email)>19) echo substr($user_details->email,0,19).'...'; else echo $user_details->email;?></a><?php endif; ?></p>
+																<p><?php if(isset($student_details)) echo $student_details->about_me; ?></p>
+																<p><?php if(isset($student_details) && $student_details->email!=""):?><a title="<?php echo $student_details->email;?>" href="mailto:<?php echo $student_details->email;?>"><?php if(strlen($student_details->email)>19) echo substr($student_details->email,0,19).'...'; else echo $student_details->email;?></a><?php endif; ?></p>
 																<ul class="list-inline">
 																   <li><i class="fa fa-facebook fa-2x"></i></li>
 																   <li><i class="fa fa-twitter fa-2x"></i></li>
@@ -289,35 +288,41 @@
 											   <!-- /OVERVIEW -->
 											   
 											   <!-- EDIT PROFILE -->
-											   <div class="tab-pane fade <?php if($mode == null || $mode == "profile") echo ' in active" ';?> " id="pro_edit">
-												  <form class="form-horizontal" id="user_profile_form" method="post" action="<?php echo base_url('secure/update_profile');?>" enctype="multipart/form-data">
+											   <div class="tab-pane fade" id="pro_edit">
+												  <form class="form-horizontal" id="user_profile_form" method="post" action="<?php echo base_url('secure/update_student_profile');?>" enctype="multipart/form-data">
 													<div class="row">
 														 <div class="col-md-12">
 															
                                                                                                                                 <div class="col-md-12">
+                                                                                                                                       <div class="form-group hide">
+                                                                                                                                          <label class="col-md-2 control-label">Student User Id</label> 
+                                                                                                                                          <div class="col-md-10">
+                                                                                                                                              <input type="text" name="student_id" class="form-control" value="<?php if(isset($student_details)) echo $student_details->id; ?>" />
+                                                                                                                                          </div>
+                                                                                                                                       </div>
                                                                                                                                        <h4>Basic Information</h4>
                                                                                                                                        <div class="form-group">
                                                                                                                                           <label class="col-md-2 control-label">First Name *</label> 
                                                                                                                                           <div class="col-md-10">
-                                                                                                                                              <input type="text" name="firstName" class="form-control" placeholder="Enter your first name" value="<?php if(isset($user_details)) echo ucfirst($user_details->firstname); ?>" <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> />
+                                                                                                                                              <input type="text" name="firstName" class="form-control" placeholder="Enter your first name" value="<?php if(isset($student_details)) echo ucfirst($student_details->firstname); ?>" <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> />
                                                                                                                                               <span id="firstName_error" class="help-block"></span>
                                                                                                                                           </div>
                                                                                                                                        </div>
                                                                                                                                        <div class="form-group">
                                                                                                                                           <label class="col-md-2 control-label">Middle Name</label> 
-                                                                                                                                          <div class="col-md-10"><input type="text" name="middleName" class="form-control" placeholder="Enter your middle name" value="<?php if(isset($user_details)) echo ucfirst($user_details->middlename); ?>" <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> /></div>
+                                                                                                                                          <div class="col-md-10"><input type="text" name="middleName" class="form-control" placeholder="Enter your middle name" value="<?php if(isset($student_details)) echo ucfirst($student_details->middlename); ?>" <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> /></div>
                                                                                                                                        </div>
                                                                                                                                        <div class="form-group">
                                                                                                                                           <label class="col-md-2 control-label">Last Name *</label> 
                                                                                                                                           <div class="col-md-10">
-                                                                                                                                              <input type="text" name="lastName" class="form-control" placeholder="Enter your last name" value="<?php if(isset($user_details)) echo ucfirst($user_details->lastname); ?>" <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> />
+                                                                                                                                              <input type="text" name="lastName" class="form-control" placeholder="Enter your last name" value="<?php if(isset($student_details)) echo ucfirst($student_details->lastname); ?>" <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> />
                                                                                                                                               <span id="lastName_error" class="help-block"></span>
                                                                                                                                           </div>
                                                                                                                                        </div>
                                                                                                                                        <div class="form-group">
                                                                                                                                           <label class="col-md-2 control-label">Birthday</label> 
                                                                                                                                           <div class="col-md-10">
-                                                                                                                                              <input  class="form-control" type="text" name="dob" data-mask="9999-99-99" size="10" value="<?php if(isset($user_details)) echo $user_details->dob; ?>" <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> />
+                                                                                                                                              <input  class="form-control" type="text" name="dob" data-mask="9999-99-99" size="10" value="<?php if(isset($student_details)) echo $student_details->dob; ?>" <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> />
                                                                                                                                               <span id="dob_error" class="help-block">yyyy-mm-dd</span>
                                                                                                                                           </div>
                                                                                                                                        </div>
@@ -325,11 +330,11 @@
                                                                                                                                           <label class="col-md-2 control-label">Gender</label> 
                                                                                                                                           <div class="col-md-4">
                                                                                                                                                         <label class="radio">
-                                                                                                                                                               <input type="radio" name="gender" value="M" data-title="Male" class="uniform"  <?php if(isset($user_details) && $user_details->gender == 'M') echo " checked "; ?>  <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> />
+                                                                                                                                                               <input type="radio" name="gender" value="M" data-title="Male" class="uniform"  <?php if(isset($student_details) && $student_details->gender == 'M') echo " checked "; ?>  <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> />
                                                                                                                                                         Male
                                                                                                                                                         </label>
                                                                                                                                                         <label class="radio">
-                                                                                                                                                               <input type="radio" name="gender" value="F" data-title="Female" class="uniform"  <?php if(isset($user_details) && $user_details->gender == 'F') echo " checked "; ?>  <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> />
+                                                                                                                                                               <input type="radio" name="gender" value="F" data-title="Female" class="uniform"  <?php if(isset($student_details) && $student_details->gender == 'F') echo " checked "; ?>  <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> />
                                                                                                                                                         Female
                                                                                                                                                         </label>														  
                                                                                                                                           </div>
@@ -337,56 +342,56 @@
                                                                                                                                        <h4>Contact Information</h4>
                                                                                                                                        <div class="form-group">
                                                                                                                                           <label class="col-md-2 control-label">Email</label> 
-                                                                                                                                          <div class="col-md-10"><input type="text" name="email" class="form-control" placeholder="Enter your email address" value="<?php if(isset($user_details)) echo $user_details->email; ?>" /><span id="email_error" class="help-block"></span></div>
+                                                                                                                                          <div class="col-md-10"><input type="text" name="email" class="form-control" placeholder="Enter your email address" value="<?php if(isset($student_details)) echo $student_details->email; ?>" /><span id="email_error" class="help-block"></span></div>
                                                                                                                                        </div>
                                                                                                                                        <div class="form-group">
                                                                                                                                           <label class="col-md-2 control-label">Phone</label> 
-                                                                                                                                          <div class="col-md-10"><input type="text" name="phone" class="form-control" placeholder="Enter your contact numbers" value="<?php if(isset($user_details)) echo $user_details->contact_nos; ?>"  <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> /><span class="help-block">Write multiple numbers separated by comma.</span></div>
+                                                                                                                                          <div class="col-md-10"><input type="text" name="phone" class="form-control" placeholder="Enter your contact numbers" value="<?php if(isset($student_details)) echo $student_details->contact_nos; ?>"  <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> /><span class="help-block">Write multiple numbers separated by comma.</span></div>
                                                                                                                                        </div>
 
                                                                                                                                        <div class="form-group">
                                                                                                                                           <label class="col-md-2 control-label">Address</label> 
-                                                                                                                                          <div class="col-md-10"><textarea name="address" class="autosize form-control"  <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> ><?php if(isset($user_details)) echo $user_details->address; ?></textarea></div>
+                                                                                                                                          <div class="col-md-10"><textarea name="address" class="autosize form-control"  <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> ><?php if(isset($student_details)) echo $student_details->address; ?></textarea></div>
                                                                                                                                        </div>
                                                                                                                                        
                                                                                                                                        <h4>Personal Information</h4>
                                                                                                                                        
                                                                                                                                        <div class="form-group">
                                                                                                                                           <label class="col-md-2 control-label">Blood Group</label> 
-                                                                                                                                          <div class="col-md-10"><input type="text" name="bloodGroup" class="form-control" id="bloodgroup"  placeholder="Enter your blood group" value="<?php if(isset($user_details)) echo $user_details->blood_group; ?>"  <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> /> <span class="help-block">Your blood group is required to be known in case of emergency.</span></div>
+                                                                                                                                          <div class="col-md-10"><input type="text" name="bloodGroup" class="form-control" id="bloodgroup"  placeholder="Enter your blood group" value="<?php if(isset($student_details)) echo $student_details->blood_group; ?>"  <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> /> <span class="help-block">Your blood group is required to be known in case of emergency.</span></div>
                                                                                                                                        </div>
                                                                                                                                        
                                                                                                                                        <div class="form-group">
                                                                                                                                           <label class="col-md-2 control-label">Languages</label> 
-                                                                                                                                          <div class="col-md-10"><input type="text" name="languages" class="form-control" placeholder="Enter languages you know" value="<?php if(isset($user_details)) echo $user_details->languages; ?>"><span class="help-block">Write multiple languages separated by comma.</span></div>
+                                                                                                                                          <div class="col-md-10"><input type="text" name="languages" class="form-control" placeholder="Enter languages you know" value="<?php if(isset($student_details)) echo $student_details->languages; ?>"><span class="help-block">Write multiple languages separated by comma.</span></div>
                                                                                                                                        </div>
                                                                                                                                        
                                                                                                                                        <div class="form-group">
                                                                                                                                           <label class="col-md-2 control-label">Nationality</label> 
-                                                                                                                                          <div class="col-md-10"><input type="text" name="nationality" class="form-control" id="nationality"  placeholder="Enter your nationality" value="<?php if(isset($user_details)) echo $user_details->nationality; ?>" <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> /></div>
+                                                                                                                                          <div class="col-md-10"><input type="text" name="nationality" class="form-control" id="nationality"  placeholder="Enter your nationality" value="<?php if(isset($student_details)) echo $student_details->nationality; ?>" <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> /></div>
                                                                                                                                        </div>
                                                                                                                                        
                                                                                                                                        <div class="form-group">
                                                                                                                                           <label class="col-md-2 control-label">Category</label> 
                                                                                                                                           <div class="col-md-10">
-                                                                                                                                              <!-- <input type="text" name="category" class="form-control" placeholder="Enter your category" value="< ?php if(isset($user_details)) echo $user_details->category; ?>" < ?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> /> -->
+                                                                                                                                              <!-- <input type="text" name="category" class="form-control" placeholder="Enter your category" value="< ?php if(isset($student_details)) echo $student_details->category; ?>" < ?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> /> -->
                                                                                                                                               <select name="category" class="form-control" <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?>>
                                                                                                                                                   <option value="">Select your category</option>
-                                                                                                                                                  <option value="open" <?php if(isset($user_details)) if($user_details->category=="open") echo " selected "; ?>>OPEN / GENERAL</option>
-                                                                                                                                                  <option value="obc" <?php if(isset($user_details)) if($user_details->category=="obc") echo " selected "; ?>>OBC</option>
-                                                                                                                                                  <option value="others" <?php if(isset($user_details)) if($user_details->category=="others") echo " selected "; ?>>SC/ST/NT/SBC/VJ/TFWS</option>
+                                                                                                                                                  <option value="open" <?php if(isset($student_details)) if($student_details->category=="open") echo " selected "; ?>>OPEN / GENERAL</option>
+                                                                                                                                                  <option value="obc" <?php if(isset($student_details)) if($student_details->category=="obc") echo " selected "; ?>>OBC</option>
+                                                                                                                                                  <option value="others" <?php if(isset($student_details)) if($student_details->category=="others") echo " selected "; ?>>SC/ST/NT/SBC/VJ/TFWS</option>
                                                                                                                                               </select>
                                                                                                                                           </div>
                                                                                                                                        </div>
                                                                                                                                        
                                                                                                                                        <div class="form-group">
                                                                                                                                           <label class="col-md-2 control-label">Religion</label> 
-                                                                                                                                          <div class="col-md-10"><input type="text" name="religion" class="form-control" placeholder="Enter your religion" value="<?php if(isset($user_details)) echo $user_details->religion; ?>" <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> /></div>
+                                                                                                                                          <div class="col-md-10"><input type="text" name="religion" class="form-control" placeholder="Enter your religion" value="<?php if(isset($student_details)) echo $student_details->religion; ?>" <?php if($this->session->userdata('privilege')==PRV_STUDENT) echo " disabled "; ?> /></div>
                                                                                                                                        </div>
                                                                                                                                        
                                                                                                                                        <div class="form-group">
                                                                                                                                           <label class="col-md-2 control-label">Something About You</label> 
-                                                                                                                                          <div class="col-md-10"><textarea name="aboutMe" class="countable autosize form-control" data-limit="250"><?php if(isset($user_details)) echo $user_details->about_me; ?></textarea><p class="help-block">You have <span id="counter"></span> characters left.</p></div>
+                                                                                                                                          <div class="col-md-10"><textarea name="aboutMe" class="countable autosize form-control" data-limit="250"><?php if(isset($student_details)) echo $student_details->about_me; ?></textarea><p class="help-block">You have <span id="counter"></span> characters left.</p></div>
                                                                                                                                        </div>
                                                                                                                                        
                                                                                                                                        <div class="form-group">
@@ -407,86 +412,6 @@
 											   </div>
 											   <!-- /EDIT PROFILE -->
 											   
-											   <!-- EDIT ACCOUNT -->
-											   <div class="tab-pane fade <?php if(isset($mode) && $mode == "account") echo ' in active ';?>" id="acc_edit">
-												  <form class="form-horizontal" id="user_account_form" method="post" action="<?php echo base_url('secure/update_account');?>">
-													<div class="row">
-														 <div class="col-md-12">
-															
-                                                                                                                                <div class="col-md-12">
-                                                                                                                                       <div class="panel panel-default">
-                                                                                                                                            <div class="panel-heading">
-                                                                                                                                                    <h3 class="panel-title">Important Information</h3>
-                                                                                                                                            </div>
-                                                                                                                                            <div class="panel-body">
-                                                                                                                                                    <ul>
-                                                                                                                                                            <li>Fields marked with <strong>*</strong> are compulsory for any update.</li>
-                                                                                                                                                            <li>By changing your username, you will need the new username to login next time.</li>
-                                                                                                                                                            <li>By changing your password, you will need the new password to login next time.</li>
-                                                                                                                                                            <li>After disabling multi-language support, you won't be able to see "Select Language" at the left side.</li>
-                                                                                                                                                            <li>Multi-language support can be enabled again if you wish to use the feature.</li>
-                                                                                                                                                    </ul>
-                                                                                                                                            </div>
-                                                                                                                                       </div>
-                                                                                                                                       <h4>Account Information</h4>
-                                                                                                                                       <div class="form-group">
-                                                                                                                                          <label class="col-md-3 control-label">Current Username *</label> 
-                                                                                                                                          <div class="col-md-9">
-                                                                                                                                              <input type="text" name="curr_username" class="form-control" value="<?php echo $this->session->userdata('username'); ?>">
-                                                                                                                                              <span id="curr_username_error" class="help-block"></span>
-                                                                                                                                          </div>
-                                                                                                                                       </div>
-                                                                                                                                       <div class="form-group">
-                                                                                                                                          <label class="col-md-3 control-label">Current Password *</label> 
-                                                                                                                                          <div class="col-md-9">
-                                                                                                                                              <input type="password" name="curr_password" class="form-control" >
-                                                                                                                                              <span id="curr_pass_error" class="help-block"></span>
-                                                                                                                                          </div>
-                                                                                                                                       </div>
-                                                                                                                                       <div class="form-group">
-                                                                                                                                          <label class="col-md-3 control-label">New Username</label> 
-                                                                                                                                          <div class="col-md-9">
-                                                                                                                                              <input type="text" name="new_username" class="form-control" >
-                                                                                                                                              <span id="new_username_error" class="help-block">Keep this field blank for not changing the username.</span>
-                                                                                                                                          </div>
-                                                                                                                                       </div>
-                                                                                                                                       <div class="form-group">
-                                                                                                                                          <label class="col-md-3 control-label">New Password</label> 
-                                                                                                                                          <div class="col-md-9">
-                                                                                                                                              <input type="password" name="new_password" class="form-control" >
-                                                                                                                                              <span id="new_pass_error" class="help-block">Keep this field blank for not changing the password.</span>
-                                                                                                                                          </div>
-                                                                                                                                       </div>
-                                                                                                                                       <div class="form-group hide">
-                                                                                                                                          <label class="col-md-3 control-label">Confirm New Password</label> 
-                                                                                                                                          <div class="col-md-9">
-                                                                                                                                              <input type="password" name="con_new_password" class="form-control" >
-                                                                                                                                              <span id="con_new_pass_error" class="help-block"></span>
-                                                                                                                                          </div>
-                                                                                                                                       </div>
-                                                                                                                                       <div class="form-group">
-                                                                                                                                          <label class="col-md-3 control-label">Multi-Language Support</label> 
-                                                                                                                                          <div class="col-md-5">
-                                                                                                                                                        <label class="radio">
-                                                                                                                                                               <input type="radio" name="multilanguage" value="T" data-title="Enable" class="uniform"  <?php if(isset($user_details) && $user_details->multilanguage == 'T') echo " checked "; ?> />
-                                                                                                                                                        Enable
-                                                                                                                                                        </label>
-                                                                                                                                                        <label class="radio">
-                                                                                                                                                               <input type="radio" name="multilanguage" value="F" data-title="Disable" class="uniform"  <?php if(isset($user_details) && $user_details->multilanguage == 'F') echo " checked "; ?> />
-                                                                                                                                                        Disable
-                                                                                                                                                        </label>
-                                                                                                                                                        <span class="help-block">Press F5 after update to observe the change in multi-language support.</span>
-                                                                                                                                          </div>
-                                                                                                                                       </div>
-                                                                                                                                       
-                                                                                                                                </div>
-                                                                                                                 </div>
-                                                                                                        </div>
-                                                                                                  </form>
-                                                                                               <div class="form-actions clearfix"> <input type="submit" value="Update Account" id="btn_update_account" class="btn btn-primary pull-right"> </div>
-											   </div>
-											   <!-- /EDIT ACCOUNT -->
-                                                                                           
                                                                                            <!-- HELP -->
                                                                                            <div class="tab-pane fade" id="pro_help">
 												  <!-- FAQ -->
@@ -660,7 +585,7 @@
 																		 <div class="panel-heading">
 																			<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse2_1">1. Screen resolution can be adjusted very easily. </a> </h3>
 																		 </div>
-																		 <div id="collapse2_1" class="panel-collapse collapse in">
+																		 <div id="collapse2_1" class="panel-collapse">
 																			<div class="panel-body">
                                                                                                                                                             If there is any problem in viewability of icons, layout, tables, graphs or images, please adjust your browser resolution in following ways:
                                                                                                                                                             <ol>
@@ -672,11 +597,14 @@
 																	  </div>
 																	  <div class="panel panel-default">
 																		 <div class="panel-heading">
-																			<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse2_2">2. Slow Internet? </a> </h3>
+																			<h3 class="panel-title"> <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse2_2">2. How can I control whether my public community posts appear on my profile page? </a> </h3>
 																		 </div>
-																		 <div id="collapse2_2" class="panel-collapse collapse in">
-																			<div class="panel-body"> If you are facing problem in loading time of edbeans pages, then disabling multi-language support may help to improve the loading time because multi-language support requires high speed Internet connection.
-                                                                                                                                                            In order to disable multi-language support go to Accounts Settings / Edit Account and select disable multi-language support.
+																		 <div id="collapse2_2" class="panel-collapse collapse">
+																			<div class="panel-body"> While in communities:
+																				Place your cursor in the top left corner for the main menu.
+																				Select  Settings.
+																				Scroll to 'Profile'.
+																				Check or uncheck the box next to Show your Google+ communities posts on your Google+ profile
 																			 </div>
 																		 </div>
 																	  </div>
@@ -1100,101 +1028,6 @@
                            {
                                App.unblockUI(el);
                            }
-                        });
-                        
-                        /* Update Account Button Click Event */
-                        jQuery("#btn_update_account").click(function(){
-                            var el = jQuery(this).parents(".box");
-                            App.blockUI(el);
-                            var error_flag = 0;
-                            jQuery('input[name=curr_username]').parent().parent().removeClass("has-error");
-                            jQuery('#curr_username_error').text('');
-                            jQuery('input[name=curr_password]').parent().parent().removeClass("has-error");
-                            jQuery('#curr_pass_error').text('');
-                            jQuery('input[name=new_password]').parent().parent().removeClass("has-error");
-                            jQuery('input[name=con_new_password]').parent().parent().removeClass("has-error");
-                            jQuery('#con_new_pass_error').text('');
-                            
-                            if(jQuery.trim(jQuery('input[name=curr_username]').val())=="")
-                            {
-                                error_flag = 1;
-                                jQuery('input[name=curr_username]').parent().parent().addClass("has-error");
-                                jQuery('#curr_username_error').text('This field is compulsory.');
-                            }
-                            if(jQuery.trim(jQuery('input[name=curr_password]').val())=="")
-                            {
-                                error_flag = 1;
-                                jQuery('input[name=curr_password]').parent().parent().addClass("has-error");
-                                jQuery('#curr_pass_error').text('This field is compulsory.');
-                            }
-                            if(jQuery.trim(jQuery('input[name=new_password]').val())!="")
-                            {
-                                if(jQuery('input[name=new_password]').val() != jQuery('input[name=con_new_password]').val())
-                                {
-                                    error_flag = 1;
-                                    jQuery('input[name=new_password]').parent().parent().addClass("has-error");
-                                    jQuery('input[name=con_new_password]').parent().parent().addClass("has-error");
-                                    jQuery('#con_new_pass_error').text('Passwords do not match.');
-                                }
-                            }
-                            if(error_flag==0)
-                            {
-                                var multilanguage = jQuery('input[name=multilanguage]:checked', '#user_account_form').val();
-                                var dataString = 'currUsername='+jQuery('input[name=curr_username]').val()+'&currPassword='+jQuery('input[name=curr_password]').val()+'&multilanguage='+multilanguage;
-                                if(jQuery.trim(jQuery('input[name=new_username]').val())!="")
-                                    dataString += '&newUsername='+jQuery('input[name=new_username]').val();
-                                if(jQuery.trim(jQuery('input[name=new_password]').val())!="")
-                                    dataString += '&newPassword='+jQuery('input[name=new_password]').val();
-                             
-                                var url = "<?php echo base_url('secure/update_account');?>";
-                                jQuery.ajax({
-                                     type: "POST",
-                                     url: url,
-                                     data: dataString, // serializes the form's elements.
-                                     success: function(data)
-                                     {
-                                         var mytheme = "flat";
-                                         var mypos = "messenger-on-top messenger-on-right";
-                                         //Set theme
-                                         Messenger.options = {
-                                                 extraClasses: 'messenger-fixed '+mypos,
-                                                 theme: mytheme
-                                         }
-                                         if(data=="all_good")
-                                         {
-                                             //Call
-                                             Messenger().post({
-                                                     message:"Information Saved!",
-                                                     showCloseButton: true
-                                             });
-                                         }
-                                         else
-                                         {
-                                             //Call
-                                             Messenger().post({
-                                                     message:data,
-                                                     type: "error",
-                                                     showCloseButton: true
-                                             });
-                                         }
-                                         App.unblockUI(el);
-                                     }
-                                });
-                            }
-                            else
-                                App.unblockUI(el);
-                        });
-                        
-                        jQuery("input[name=new_password]").on('input',function(e){
-                            if(jQuery.trim(jQuery('input[name=new_password]').val())!="" && jQuery('input[name=con_new_password]').parent().parent().hasClass("hide"))
-                            {
-                                jQuery('input[name=con_new_password]').parent().parent().removeClass("hide");
-                            }
-                            else if(jQuery.trim(jQuery('input[name=new_password]').val())=="")
-                            {
-                                jQuery('input[name=con_new_password]').val('');
-                                jQuery('input[name=con_new_password]').parent().parent().addClass("hide");
-                            }    
                         });
                         
                         /* Toggling of left menu in help tab */

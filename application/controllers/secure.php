@@ -169,6 +169,20 @@ class Secure extends CI_Controller {
     
     public function update_profile()
     {
+        $user_id = $this->session->userdata('id');
+        $this->save_profile($user_id,false);
+        redirect('secure/user_manager/profile');
+    }
+    
+    public function update_student_profile()
+    {
+        $user_id = $this->input->post('student_id');
+        $this->save_profile($user_id,true);
+        redirect('secure/manage_students_profile');
+    }
+    
+    public function save_profile($user_id,$is_this_student)
+    {
         $firstName = $this->input->post('firstName');
         $lastName = $this->input->post('lastName');
         $middleName = $this->input->post('middleName');
@@ -310,21 +324,22 @@ class Secure extends CI_Controller {
         if($photo=="")
             $this->session->set_flashdata('upload_success',"Information Saved!");
         $this->load->model('secureUsers');
-        $user_id = $this->session->userdata('id');
-        $this->secureUsers->set_user_details($user_id,$firstName,$lastName,$middleName,$dob,$gender,$email,$phone,$address,$bloodGroup,$languages,$nationality,$category,$religion,$aboutMe,$photo);
-        redirect('secure/user_manager/profile');
+        
+        $this->secureUsers->set_user_details($user_id,$firstName,$lastName,$middleName,$dob,$gender,$email,$phone,$address,$bloodGroup,$languages,$nationality,$category,$religion,$aboutMe,$photo,$is_this_student);
     }
     
     public function institute_setup()
     {
         if($this->is_admin())
         {
+            $this->session->set_userdata('selected_menu','institute_setup');
             $this->load->model('secureAdmin');
             $data['institute_details'] = $this->secureAdmin->fetch_institute_details();
             $this->load->view('institute_setup',$data);
         }
         else
         {
+            $this->session->set_userdata('selected_menu','');
             redirect('secure');
         }
     }
@@ -379,6 +394,7 @@ class Secure extends CI_Controller {
     {
         if($this->is_PRV_admin())
         {
+            $this->session->set_userdata('selected_menu','view_departments');
             $this->load->model('secureAdmin');
             $data['departments'] = $this->secureAdmin->get_departments();
             if(isset($data['departments']))
@@ -401,6 +417,7 @@ class Secure extends CI_Controller {
         }
         else
         {
+            $this->session->set_userdata('selected_menu','');
             redirect('secure');
         }
     }
@@ -409,6 +426,7 @@ class Secure extends CI_Controller {
     {
         if($this->is_PRV_admin())
         {
+            $this->session->set_userdata('selected_menu','create_department');
             $this->load->model('secureUsers');
             $data['classes'] = $this->secureUsers->get_classes();
             $data['teachers'] = $this->secureUsers->get_teachers();
@@ -416,6 +434,7 @@ class Secure extends CI_Controller {
         }
         else
         {
+            $this->session->set_userdata('selected_menu','');
             redirect('secure');
         }
     }
@@ -424,6 +443,7 @@ class Secure extends CI_Controller {
     {
         if($this->is_PRV_admin())
         {
+            $this->session->set_userdata('selected_menu','create_department');
             $deptname = $this->input->post('deptname');
             $multi_classes = $this->input->post('multi_classes');
             $multi_teachers = $this->input->post('multi_teachers');
@@ -441,12 +461,65 @@ class Secure extends CI_Controller {
         }
         else
         {
+            $this->session->set_userdata('selected_menu','');
             redirect('secure');
         }
     }
-    
+    public function update_department()
+    {
+        if($this->is_PRV_admin())
+        {
+            $this->session->set_userdata('selected_menu','update_department');
+             $this->load->model('secureAdmin');
+             $this->load->model('secureUsers');
+            $data['departments'] = $this->secureAdmin->get_departments();
+            if(isset($data['departments']))
+            {
+                    $data['thisdeptid'] = $data['departments'][0]['id'];
+                    $data['classes'] = $this->secureUsers->get_classes();
+                    $data['teachers'] = $this->secureUsers->get_teachers();
+                    $data['department_classes'] = $this->secureAdmin->get_department_classes($data['departments'][0]['id']);
+                    $data['department_teachers'] = $this->secureAdmin->get_department_teachers($data['departments'][0]['id']);
+            }
+            $this->load->view('update_department',$data);
+        }
+        else
+        {
+            $this->session->set_userdata('selected_menu','');
+            redirect('secure');
+        }
+    }
+
+    public function edit_department()
+    {
+        if($this->is_PRV_admin())
+        {
+            $this->session->set_userdata('selected_menu','update_department');
+            $thisdeptid = $this->input->post('thisdeptid');
+            $multi_classes = $this->input->post('multi_classes');
+            $multi_teachers = $this->input->post('multi_teachers');
+            $this->load->model('secureAdmin');
+            $data = $this->secureAdmin->update_department($thisdeptid,$multi_classes,$multi_teachers);
+            if($data=="all_good")
+            {
+                $this->session->set_flashdata('success_msg','Department Successfully Updated');
+            }
+            else
+            {
+                $this->session->set_flashdata('error_msg',$data);
+            }
+            redirect('secure/update_department');
+        }
+        else
+        {
+            $this->session->set_userdata('selected_menu','');
+            redirect('secure');
+        }
+    }
+
     public function monitor_inouttime()
     {
+        $this->session->set_userdata('selected_menu','monitor_inouttime');
         $this->load->model('secureUsers');
         $data['classes'] = $this->secureUsers->get_classes();
         if(isset($data['classes']))
@@ -482,6 +555,7 @@ class Secure extends CI_Controller {
     
     public function intime_stats()
     {
+        $this->session->set_userdata('selected_menu','intime_stats');
         $this->load->model('secureUsers');
         $data['classes'] = $this->secureUsers->get_classes();
         if(isset($data['classes']))
@@ -500,6 +574,7 @@ class Secure extends CI_Controller {
     
     public function outtime_stats()
     {
+        $this->session->set_userdata('selected_menu','outtime_stats');
         $this->load->model('secureUsers');
         $data['classes'] = $this->secureUsers->get_classes();
         if(isset($data['classes']))
@@ -516,6 +591,17 @@ class Secure extends CI_Controller {
         echo json_encode($this->secureUsers->get_outtime_ofa_student($this->input->post('class_code'),$this->input->post('bio_id'),$this->input->post('date_from'),$this->input->post('date_to')));
     }
     
-    
+    public function manage_students_profile()
+    {
+        $this->session->set_userdata('selected_menu','my_childs_profile');
+        if($this->is_guardian())
+        {
+            $student_bioid = $this->session->userdata('bioid');
+        }
+        $this->load->model('secureUsers');
+        $data['student_details'] = $this->secureUsers->get_student_details($student_bioid);
+        $this->load->view('student_profile',$data);
+    }
+            
     
 }

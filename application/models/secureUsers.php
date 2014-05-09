@@ -28,7 +28,20 @@ class SecureUsers extends CI_Model
         else
             return null;
     }
-    function set_user_details($user_id,$firstName,$lastName,$middleName,$dob,$gender,$email,$phone,$address,$bloodGroup,$languages,$nationality,$category,$religion,$aboutMe,$photo)
+    function get_student_details($student_bioid)
+    {
+        $this->db->select('users.id,gender,admission_no,roll_no,dob,address,blood_group,languages,nationality,category,religion,about_me,firstname,middlename,lastname,class_code,type,privilege,contact_nos,email,bioid,photourl');
+        $this->db->from('users');
+        $this->db->join('profiles', 'users.id = profiles.user_id','left');
+        $this->db->where(array('users.bioid'=>$student_bioid,'type'=>STUDENT_TYPE));
+        $query = $this->db->get();
+        $row = $query->row();
+        if($this->db->affected_rows()==1)
+            return $row;
+        else
+            return null;
+    }
+    function set_user_details($user_id,$firstName,$lastName,$middleName,$dob,$gender,$email,$phone,$address,$bloodGroup,$languages,$nationality,$category,$religion,$aboutMe,$photo,$is_this_student)
     {
         $p = $this->session->userdata('privilege');
         if($p == PRV_STUDENT)
@@ -72,13 +85,16 @@ class SecureUsers extends CI_Model
             if($photo!="")
             {
                 $data['photourl'] = $photo;
-                $this->session->set_userdata('photourl',$photo);
+                if(!$is_this_student)
+                    $this->session->set_userdata('photourl',$photo);
             }
             $this->db->where('id',$user_id);
             $this->db->update('users',$data);
-            $this->session->set_userdata('firstname',$firstName);
-            $this->session->set_userdata('lastname',$lastName);
-            
+            if(!$is_this_student)
+            {
+                $this->session->set_userdata('firstname',$firstName);
+                $this->session->set_userdata('lastname',$lastName);
+            }
             $this->db->get_where('profiles',array('user_id'=>$user_id));
             $data = array(
                'user_id' => $user_id, 
