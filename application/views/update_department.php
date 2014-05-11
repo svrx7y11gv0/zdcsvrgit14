@@ -215,7 +215,63 @@
                 <?php endif; ?>
                 
                 jQuery( "#select_department" ).change(function() {
-                    
+                    var el = jQuery(this).parents(".box");
+                    App.blockUI(el);
+                    var dataString = "deptid="+jQuery("#select_department").val();
+                    var url = "<?php echo base_url('secure/get_dept_classes');?>";
+                           jQuery.ajax({
+                                type: "POST",
+                                url: url,
+                                data: dataString, 
+                                dataType: "json",
+                                success: function(data)
+                                {
+                                    jQuery('select#multi_classes option').removeAttr("selected");
+                                    if(data)
+                                    {
+                                        for(var i = 0; i < jQuery('select#multi_classes option').length; i++)
+                                        {
+                                            for(var j = 0; j < data.length; j++)
+                                            {
+                                               var obj = data[j];
+                                               if(jQuery('select#multi_classes option').eq(i).val()==obj.class_code)
+                                               {
+                                                   jQuery('select#multi_classes option').eq(i).attr("selected","selected");
+                                               }
+                                            }
+                                        }
+                                    }
+                                    jQuery("#multi_classes").trigger("chosen:updated");
+                                    App.unblockUI(el);
+                                }
+                           });
+                     var url = "<?php echo base_url('secure/get_dept_teachers');?>";
+                           jQuery.ajax({
+                                type: "POST",
+                                url: url,
+                                data: dataString, 
+                                dataType: "json",
+                                success: function(data)
+                                {
+                                    jQuery('select#multi_teachers option').removeAttr("selected");
+                                    if(data)
+                                    {
+                                        for(var i = 0; i < jQuery('select#multi_teachers option').length; i++)
+                                        {
+                                            for(var j = 0; j < data.length; j++)
+                                            {
+                                               var obj = data[j];
+                                               if(jQuery('select#multi_teachers option').eq(i).val()==obj.bioid)
+                                               {
+                                                   jQuery('select#multi_teachers option').eq(i).attr("selected","selected");
+                                               }
+                                            }
+                                        }
+                                    }
+                                    jQuery("#multi_teachers").trigger("chosen:updated");
+                                    App.unblockUI(el);
+                                }
+                           });
                 });
                 jQuery("#btn_update_dept").click(function(){
                     var el = jQuery(this).parents(".box");

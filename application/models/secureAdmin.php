@@ -51,12 +51,53 @@ class SecureAdmin extends CI_Model
             return $query->result_array();
     }
     
+    public function get_selective_classes($dept_id)
+    {
+        if($dept_id=="others")
+        {
+            $this->db->select('class_code, class AS classname, section',FALSE);
+            $this->db->from('classes');
+            $this->db->where('`class_code` NOT IN (Select distinct(`class_code`) from department_classes)', NULL, FALSE);
+            $query = $this->db->get();
+        }
+        else
+        {
+            $this->db->select('classes.class_code,class AS classname,section',FALSE);
+            $this->db->from('classes');
+            $this->db->join('department_classes', 'classes.class_code = department_classes.class_code');
+            $this->db->where(array('department_classes.dept_id'=>$dept_id));
+            $query = $this->db->get();
+        }
+        
+        if($this->db->affected_rows()==0)
+        {
+            return null;
+        }
+        else
+            return $query->result_array();
+    }
+    
     public function get_department_classes($dept_id)
     {
         $this->db->select('*');
         $this->db->from('classes');
         $this->db->join('department_classes', 'classes.class_code = department_classes.class_code');
         $this->db->where(array('department_classes.dept_id'=>$dept_id));
+        $query = $this->db->get();
+        
+        if($this->db->affected_rows()==0)
+        {
+            return null;
+        }
+        else
+            return $query->result_array();
+    }
+    
+    public function get_non_department_classes()
+    {
+        $this->db->select('*');
+        $this->db->from('classes');
+        $this->db->where('`class_code` NOT IN (Select distinct(`class_code`) from department_classes)', NULL, FALSE);
         $query = $this->db->get();
         if($this->db->affected_rows()==0)
         {

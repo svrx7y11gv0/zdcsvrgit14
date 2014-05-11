@@ -162,7 +162,7 @@
                                 {
                                    var obj = data[i];
                                    var option = new Option(obj.firstname + " " + obj.middlename + " " + obj.lastname, obj.bioid);
-                                   /// jquerify the DOM object 'o' so we can use the html method
+                                   /// jquerify the DOM object 'option' so we can use the html method
                                    $(option).html(obj.firstname + " " + obj.middlename + " " + obj.lastname);
                                    $("#student_bioid").append(option);
                                 }
@@ -262,7 +262,7 @@
                                 jQuery.ajax({
                                      type: "POST",
                                      url: url,
-                                     data: dataString, // serializes the form's elements.
+                                     data: dataString, 
                                      dataType: "json",
                                      success: function(data)
                                      {

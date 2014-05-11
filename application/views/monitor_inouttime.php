@@ -58,6 +58,19 @@
                                                                                                                             </div>
                                                                                                                     </div>
                                                                                                                     <div class="form-group">
+                                                                                                                        <label class="col-md-2 control-label">Select Department</label> 
+                                                                                                                        <div class="col-md-10">
+                                                                                                                            <select id="select_department" name="thisdeptid" data-placeholder="Choose Department..." class="form-control" style="cursor:pointer;">
+                                                                                                                                <?php if(isset($departments)):?>
+                                                                                                                                    <?php foreach($departments as $department):?>
+                                                                                                                                        <option value="<?php echo $department['id'];?>" <?php if($thisdeptid==$department['id']) echo " selected ";?> > <?php echo $department['department_name']; ?> </option>
+                                                                                                                                    <?php endforeach;?>
+                                                                                                                                <?php endif; ?>
+                                                                                                                                        <option value="others" <?php if($thisdeptid=="others") echo " selected ";?> >Others</option>
+                                                                                                                            </select>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div class="form-group">
                                                                                                                         <label class="col-md-2 control-label">Select Class</label> 
                                                                                                                          <div class="col-md-10">
                                                                                                                              <select id="class_code" name="thisclasscode" data-placeholder="Choose a Class..." class="form-control">
@@ -167,6 +180,35 @@
                                 }
 			});
                  $(".datepicker-fullscreen").pickadate();
+                 
+                 jQuery( "#select_department" ).change(function() {
+                    var el = jQuery(this).parents(".box");
+                    App.blockUI(el);
+                    var dataString = "deptid="+jQuery("#select_department").val();
+                    var url = "<?php echo base_url('secure/get_selective_classes');?>";
+                           jQuery.ajax({
+                                type: "POST",
+                                url: url,
+                                data: dataString, 
+                                dataType: "json",
+                                success: function(data)
+                                {
+                                   jQuery("#class_code option").remove();
+                                   if(data)
+                                   {
+                                        for(var i = 0; i < data.length; i++)
+                                        {
+                                           var obj = data[i];
+                                           var option = new Option(obj.classname + " " + obj.section,obj.class_code);
+                                           /// jquerify the DOM object 'option' so we can use the html method
+                                           jQuery(option).html(obj.classname + " " + obj.section);
+                                           jQuery("#class_code").append(option);
+                                        }
+                                   }
+                                   App.unblockUI(el);
+                                }
+                           });
+                    });
                  
                  $( "#btn_show_records" ).click(function() {
                     var el = jQuery(this).parents(".box");

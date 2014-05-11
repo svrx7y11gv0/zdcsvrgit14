@@ -160,6 +160,7 @@ class Secure extends CI_Controller {
     
     public function user_manager($mode = null)
     {
+        $this->session->set_userdata('selected_menu','');
         $data['mode'] = $mode;
         $user_id = $this->session->userdata('id');
         $this->load->model('secureUsers');
@@ -465,7 +466,7 @@ class Secure extends CI_Controller {
             redirect('secure');
         }
     }
-    public function update_department()
+    public function update_department($thisdeptid=null)
     {
         if($this->is_PRV_admin())
         {
@@ -475,11 +476,20 @@ class Secure extends CI_Controller {
             $data['departments'] = $this->secureAdmin->get_departments();
             if(isset($data['departments']))
             {
+                if($thisdeptid==null)
+                {
                     $data['thisdeptid'] = $data['departments'][0]['id'];
-                    $data['classes'] = $this->secureUsers->get_classes();
-                    $data['teachers'] = $this->secureUsers->get_teachers();
                     $data['department_classes'] = $this->secureAdmin->get_department_classes($data['departments'][0]['id']);
                     $data['department_teachers'] = $this->secureAdmin->get_department_teachers($data['departments'][0]['id']);
+                }
+                else
+                {
+                    $data['thisdeptid'] = $thisdeptid;
+                    $data['department_classes'] = $this->secureAdmin->get_department_classes($thisdeptid);
+                    $data['department_teachers'] = $this->secureAdmin->get_department_teachers($thisdeptid);
+                }
+                $data['classes'] = $this->secureUsers->get_classes();
+                $data['teachers'] = $this->secureUsers->get_teachers();
             }
             $this->load->view('update_department',$data);
         }
@@ -488,6 +498,16 @@ class Secure extends CI_Controller {
             $this->session->set_userdata('selected_menu','');
             redirect('secure');
         }
+    }
+    
+    public function get_dept_classes()
+    {
+        echo json_encode($this->secureAdmin->get_department_classes($this->input->post('deptid')));
+    }
+    
+    public function get_dept_teachers()
+    {
+        echo json_encode($this->secureAdmin->get_department_teachers($this->input->post('deptid')));
     }
 
     public function edit_department()
@@ -508,7 +528,7 @@ class Secure extends CI_Controller {
             {
                 $this->session->set_flashdata('error_msg',$data);
             }
-            redirect('secure/update_department');
+            redirect('secure/update_department/'.$thisdeptid);
         }
         else
         {
@@ -520,30 +540,60 @@ class Secure extends CI_Controller {
     public function monitor_inouttime()
     {
         $this->session->set_userdata('selected_menu','monitor_inouttime');
-        $this->load->model('secureUsers');
-        $data['classes'] = $this->secureUsers->get_classes();
-        if(isset($data['classes']))
+        $this->load->model('secureAdmin');  //For getting departments 
+        $this->load->model('secureUsers');  //For getting classes
+        
+        $data['departments'] = $this->secureAdmin->get_departments();
+        if(isset($data['departments']))
+        {
+            if($this->input->post('thisdeptid') && $this->input->post('thisdeptid')!="others")
             {
-                if($this->input->post('thisclasscode'))
-                {
-                    $data['thisdate'] = date_create($this->input->post('thisdate'));
-                    $data['thisdate'] = date_format($data['thisdate'],'Y-m-d');
-                    $data['thisclasscode'] = $this->input->post('thisclasscode');
-                    $data['students_inouttime_details'] = $this->secureUsers->get_students_inouttime_details($this->input->post('thisclasscode'),$data['thisdate']);
-                    //var_dump($data);
-                }
-                else
-                {
-                    $data['thisdate'] = date("Y-m-d");
-                    $data['thisclasscode'] = $data['classes'][0]['class_code'];
-                    $data['students_inouttime_details'] = $this->secureUsers->get_students_inouttime_details($data['classes'][0]['class_code'],$data['thisdate']);
-                }
+                    $data['thisdeptid'] = $this->input->post('thisdeptid');
+                    $data['classes'] = $this->secureAdmin->get_department_classes($this->input->post('thisdeptid'));
             }
-            else //When there is no class in database
+            else if($this->input->post('thisdeptid') && $this->input->post('thisdeptid')=="others")
+            {
+                $data['thisdeptid'] = $this->input->post('thisdeptid');
+                $data['classes'] = $this->secureAdmin->get_non_department_classes();
+            }
+            else
+            {
+                $data['thisdeptid'] = $data['departments'][0]['id'];
+                $data['classes'] = $this->secureAdmin->get_department_classes($data['departments'][0]['id']);
+            }
+        }
+        else
+        {
+            $data['thisdeptid'] = "others";
+            $data['classes'] = $this->secureUsers->get_classes();
+        }
+        if(isset($data['classes']))
+        {
+            if($this->input->post('thisclasscode'))
+            {
+                $data['thisdate'] = date_create($this->input->post('thisdate'));
+                $data['thisdate'] = date_format($data['thisdate'],'Y-m-d');
+                $data['thisclasscode'] = $this->input->post('thisclasscode');
+                $data['students_inouttime_details'] = $this->secureUsers->get_students_inouttime_details($this->input->post('thisclasscode'),$data['thisdate']);
+            }
+            else
             {
                 $data['thisdate'] = date("Y-m-d");
+                $data['thisclasscode'] = $data['classes'][0]['class_code'];
+                $data['students_inouttime_details'] = $this->secureUsers->get_students_inouttime_details($data['classes'][0]['class_code'],$data['thisdate']);
             }
+        }
+        else //When there is no class in database
+        {
+            $data['thisdate'] = date("Y-m-d");
+        }
+        //var_dump($data);
         $this->load->view('monitor_inouttime',$data);
+    }
+    
+    public function get_selective_classes()
+    {
+        echo json_encode($this->secureAdmin->get_selective_classes($this->input->post('deptid')));
     }
     
     public function get_students_ofa_class()
