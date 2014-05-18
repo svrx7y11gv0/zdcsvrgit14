@@ -76,7 +76,7 @@
                                                                                                                              <select id="class_code" name="thisclasscode" data-placeholder="Choose a Class..." class="form-control">
                                                                                                                                  <?php if(isset($classes)):?>
                                                                                                                                      <?php foreach($classes as $class):?>
-                                                                                                                                         <option value="<?php echo $class['class_code'];?>" <?php if($thisclasscode==$class['class_code']) echo " selected "; ?> > <?php echo $class['class']." ".$class['section']; ?></option>
+                                                                                                                                         <option value="<?php echo $class['class_code'];?>" <?php if($thisclasscode==$class['class_code']) echo " selected "; ?> > <?php echo $class['classname']." ".$class['section']; ?></option>
                                                                                                                                      <?php endforeach;?>
                                                                                                                                  <?php endif; ?>
                                                                                                                              </select>
@@ -93,6 +93,7 @@
                                                                                                     <table id="datatable1" cellpadding="0" cellspacing="0" border="0" class="datatable table table-striped table-bordered table-hover">
                                                                                                         <thead>
                                                                                                                 <tr>
+                                                                                                                        <th>Roll No.</th>
                                                                                                                         <th>First Name</th>
                                                                                                                         <th>Middle Name</th>
                                                                                                                         <th>Last Name</th>
@@ -104,6 +105,7 @@
                                                                                                         <tbody>
                                                                                                             <?php foreach($students_inouttime_details as $detail):?>
                                                                                                                 <tr>
+                                                                                                                    <td><?php if($detail['rollno']!=0 && $detail['rollno']!=null) echo $detail['rollno'];?></td>
                                                                                                                     <td><?php echo $detail['firstname'];?></td>
                                                                                                                     <td><?php echo $detail['middlename'];?></td>
                                                                                                                     <td><?php echo $detail['lastname'];?></td>
@@ -115,6 +117,7 @@
                                                                                                         </tbody>
                                                                                                         <tfoot>
                                                                                                                 <tr>
+                                                                                                                        <th>Roll No.</th>
                                                                                                                         <th>First Name</th>
                                                                                                                         <th>Middle Name</th>
                                                                                                                         <th>Last Name</th>

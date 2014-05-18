@@ -5,34 +5,46 @@
 <!-- PAGE SPECIFIC STYLE / CSS -->
 <link rel="stylesheet" href="<?php echo base_url('resources/css/chosen/chosen.min.css');?>">
 <style>
-    /* Smartphones (portrait and landscape) ----------- */
-    @media only screen 
-    and (min-device-width : 2048px)
+    @media screen and (min-width: 240px)
     {
+        /* styles for browsers larger than 240px; */
         .chosen-select
-        {
-            width: 460px;
-        }
+            {
+                width: 115px;
+            }
     }
-    
-    @media only screen 
-    and (min-device-width : 1024px)
+    @media screen and (min-width: 320px)
     {
+        /* styles for browsers larger than 320px; */
         .chosen-select
-        {
-            width: 360px;
-        }
+            {
+                width: 150px;
+            }
     }
-    
-    @media only screen 
-    and (min-device-width : 220px) and (max-device-width : 1024px)
+    @media screen and (min-width: 480px)
     {
+        /* styles for browsers larger than 480px; */
         .chosen-select
-        {
-            width: 160px;
-        }
+            {
+                width: 230px;
+            }
     }
-
+    @media screen and (min-width: 768px)
+    {
+        /* styles for browsers larger than 768px; */
+        .chosen-select
+            {
+                width: 368px;
+            }
+    }
+    @media screen and (min-width: 1024px)
+    {
+        /* styles for browsers larger than 1024px; */
+        .chosen-select
+            {
+                width: 490px;
+            }
+    }
 </style>
 
 									<div class="clearfix">
@@ -97,7 +109,25 @@
                                                                                                                             <span class="help-block">Press and hold Ctrl key + Click on class for adding multiple classes in one go.</span>
                                                                                                                         </div>
                                                                                                                    </div>
-                                                                                                                    <div class="form-group">
+                                                                                                                   <div class="form-group">
+                                                                                                                        <label class="col-md-2 control-label">Department Head</label> 
+                                                                                                                        <div class="col-md-10">
+                                                                                                                            <select id="dept_head" name="dept_head" data-placeholder="Add Department Head..." class="form-control">
+                                                                                                                                <?php if(isset($teachers)):?>
+                                                                                                                                    <?php foreach($teachers as $teacher):?>
+                                                                                                                                        <?php $selected=false;?>
+                                                                                                                                        <?php if(isset($department_teachers)):?>
+                                                                                                                                            <?php foreach($department_teachers as $department_teacher):?>
+                                                                                                                                                <?php if($teacher['bioid']==$department_teacher['bioid'] && $department_teacher['prv_type']=='hod') { $selected = true; break;}?>
+                                                                                                                                            <?php endforeach;?>
+                                                                                                                                        <?php endif;?>
+                                                                                                                                        <option value="<?php echo $teacher['bioid'];?>" <?php if($selected) echo " selected ";?> ><?php echo ucfirst($teacher['firstname'])." ".ucfirst($teacher['middlename']." ".ucfirst($teacher['lastname']));?></option>
+                                                                                                                                    <?php endforeach;?>
+                                                                                                                                <?php endif; ?>
+                                                                                                                            </select>
+                                                                                                                        </div>
+                                                                                                                   </div>
+                                                                                                                   <div class="form-group">
                                                                                                                         <label class="col-md-2 control-label">Add/Remove Teachers</label> 
                                                                                                                         <div class="col-md-10">
                                                                                                                             <select id="multi_teachers" name="multi_teachers[]" data-placeholder="Add Teachers..." class="chosen-select form-control" multiple>
@@ -113,9 +143,9 @@
                                                                                                                                     <?php endforeach;?>
                                                                                                                                 <?php endif; ?>
                                                                                                                             </select>
-                                                                                                                            <span class="help-block">Press and hold Ctrl key + Click on class for adding multiple teachers in one go.</span>
+                                                                                                                            <span class="help-block">Department Head must also be added here. Press and hold Ctrl key + Click on class for adding multiple teachers in one go.</span>
                                                                                                                         </div>
-                                                                                                                    </div>
+                                                                                                                   </div>
                                                                                                         </div>
                                                                                                     </div>
                                                                                                 </form>
@@ -261,6 +291,10 @@
                                             for(var j = 0; j < data.length; j++)
                                             {
                                                var obj = data[j];
+                                               if(jQuery('select#dept_head option').eq(i).val()==obj.bioid && obj.prv_type=="hod")
+                                               {
+                                                   jQuery('select#dept_head option').eq(i).attr("selected","selected");
+                                               }
                                                if(jQuery('select#multi_teachers option').eq(i).val()==obj.bioid)
                                                {
                                                    jQuery('select#multi_teachers option').eq(i).attr("selected","selected");
@@ -276,7 +310,20 @@
                 jQuery("#btn_update_dept").click(function(){
                     var el = jQuery(this).parents(".box");
                     App.blockUI(el);
-                    jQuery("#department_form").submit();
+                    var error_flag = 0;
+                    jQuery('#multi_teachers').parent().parent().removeClass("has-error");
+                    var index = jQuery("#dept_head")[0].selectedIndex;
+                    if(! jQuery("#multi_teachers option").eq(index).is(':selected'))
+                    {
+                        error_flag = 1;
+                        jQuery('#multi_teachers').parent().parent().addClass("has-error");
+                    }
+                    if(error_flag==0)
+                    {
+                        jQuery("#department_form").submit();
+                    }
+                    else
+                        App.unblockUI(el);
                 });
             });
         </script>

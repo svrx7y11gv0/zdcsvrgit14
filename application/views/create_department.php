@@ -4,33 +4,48 @@
 <!-- PAGE SPECIFIC STYLE / CSS -->
 <link rel="stylesheet" href="<?php echo base_url('resources/css/chosen/chosen.min.css');?>">
 <style>
-    /* Smartphones (portrait and landscape) ----------- */
-    @media only screen 
-    and (min-device-width : 2048px)
+
+    @media screen and (min-width: 240px)
     {
+        /* styles for browsers larger than 240px; */
         .chosen-select
-        {
-            width: 460px;
-        }
+            {
+                width: 115px;
+            }
+    }
+    @media screen and (min-width: 320px)
+    {
+        /* styles for browsers larger than 320px; */
+        .chosen-select
+            {
+                width: 150px;
+            }
+    }
+    @media screen and (min-width: 480px)
+    {
+        /* styles for browsers larger than 480px; */
+        .chosen-select
+            {
+                width: 230px;
+            }
+    }
+    @media screen and (min-width: 768px)
+    {
+        /* styles for browsers larger than 768px; */
+        .chosen-select
+            {
+                width: 368px;
+            }
+    }
+    @media screen and (min-width: 1024px)
+    {
+        /* styles for browsers larger than 1024px; */
+        .chosen-select
+            {
+                width: 490px;
+            }
     }
     
-    @media only screen 
-    and (min-device-width : 1024px)
-    {
-        .chosen-select
-        {
-            width: 360px;
-        }
-    }
-    
-    @media only screen 
-    and (min-device-width : 220px) and (max-device-width : 1024px)
-    {
-        .chosen-select
-        {
-            width: 160px;
-        }
-    }
 
 </style>
 									<div class="clearfix">
@@ -83,7 +98,19 @@
                                                                                                                             <span class="help-block">Press and hold Ctrl key + Click on class for adding multiple classes in one go.</span>
                                                                                                                         </div>
                                                                                                                    </div>
-                                                                                                                    <div class="form-group">
+                                                                                                                   <div class="form-group">
+                                                                                                                        <label class="col-md-2 control-label">Department Head</label> 
+                                                                                                                        <div class="col-md-10">
+                                                                                                                            <select id="dept_head" name="dept_head" data-placeholder="Add Department Head..." class="form-control">
+                                                                                                                                <?php if(isset($teachers)):?>
+                                                                                                                                    <?php foreach($teachers as $teacher):?>
+                                                                                                                                        <option value="<?php echo $teacher['bioid'];?>"><?php echo ucfirst($teacher['firstname'])." ".ucfirst($teacher['middlename']." ".ucfirst($teacher['lastname']));?></option>
+                                                                                                                                    <?php endforeach;?>
+                                                                                                                                <?php endif; ?>
+                                                                                                                            </select>
+                                                                                                                        </div>
+                                                                                                                   </div>
+                                                                                                                   <div class="form-group">
                                                                                                                         <label class="col-md-2 control-label">Add Teachers</label> 
                                                                                                                         <div class="col-md-10">
                                                                                                                             <select id="multi_teachers" name="multi_teachers[]" data-placeholder="Add Teachers..." class="chosen-select form-control" multiple>
@@ -93,9 +120,9 @@
                                                                                                                                     <?php endforeach;?>
                                                                                                                                 <?php endif; ?>
                                                                                                                             </select>
-                                                                                                                            <span class="help-block">Press and hold Ctrl key + Click on class for adding multiple teachers in one go.</span>
+                                                                                                                            <span class="help-block">Department Head must also be added here. Press and hold Ctrl key + Click on class for adding multiple teachers in one go.</span>
                                                                                                                         </div>
-                                                                                                                    </div>
+                                                                                                                   </div>
                                                                                                             </div>
                                                                                                         </div>
                                                                                             </form>
@@ -201,11 +228,19 @@
                     App.blockUI(el);
                     var error_flag = 0;
                     jQuery('#deptname_error').text('');
+                    jQuery('input[name=deptname]').parent().parent().removeClass("has-error");
+                    jQuery('#multi_teachers').parent().parent().removeClass("has-error");
                     if(jQuery.trim(jQuery('input[name=deptname]').val())=="")
                     {
                         error_flag = 1;
                         jQuery('input[name=deptname]').parent().parent().addClass("has-error");
                         jQuery('#deptname_error').text('This field is compulsory.');
+                    }
+                    var index = jQuery("#dept_head")[0].selectedIndex;
+                    if(! jQuery("#multi_teachers option").eq(index).is(':selected'))
+                    {
+                        error_flag = 1;
+                        jQuery('#multi_teachers').parent().parent().addClass("has-error");
                     }
                     if(error_flag==0)
                     {

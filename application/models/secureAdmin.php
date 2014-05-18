@@ -51,35 +51,9 @@ class SecureAdmin extends CI_Model
             return $query->result_array();
     }
     
-    public function get_selective_classes($dept_id)
-    {
-        if($dept_id=="others")
-        {
-            $this->db->select('class_code, class AS classname, section',FALSE);
-            $this->db->from('classes');
-            $this->db->where('`class_code` NOT IN (Select distinct(`class_code`) from department_classes)', NULL, FALSE);
-            $query = $this->db->get();
-        }
-        else
-        {
-            $this->db->select('classes.class_code,class AS classname,section',FALSE);
-            $this->db->from('classes');
-            $this->db->join('department_classes', 'classes.class_code = department_classes.class_code');
-            $this->db->where(array('department_classes.dept_id'=>$dept_id));
-            $query = $this->db->get();
-        }
-        
-        if($this->db->affected_rows()==0)
-        {
-            return null;
-        }
-        else
-            return $query->result_array();
-    }
-    
     public function get_department_classes($dept_id)
     {
-        $this->db->select('*');
+        $this->db->select('classes.class_code,class AS classname,section');
         $this->db->from('classes');
         $this->db->join('department_classes', 'classes.class_code = department_classes.class_code');
         $this->db->where(array('department_classes.dept_id'=>$dept_id));
@@ -95,7 +69,7 @@ class SecureAdmin extends CI_Model
     
     public function get_non_department_classes()
     {
-        $this->db->select('*');
+        $this->db->select('classes.class_code,class AS classname,section');
         $this->db->from('classes');
         $this->db->where('`class_code` NOT IN (Select distinct(`class_code`) from department_classes)', NULL, FALSE);
         $query = $this->db->get();
@@ -122,7 +96,7 @@ class SecureAdmin extends CI_Model
             return $query->result_array();
     }
     
-    function add_department($deptname,$multi_classes,$multi_teachers)
+    function add_department($deptname,$multi_classes,$multi_teachers,$dept_head_bioid)
     {
         $query = $this->db->get_where('departments',array('department_name'=>$deptname));
         if($this->db->affected_rows()!=0)
@@ -137,15 +111,20 @@ class SecureAdmin extends CI_Model
             {
                 $this->db->insert('department_classes',array('dept_id'=>$dept_id,'class_code'=>$multi_classes[$i]));
             }
+            //Insert all teachers under the dept_id
             for($i=0; $i<count($multi_teachers) ; $i++)
             {
                 $this->db->insert('department_teachers',array('dept_id'=>$dept_id,'bioid'=>$multi_teachers[$i]));
             }
+            //Update the teacher type who is the HOD
+            $this->db->where(array('dept_id'=>$dept_id,'bioid'=>$dept_head_bioid));
+            $this->db->update('department_teachers',array('prv_type'=>'hod'));
+            
             return "all_good";
         }
     }
     
-    function update_department($dept_id,$multi_classes,$multi_teachers)
+    function update_department($dept_id,$multi_classes,$multi_teachers,$dept_head_bioid)
     {
         $this->db->where(array('dept_id'=>$dept_id));
         $this->db->delete('department_classes');
@@ -160,6 +139,10 @@ class SecureAdmin extends CI_Model
         {
             $this->db->insert('department_teachers',array('dept_id'=>$dept_id,'bioid'=>$multi_teachers[$i]));
         }
+        //Update the teacher type who is the HOD
+        $this->db->where(array('dept_id'=>$dept_id,'bioid'=>$dept_head_bioid));
+        $this->db->update('department_teachers',array('prv_type'=>'hod'));
+
         return "all_good";
     }
 }

@@ -15,6 +15,14 @@ class SecureUsers extends CI_Model
         else
             return null;
     }
+    function validate_username($username)
+    {
+        $row = $this->db->get_where('users',array('username'=>$username))->row();
+        if($this->db->affected_rows()==1)
+            return $row;
+        else
+            return null;
+    }
     function get_user_details($user_id)
     {
         $this->db->select('*');
@@ -189,7 +197,8 @@ class SecureUsers extends CI_Model
     
     function get_students_ofa_class($class_code)
     {
-        $this->db->select('id,firstname,middlename,lastname,bioid');
+        $this->db->select('id,rollno,firstname,middlename,lastname,bioid');
+        $this->db->order_by('rollno ASC, firstname ASC,middlename ASC,lastname ASC');
         $query = $this->db->get_where('users',array('class_code'=>$class_code,'type'=>STUDENT_TYPE));
         if($this->db->affected_rows()==0)
         {
@@ -223,6 +232,66 @@ class SecureUsers extends CI_Model
             return $result->result_array();
     }
     
+    function get_selective_departments($bioid)
+    {
+        $this->db->select('departments.id,department_name');
+        $this->db->from('departments');
+        $this->db->join('department_teachers', 'departments.id = department_teachers.dept_id');
+        $this->db->where(array('department_teachers.bioid'=>$bioid));
+        $query = $this->db->get();
+        if($this->db->affected_rows()==0)
+        {
+            return null;
+        }
+        else
+            return $query->result_array();
+
+    }
+    function is_hod_of_dept($dept_id,$bio_id)
+    {
+        $query = $this->db->get_where('department_teachers',array('prv_type'=>'hod','dept_id'=>$dept_id,'bioid'=>$bio_id));
+        if($this->db->affected_rows()==0)
+        {
+            return false;
+        }
+        else
+            return true;
+    }
+    
+    function get_selective_dept_classes($dept_id,$bio_id)
+    {
+        $this->db->select('classes.class_code,class AS classname,section');
+        $this->db->from('classes');
+        $this->db->join('department_classes', 'classes.class_code = department_classes.class_code');
+        $this->db->where(array('department_classes.dept_id'=>$dept_id));
+        //Get all class codes of the logged in teacher who is not HOD
+        $this->db->where('classes.class_code IN (Select `class_code` from `teachers_subjects` where bio_id = '.$bio_id.')', NULL, FALSE); 
+        $query = $this->db->get();
+        
+        if($this->db->affected_rows()==0)
+        {
+            return null;
+        }
+        else
+            return $query->result_array();
+    }
+    
+    
+    public function get_selective_non_dept_classes($bio_id)
+    {
+        $this->db->select('classes.class_code,class AS classname,section');
+        $this->db->from('classes');
+        $this->db->where('`class_code` NOT IN (Select distinct(`class_code`) from department_classes)', NULL, FALSE);
+        //Get all class codes of the logged in teacher who is not HOD
+        $this->db->where('classes.class_code IN (Select `class_code` from `teachers_subjects` where bio_id = '.$bio_id.')', NULL, FALSE); 
+        $query = $this->db->get();
+        if($this->db->affected_rows()==0)
+        {
+            return null;
+        }
+        else
+            return $query->result_array();
+    }
 }
 
 

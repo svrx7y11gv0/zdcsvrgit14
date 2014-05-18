@@ -116,7 +116,7 @@
                                                                                                                     <td><?php echo $department_teacher['firstname'];?></td>
                                                                                                                     <td><?php echo $department_teacher['middlename'];?></td>
                                                                                                                     <td><?php echo $department_teacher['lastname'];?></td>
-                                                                                                                    <td><?php echo $department_teacher['privilege'];?></td>
+                                                                                                                    <td><?php echo strtoupper($department_teacher['prv_type']);?></td>
                                                                                                                     <td><?php echo $department_teacher['contact_nos'];?></td>
                                                                                                                     <td><?php echo $department_teacher['email'];?></td>
                                                                                                                 </tr>

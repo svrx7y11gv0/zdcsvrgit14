@@ -64,7 +64,7 @@ $autoload['libraries'] = array();
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('url'); //'breadcrumb');
+$autoload['helper'] = array('url','cookie'); //'breadcrumb');
 
 
 /*

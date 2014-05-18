@@ -86,6 +86,14 @@
 							</li>
                                                         <?php endif; ?>
                                                         
+                                                        <?php if($prv==PRV_ADMIN || $prv==PRV_HEAD_TEACHER || $prv==PRV_GFM_TEACHER || $prv==PRV_GEN_TEACHER):?>
+                                                        <li <?php if($this->session->userdata('selected_menu')=='manage_classes') echo ' class="active" ';?> >
+								<a href="<?php echo base_url('secure/manage_classes');?>">
+									<i class="fa fa-users fa-fw"></i> <span class="menu-text">Manage Classes</span>
+								</a>					
+							</li>
+                                                        <?php endif; ?>
+                                                        
                                                         <?php if($this->session->userdata('atttype')=="inout" && ($prv==PRV_ADMIN || $prv==PRV_HEAD_TEACHER || $prv==PRV_GFM_TEACHER || $prv==PRV_GEN_TEACHER)):?>
                                                         <li <?php if($this->session->userdata('selected_menu')=='monitor_inouttime') echo ' class="active" ';?> >
 								<a href="<?php echo base_url('secure/monitor_inouttime');?>">
@@ -94,12 +102,12 @@
 							</li>
                                                         <li <?php if($this->session->userdata('selected_menu')=='intime_stats') echo ' class="active" ';?> >
 								<a href="<?php echo base_url('secure/intime_stats');?>">
-									<i class="fa fa-download fa-fw"></i> <span class="menu-text">In-Time Statistics</span>
+									<i class="fa fa-sign-in fa-fw"></i> <span class="menu-text">In-Time Statistics</span>
 								</a>					
 							</li>
                                                         <li <?php if($this->session->userdata('selected_menu')=='outtime_stats') echo ' class="active" ';?> >
 								<a href="<?php echo base_url('secure/outtime_stats');?>">
-									<i class="fa fa-upload fa-fw"></i> <span class="menu-text">Out-Time Statistics</span>
+									<i class="fa fa-sign-out fa-fw"></i> <span class="menu-text">Out-Time Statistics</span>
 								</a>					
 							</li>
                                                         <?php endif; ?>
