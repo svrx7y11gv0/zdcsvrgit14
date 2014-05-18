@@ -112,6 +112,12 @@
 							</li>
                                                         <?php endif; ?>
                                                         
+                                                        <li <?php if($this->session->userdata('selected_menu')=='faq') echo ' class="active" ';?> >
+								<a href="<?php echo base_url('secure/faq');?>">
+									<i class="fa fa-question fa-fw"></i> <span class="menu-text">FAQs</span>
+								</a>					
+							</li>
+                                                        
 							<li class="has-sub">
 								<a href="javascript:;" class="">
 								<i class="fa fa-bookmark-o fa-fw"></i> <span class="menu-text">UI Features</span>

@@ -753,4 +753,10 @@ class Secure extends CI_Controller {
         $this->load->view('manage_classes',$data);
         
     }
+    
+    public function faq()
+    {
+        $this->session->set_userdata('selected_menu','faq');
+        $this->load->view('faq');
+    }
 }
