@@ -53,7 +53,7 @@ class SecureAdmin extends CI_Model
     
     public function get_department_classes($dept_id)
     {
-        $this->db->select('classes.class_code,class AS classname,section');
+        $this->db->select('classes.class_code,class AS classname,section,device_serial_number');
         $this->db->from('classes');
         $this->db->join('department_classes', 'classes.class_code = department_classes.class_code');
         $this->db->where(array('department_classes.dept_id'=>$dept_id));

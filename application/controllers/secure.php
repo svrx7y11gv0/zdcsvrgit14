@@ -750,7 +750,18 @@ class Secure extends CI_Controller {
         
         $data = $this->get_departments_and_classes();
         
-        $this->load->view('manage_classes',$data);
+        if($data['classes'][0]['class_code']!="")
+        {
+            $date_from = date('Y')."-".date('m')."-01";
+            $date_to = date('Y')."-".date('m')."-31";
+            if($this->session->userdata('atttype')=="inout")
+            {
+                $data['all_students'] = $this->secureUsers->get_allstudents_ofa_class($data['classes'][0]['class_code']);
+                $data['inout_att_records'] = $this->secureUsers->get_inout_att_records($data['classes'][0]['class_code'],$date_from,$date_to);
+            }
+        }
+        var_dump($data);
+        //$this->load->view('manage_classes',$data);
         
     }
     

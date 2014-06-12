@@ -56,6 +56,36 @@
                                                                                                                  </select>
                                                                                                              </div>
                                                                                                         </div>
+                                                                                                        <div class="form-group">
+                                                                                                            <label class="col-md-2 control-label">Select Month & Year</label> 
+                                                                                                             <div class="col-sm-9">
+                                                                                                                 <div class="col-lg-4" style="padding-left:0;"> 
+                                                                                                                    <select id="month" name="month" data-placeholder="Choose Month..." class="form-control">
+                                                                                                                        <option value="01" <?php if(date('F')=='January') echo " selected " ?> >January</option>
+                                                                                                                        <option value="02" <?php if(date('F')=='February') echo " selected " ?> >February</option>
+                                                                                                                        <option value="03" <?php if(date('F')=='March') echo " selected " ?> >March</option>
+                                                                                                                        <option value="04" <?php if(date('F')=='April') echo " selected " ?> >April</option>
+                                                                                                                        <option value="05" <?php if(date('F')=='May') echo " selected " ?> >May</option>
+                                                                                                                        <option value="06" <?php if(date('F')=='June') echo " selected " ?> >June</option>
+                                                                                                                        <option value="07" <?php if(date('F')=='July') echo " selected " ?> >July</option>
+                                                                                                                        <option value="08" <?php if(date('F')=='August') echo " selected " ?> >August</option>
+                                                                                                                        <option value="09" <?php if(date('F')=='September') echo " selected " ?> >September</option>
+                                                                                                                        <option value="10" <?php if(date('F')=='October') echo " selected " ?> >October</option>
+                                                                                                                        <option value="11" <?php if(date('F')=='November') echo " selected " ?> >November</option>
+                                                                                                                        <option value="12" <?php if(date('F')=='December') echo " selected " ?> >December</option>
+                                                                                                                    </select>
+                                                                                                                 </div>
+                                                                                                                 <div class="col-lg-4" style="padding-left:0;"> 
+                                                                                                                    <select id="year" name="year" data-placeholder="Choose Year..." class="form-control">
+                                                                                                                        <?php for($i=2010; $i<=2050; $i++): ?>
+                                                                                                                            <option value="<?php echo $i;?>" <?php if(date('Y')==$i) echo " selected " ?>><?php echo $i;?></option>
+                                                                                                                        <?php endfor;?>
+                                                                                                                    </select>
+                                                                                                                 </div>
+                                                                                                                 
+                                                                                                                 <div class="col-lg-2"> <input type="submit" value="Show Records" id="btn_show_records" class="btn btn-primary pull-right"> </div>
+                                                                                                             </div>
+                                                                                                        </div>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </form>

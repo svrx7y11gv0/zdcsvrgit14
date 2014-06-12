@@ -75,7 +75,7 @@
                                                                                                             <?php foreach($department_classes as $department_class):?>
                                                                                                                 <tr class="<?php if($i%2==0) echo 'ss_tr_even';?>">
                                                                                                                     <td><?php echo $department_class['class_code'];?></td>
-                                                                                                                    <td><?php echo $department_class['class'];?></td>
+                                                                                                                    <td><?php echo $department_class['classname'];?></td>
                                                                                                                     <td><?php echo $department_class['section'];?></td>
                                                                                                                     <td><?php echo $department_class['device_serial_number'];?></td>
                                                                                                                 </tr>
