@@ -240,16 +240,18 @@
                            });
                     });
                     
-                    <?php foreach($inout_att_records as $record):?>
-                        <?php $in = "<h6><strong>In </strong><span style='color:#942170;font-weight:600;'>".substr($record['in_time'],0,5)."</span></h6>";?>
-                        <?php
-                            if($record['out_time']=="00:00:00")
-                                $out="";
-                            else
-                                $out = "<h6><strong>Out </strong><span style='color:#942170;font-weight:600;'>".substr($record['out_time'],0,5)."</span></h6>"; 
-                        ?>
-                        jQuery(".inout_att_table tr#<?php echo $record['bio_id'];?> td.<?php echo $record['date'];?>").html("<?php echo $in.$out;?>");
-                    <?php endforeach;?>
+                    <?php if(isset($inout_att_records)): ?>
+                        <?php foreach($inout_att_records as $record):?>
+                            <?php $in = "<h6><strong>In </strong><span style='color:#942170;font-weight:600;'>".substr($record['in_time'],0,5)."</span></h6>";?>
+                            <?php
+                                if($record['out_time']=="00:00:00")
+                                    $out="";
+                                else
+                                    $out = "<h6><strong>Out </strong><span style='color:#942170;font-weight:600;'>".substr($record['out_time'],0,5)."</span></h6>"; 
+                            ?>
+                            jQuery(".inout_att_table tr#<?php echo $record['bio_id'];?> td.<?php echo $record['date'];?>").html("<?php echo $in.$out;?>");
+                        <?php endforeach;?>
+                    <?php endif;?>
                         
                     jQuery(".inout_att_table th").css( 'cursor', 'url('+base_url+'/resources/img/arrow-down.png), auto' );
                     jQuery(".inout_att_table tr td:first-child").css( 'cursor', 'url('+base_url+'/resources/img/arrow-right.png), auto' );
