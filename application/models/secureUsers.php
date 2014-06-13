@@ -293,10 +293,6 @@ class SecureUsers extends CI_Model
             return $query->result_array();
     }
     
-    public function get_allstudents_ofa_class($class_code)
-    {
-        return $this->db->get_where('users',array('class_code'=>$class_code,'type'=>STUDENT_TYPE))->result_array();
-    }
     public function get_inout_att_records($class_code,$date_from,$date_to)
     {
         $this->db->select($class_code.'.bio_id,in_time,out_time,date');

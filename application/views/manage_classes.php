@@ -1,6 +1,13 @@
 <?php   include_once('templates/header_bar.php');
         include_once('templates/left_sidebar.php');
 ?>
+<!-- PAGE SPECIFIC CSS -->
+<style>
+    .highlighted
+    {
+        background: #FFFFB0;
+    }
+</style>
 									<div class="clearfix">
 										<h3 class="content-title pull-left">Manage Classes</h3>
 									</div>
@@ -58,8 +65,8 @@
                                                                                                         </div>
                                                                                                         <div class="form-group">
                                                                                                             <label class="col-md-2 control-label">Select Month & Year</label> 
-                                                                                                             <div class="col-sm-9">
-                                                                                                                 <div class="col-lg-4" style="padding-left:0;"> 
+                                                                                                             <div class="col-md-10">
+                                                                                                                 <div class="col-sm-6" style="padding-left:0;"> 
                                                                                                                     <select id="month" name="month" data-placeholder="Choose Month..." class="form-control">
                                                                                                                         <option value="01" <?php if(date('F')=='January') echo " selected " ?> >January</option>
                                                                                                                         <option value="02" <?php if(date('F')=='February') echo " selected " ?> >February</option>
@@ -75,25 +82,68 @@
                                                                                                                         <option value="12" <?php if(date('F')=='December') echo " selected " ?> >December</option>
                                                                                                                     </select>
                                                                                                                  </div>
-                                                                                                                 <div class="col-lg-4" style="padding-left:0;"> 
+                                                                                                                 <div class="col-sm-6" style="padding:0 0;"> 
                                                                                                                     <select id="year" name="year" data-placeholder="Choose Year..." class="form-control">
                                                                                                                         <?php for($i=2010; $i<=2050; $i++): ?>
                                                                                                                             <option value="<?php echo $i;?>" <?php if(date('Y')==$i) echo " selected " ?>><?php echo $i;?></option>
                                                                                                                         <?php endfor;?>
                                                                                                                     </select>
                                                                                                                  </div>
-                                                                                                                 
-                                                                                                                 <div class="col-lg-2"> <input type="submit" value="Show Records" id="btn_show_records" class="btn btn-primary pull-right"> </div>
                                                                                                              </div>
                                                                                                         </div>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </form>
+                                                                                            <div class="form-actions clearfix"> <input type="submit" value="Show Records" id="btn_show_records" class="btn btn-primary pull-right"> </div>
+                                                                                            
 											</div>
 										</div>
 									</div>
                                                                 </div>
                                                         </div>
+                                                </div>
+                                                
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <?php if(isset($students)):?>
+                                                            <table class="table table-bordered inout_att_table" style="background:#fff; overflow: auto;">
+                                                                <thead>
+                                                                        <tr>
+                                                                                <th style="text-align:center;">Roll No.</th>
+                                                                                <th style="text-align:center;">Name</th>
+                                                                                <?php 
+                                                                                        $dateTime = new DateTime($date_from);
+                                                                                        $year = $dateTime->format('Y');
+                                                                                        $month = $dateTime->format('m');
+                                                                                ?>
+
+                                                                                <?php for($i=1; $i <= cal_days_in_month(CAL_GREGORIAN, $month, $year); $i++):?>
+                                                                                    <?php $timestamp = strtotime($year."-".$month."-".$i); ?>
+                                                                                    <th style="text-align:center;"><h5><strong><?php echo date('D',$timestamp);?></strong></h5><h5><?php echo $i;?></h5></th>
+                                                                                <?php endfor;?>
+
+                                                                        </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <?php foreach($students as $student):?>
+                                                                        <tr id="<?php echo $student['bioid'];?>">
+                                                                            <td><?php echo $student['rollno'];?></td>
+                                                                            <td><?php echo $student['firstname']." ".$student['lastname'];?></td>
+                                                                            <?php 
+                                                                                    $dateTime = new DateTime($date_from);
+                                                                                    $year = $dateTime->format('Y');
+                                                                                    $month = $dateTime->format('m');
+                                                                            ?>
+
+                                                                            <?php for($i=1; $i <= cal_days_in_month(CAL_GREGORIAN, $month, $year); $i++):?>
+                                                                                <td class="<?php echo $year."-".$month."-".$i;?>" style="text-align:center; padding:5px;"></th>
+                                                                            <?php endfor;?>
+                                                                        </tr>
+                                                                    <?php endforeach;?>
+                                                                </tbody>
+                                                            </table>
+                                                        <?php endif;?>
+                                                    </div>
                                                 </div>
 					</div>
 				</div>
@@ -189,6 +239,67 @@
                                 }
                            });
                     });
+                    
+                    <?php foreach($inout_att_records as $record):?>
+                        <?php $in = "<h6><strong>In </strong><span style='color:#942170;font-weight:600;'>".substr($record['in_time'],0,5)."</span></h6>";?>
+                        <?php
+                            if($record['out_time']=="00:00:00")
+                                $out="";
+                            else
+                                $out = "<h6><strong>Out </strong><span style='color:#942170;font-weight:600;'>".substr($record['out_time'],0,5)."</span></h6>"; 
+                        ?>
+                        jQuery(".inout_att_table tr#<?php echo $record['bio_id'];?> td.<?php echo $record['date'];?>").html("<?php echo $in.$out;?>");
+                    <?php endforeach;?>
+                        
+                    jQuery(".inout_att_table th").css( 'cursor', 'url('+base_url+'/resources/img/arrow-down.png), auto' );
+                    jQuery(".inout_att_table tr td:first-child").css( 'cursor', 'url('+base_url+'/resources/img/arrow-right.png), auto' );
+                    
+                    jQuery(".inout_att_table th").mouseenter(function(){
+                        var index = jQuery(".inout_att_table th").index(this);
+                        jQuery(".inout_att_table tr > :nth-child("+parseInt(index+1)+")").css({'backgroundColor': '#FFFFB0'});
+                    });
+                    
+                    jQuery(".inout_att_table th").mouseleave(function(){
+                        var index = jQuery(".inout_att_table th").index(this);
+                        if(! jQuery(".inout_att_table tr > :nth-child("+parseInt(index+1)+")").hasClass('highlighted'))
+                            jQuery(".inout_att_table tr > :nth-child("+parseInt(index+1)+")").css({'backgroundColor': 'transparent'});
+                    });
+                    
+                    jQuery(".inout_att_table th").click(function(){
+                        var index = jQuery(".inout_att_table th").index(this);
+                        if(jQuery(".inout_att_table tr > :nth-child("+parseInt(index+1)+")").hasClass('highlighted'))
+                        {
+                            jQuery(".inout_att_table tr > :nth-child("+parseInt(index+1)+")").removeClass('highlighted');
+                            jQuery(".inout_att_table tr > :nth-child("+parseInt(index+1)+")").css({'backgroundColor': 'transparent'});
+                        }
+                        else
+                            jQuery(".inout_att_table tr > :nth-child("+parseInt(index+1)+")").addClass('highlighted');
+                    });
+                    
+                    
+                    
+                    jQuery(".inout_att_table tr td:first-child").mouseenter(function(){
+                        var index = jQuery(".inout_att_table tr td:first-child").index(this);
+                        jQuery(".inout_att_table tr").eq(parseInt(index+1)).css({'backgroundColor': '#FFFFB0'});
+                    });
+                    
+                    jQuery(".inout_att_table tr td:first-child").mouseleave(function(){
+                        var index = jQuery(".inout_att_table tr td:first-child").index(this);
+                        if(! jQuery(".inout_att_table tr").eq(parseInt(index+1)).hasClass('highlighted'))
+                            jQuery(".inout_att_table tr").eq(parseInt(index+1)).css({'backgroundColor': 'transparent'});
+                    });
+                    
+                    jQuery(".inout_att_table tr td:first-child").click(function(){
+                        var index = jQuery(".inout_att_table tr td:first-child").index(this);
+                        if(jQuery(".inout_att_table tr").eq(parseInt(index+1)).hasClass('highlighted'))
+                        {
+                            jQuery(".inout_att_table tr").eq(parseInt(index+1)).removeClass('highlighted');
+                            jQuery(".inout_att_table tr").eq(parseInt(index+1)).css({'backgroundColor': 'transparent'});
+                        }
+                        else
+                            jQuery(".inout_att_table tr").eq(parseInt(index+1)).addClass('highlighted');
+                    });
+                    
             });
         </script>
         

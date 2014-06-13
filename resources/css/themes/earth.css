@@ -497,6 +497,7 @@
 .sidebar-menu #search-bar {
   display: block;
   text-align: center;
+  position: relative;
 }
 .sidebar-menu #search-bar .search {
   background: none repeat scroll 0 0 #e6ddcc;
@@ -514,7 +515,7 @@
   line-height: 1;
   position: absolute;
   right: 22px;
-  top: 29px;
+  top: 10px;
   color: #ab8d55;
 }
 /* Mini Menu Search */
@@ -537,7 +538,7 @@
   line-height: 1;
   position: absolute;
   right: 22px;
-  top: 29px;
+  top: 10px;
   color: #ab8d55;
 }
 /* Quick launch */
