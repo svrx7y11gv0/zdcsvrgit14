@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class SecureUsers extends CI_Model
+class Secureusers extends CI_Model
 {
     function __construct()
     {

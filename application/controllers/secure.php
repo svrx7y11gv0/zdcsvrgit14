@@ -57,8 +57,8 @@ class Secure extends CI_Controller {
         $this->db = $new_db;
         
         // Get Attendance Type of THE INSTITUTE and set in session //
-        $this->load->model('secureAdmin');
-        $institute_details = $this->secureAdmin->fetch_institute_details();
+        $this->load->model('secureadmin');
+        $institute_details = $this->secureadmin->fetch_institute_details();
         if(isset($institute_details))
             if($institute_details->attendance_type!="")
                 $this->session->set_userdata('atttype',$institute_details->attendance_type);
@@ -69,8 +69,8 @@ class Secure extends CI_Controller {
         // all userdata and create user session.
         if($cookie_data!=null)
         {
-            $this->load->model('secureUsers');
-            $result = $this->secureUsers->validate_username($cookie_data[1]);
+            $this->load->model('secureusers');
+            $result = $this->secureusers->validate_username($cookie_data[1]);
             if(isset($result))
             {
                 $userInfo = array('id'=>$result->id,'username'=>$result->username,'firstname'=>$result->firstname,'lastname'=>$result->lastname,'type'=>$result->type,'privilege'=>$result->privilege,'bioid'=>$result->bioid,'multilanguage'=>$result->multilanguage,'photourl'=>$result->photourl);
@@ -82,8 +82,8 @@ class Secure extends CI_Controller {
 
     public function login()
     {
-        $this->load->model('secureUsers');
-        $result = $this->secureUsers->validate_user($_POST['username'],$_POST['password']);
+        $this->load->model('secureusers');
+        $result = $this->secureusers->validate_user($_POST['username'],$_POST['password']);
         if(isset($result))
         {
             if($_POST['remember_me']=="yes")
@@ -182,8 +182,8 @@ class Secure extends CI_Controller {
         {
             if(!$this->session->userdata('atttype'))
             {
-                $this->load->model('secureAdmin');
-                $data['institute_details'] = $this->secureAdmin->fetch_institute_details();
+                $this->load->model('secureadmin');
+                $data['institute_details'] = $this->secureadmin->fetch_institute_details();
                 $this->load->view('institute_setup',$data);
             }
             else
@@ -200,8 +200,8 @@ class Secure extends CI_Controller {
         $this->session->set_userdata('selected_menu','');
         $data['mode'] = $mode;
         $user_id = $this->session->userdata('id');
-        $this->load->model('secureUsers');
-        $data['user_details'] = $this->secureUsers->get_user_details($user_id);
+        $this->load->model('secureusers');
+        $data['user_details'] = $this->secureusers->get_user_details($user_id);
         $this->load->view('user_manager',$data);
     }
     
@@ -361,9 +361,9 @@ class Secure extends CI_Controller {
         }
         if($photo=="")
             $this->session->set_flashdata('upload_success',"Information Saved!");
-        $this->load->model('secureUsers');
+        $this->load->model('secureusers');
         
-        $this->secureUsers->set_user_details($user_id,$firstName,$lastName,$middleName,$dob,$gender,$email,$phone,$address,$bloodGroup,$languages,$nationality,$category,$religion,$aboutMe,$photo,$is_this_student);
+        $this->secureusers->set_user_details($user_id,$firstName,$lastName,$middleName,$dob,$gender,$email,$phone,$address,$bloodGroup,$languages,$nationality,$category,$religion,$aboutMe,$photo,$is_this_student);
     }
     
     public function institute_setup()
@@ -371,8 +371,8 @@ class Secure extends CI_Controller {
         if($this->is_admin())
         {
             $this->session->set_userdata('selected_menu','institute_setup');
-            $this->load->model('secureAdmin');
-            $data['institute_details'] = $this->secureAdmin->fetch_institute_details();
+            $this->load->model('secureadmin');
+            $data['institute_details'] = $this->secureadmin->fetch_institute_details();
             $this->load->view('institute_setup',$data);
         }
         else
@@ -386,10 +386,10 @@ class Secure extends CI_Controller {
     {
         if($this->is_admin())
         {
-            $this->load->model('secureAdmin');
+            $this->load->model('secureadmin');
             if($_POST['atttype']!="")
                 $this->session->set_userdata('atttype',$_POST['atttype']);
-            if($this->secureAdmin->save_institute_details($_POST['name'],$_POST['phone'],$_POST['email'],$_POST['address'],$_POST['atttype']))
+            if($this->secureadmin->save_institute_details($_POST['name'],$_POST['phone'],$_POST['email'],$_POST['address'],$_POST['atttype']))
                 echo "all_good";
             else
                 echo "Please contact support team to change attendance type";
@@ -416,9 +416,9 @@ class Secure extends CI_Controller {
         else
             $newPassword = null;
         
-        $this->load->model('secureUsers');
+        $this->load->model('secureusers');
         $user_id = $this->session->userdata('id');
-        if($this->secureUsers->update_account($user_id,$currUsername,$currPassword,$multilanguage,$newUsername,$newPassword))
+        if($this->secureusers->update_account($user_id,$currUsername,$currPassword,$multilanguage,$newUsername,$newPassword))
         {
             echo "all_good";
         }
@@ -433,21 +433,21 @@ class Secure extends CI_Controller {
         if($this->is_PRV_admin())
         {
             $this->session->set_userdata('selected_menu','view_departments');
-            $this->load->model('secureAdmin');
-            $data['departments'] = $this->secureAdmin->get_departments();
+            $this->load->model('secureadmin');
+            $data['departments'] = $this->secureadmin->get_departments();
             if(isset($data['departments']))
             {
                 if($this->input->post('thisdeptid'))
                 {
                     $data['thisdeptid'] = $this->input->post('thisdeptid');
-                    $data['department_classes'] = $this->secureAdmin->get_department_classes($this->input->post('thisdeptid'));
-                    $data['department_teachers'] = $this->secureAdmin->get_department_teachers($this->input->post('thisdeptid'));
+                    $data['department_classes'] = $this->secureadmin->get_department_classes($this->input->post('thisdeptid'));
+                    $data['department_teachers'] = $this->secureadmin->get_department_teachers($this->input->post('thisdeptid'));
                 }
                 else
                 {
                     $data['thisdeptid'] = $data['departments'][0]['id'];
-                    $data['department_classes'] = $this->secureAdmin->get_department_classes($data['departments'][0]['id']);
-                    $data['department_teachers'] = $this->secureAdmin->get_department_teachers($data['departments'][0]['id']);
+                    $data['department_classes'] = $this->secureadmin->get_department_classes($data['departments'][0]['id']);
+                    $data['department_teachers'] = $this->secureadmin->get_department_teachers($data['departments'][0]['id']);
                 }
             }
 
@@ -465,9 +465,9 @@ class Secure extends CI_Controller {
         if($this->is_PRV_admin())
         {
             $this->session->set_userdata('selected_menu','create_department');
-            $this->load->model('secureUsers');
-            $data['classes'] = $this->secureUsers->get_classes();
-            $data['teachers'] = $this->secureUsers->get_teachers();
+            $this->load->model('secureusers');
+            $data['classes'] = $this->secureusers->get_classes();
+            $data['teachers'] = $this->secureusers->get_teachers();
             $this->load->view('create_department',$data);
         }
         else
@@ -486,8 +486,8 @@ class Secure extends CI_Controller {
             $multi_classes = $this->input->post('multi_classes');
             $dept_head_bioid = $this->input->post('dept_head');
             $multi_teachers = $this->input->post('multi_teachers');
-            $this->load->model('secureAdmin');
-            $data = $this->secureAdmin->add_department($deptname,$multi_classes,$multi_teachers,$dept_head_bioid);
+            $this->load->model('secureadmin');
+            $data = $this->secureadmin->add_department($deptname,$multi_classes,$multi_teachers,$dept_head_bioid);
             if($data=="all_good")
             {
                 $this->session->set_flashdata('success_msg','Department Successfully Created');
@@ -509,25 +509,25 @@ class Secure extends CI_Controller {
         if($this->is_PRV_admin())
         {
             $this->session->set_userdata('selected_menu','update_department');
-             $this->load->model('secureAdmin');
-             $this->load->model('secureUsers');
-            $data['departments'] = $this->secureAdmin->get_departments();
+             $this->load->model('secureadmin');
+             $this->load->model('secureusers');
+            $data['departments'] = $this->secureadmin->get_departments();
             if(isset($data['departments']))
             {
                 if($thisdeptid==null)
                 {
                     $data['thisdeptid'] = $data['departments'][0]['id'];
-                    $data['department_classes'] = $this->secureAdmin->get_department_classes($data['departments'][0]['id']);
-                    $data['department_teachers'] = $this->secureAdmin->get_department_teachers($data['departments'][0]['id']);
+                    $data['department_classes'] = $this->secureadmin->get_department_classes($data['departments'][0]['id']);
+                    $data['department_teachers'] = $this->secureadmin->get_department_teachers($data['departments'][0]['id']);
                 }
                 else
                 {
                     $data['thisdeptid'] = $thisdeptid;
-                    $data['department_classes'] = $this->secureAdmin->get_department_classes($thisdeptid);
-                    $data['department_teachers'] = $this->secureAdmin->get_department_teachers($thisdeptid);
+                    $data['department_classes'] = $this->secureadmin->get_department_classes($thisdeptid);
+                    $data['department_teachers'] = $this->secureadmin->get_department_teachers($thisdeptid);
                 }
-                $data['classes'] = $this->secureUsers->get_classes();
-                $data['teachers'] = $this->secureUsers->get_teachers();
+                $data['classes'] = $this->secureusers->get_classes();
+                $data['teachers'] = $this->secureusers->get_teachers();
             }
             $this->load->view('update_department',$data);
         }
@@ -540,12 +540,12 @@ class Secure extends CI_Controller {
     
     public function get_dept_classes()
     {
-        echo json_encode($this->secureAdmin->get_department_classes($this->input->post('deptid')));
+        echo json_encode($this->secureadmin->get_department_classes($this->input->post('deptid')));
     }
     
     public function get_dept_teachers()
     {
-        echo json_encode($this->secureAdmin->get_department_teachers($this->input->post('deptid')));
+        echo json_encode($this->secureadmin->get_department_teachers($this->input->post('deptid')));
     }
 
     public function edit_department()
@@ -557,8 +557,8 @@ class Secure extends CI_Controller {
             $multi_classes = $this->input->post('multi_classes');
             $dept_head_bioid = $this->input->post('dept_head');
             $multi_teachers = $this->input->post('multi_teachers');
-            $this->load->model('secureAdmin');
-            $data = $this->secureAdmin->update_department($thisdeptid,$multi_classes,$multi_teachers,$dept_head_bioid);
+            $this->load->model('secureadmin');
+            $data = $this->secureadmin->update_department($thisdeptid,$multi_classes,$multi_teachers,$dept_head_bioid);
             if($data=="all_good")
             {
                 $this->session->set_flashdata('success_msg','Department Successfully Updated');
@@ -579,8 +579,8 @@ class Secure extends CI_Controller {
     public function monitor_inouttime()
     {
         $this->session->set_userdata('selected_menu','monitor_inouttime');
-        $this->load->model('secureAdmin');  //For getting departments 
-        $this->load->model('secureUsers');  //For getting classes
+        $this->load->model('secureadmin');  //For getting departments 
+        $this->load->model('secureusers');  //For getting classes
         
         $data = $this->get_departments_and_classes();
         
@@ -591,13 +591,13 @@ class Secure extends CI_Controller {
                 $data['thisdate'] = date_create($this->input->post('thisdate'));
                 $data['thisdate'] = date_format($data['thisdate'],'Y-m-d');
                 $data['thisclasscode'] = $this->input->post('thisclasscode');
-                $data['students_inouttime_details'] = $this->secureUsers->get_students_inouttime_details($this->input->post('thisclasscode'),$data['thisdate']);
+                $data['students_inouttime_details'] = $this->secureusers->get_students_inouttime_details($this->input->post('thisclasscode'),$data['thisdate']);
             }
             else
             {
                 $data['thisdate'] = date("Y-m-d");
                 $data['thisclasscode'] = $data['classes'][0]['class_code'];
-                $data['students_inouttime_details'] = $this->secureUsers->get_students_inouttime_details($data['classes'][0]['class_code'],$data['thisdate']);
+                $data['students_inouttime_details'] = $this->secureusers->get_students_inouttime_details($data['classes'][0]['class_code'],$data['thisdate']);
             }
         }
         else //When there is no class in database
@@ -610,39 +610,39 @@ class Secure extends CI_Controller {
     
     public function get_selective_classes()
     {
-        $this->load->model('secureUsers');  //For getting classes
-        $this->load->model('secureAdmin');  //For getting departments 
+        $this->load->model('secureusers');  //For getting classes
+        $this->load->model('secureadmin');  //For getting departments 
         if($this->input->post('deptid')=="others")
         {
             if($this->is_PRV_admin()) //If the user is admin get all non department classes
-                echo json_encode($this->secureAdmin->get_non_department_classes());
+                echo json_encode($this->secureadmin->get_non_department_classes());
             else
-                echo json_encode($this->secureUsers->get_selective_non_dept_classes($this->session->userdata('bioid')));
+                echo json_encode($this->secureusers->get_selective_non_dept_classes($this->session->userdata('bioid')));
         }
         else
         {
             if($this->is_PRV_admin()) //If the user is admin get all classes
-                echo json_encode($this->secureAdmin->get_department_classes($this->input->post('deptid')));
-            else if($this->secureUsers->is_hod_of_dept($this->input->post('deptid'),$this->session->userdata('bioid')))
-                echo json_encode($this->secureAdmin->get_department_classes($this->input->post('deptid')));
+                echo json_encode($this->secureadmin->get_department_classes($this->input->post('deptid')));
+            else if($this->secureusers->is_hod_of_dept($this->input->post('deptid'),$this->session->userdata('bioid')))
+                echo json_encode($this->secureadmin->get_department_classes($this->input->post('deptid')));
             else
-                echo json_encode($this->secureUsers->get_selective_dept_classes($this->input->post('deptid'),$this->session->userdata('bioid')));
+                echo json_encode($this->secureusers->get_selective_dept_classes($this->input->post('deptid'),$this->session->userdata('bioid')));
         }
     }
     
     public function get_students_ofa_class()
     {
-        $this->load->model('secureUsers');
-        echo json_encode($this->secureUsers->get_students_ofa_class($this->input->post('class_code')));
+        $this->load->model('secureusers');
+        echo json_encode($this->secureusers->get_students_ofa_class($this->input->post('class_code')));
     }
     
     public function get_departments_and_classes()
     {
         if($this->is_PRV_admin())   //If the user is admin
-            $data['departments'] = $this->secureAdmin->get_departments();
+            $data['departments'] = $this->secureadmin->get_departments();
         else //If the user is a teacher and not admin
         {
-            $data['departments'] = $this->secureUsers->get_selective_departments($this->session->userdata('bioid'));
+            $data['departments'] = $this->secureusers->get_selective_departments($this->session->userdata('bioid'));
         }
         
         if(isset($data['departments']))
@@ -651,53 +651,53 @@ class Secure extends CI_Controller {
             {
                     $data['thisdeptid'] = $this->input->post('thisdeptid');
                     if($this->is_PRV_admin()) //If the user is admin get all classes
-                        $data['classes'] = $this->secureAdmin->get_department_classes($this->input->post('thisdeptid'));
-                    else if($this->secureUsers->is_hod_of_dept($this->input->post('thisdeptid'),$this->session->userdata('bioid')))
-                        $data['classes'] = $this->secureAdmin->get_department_classes($this->input->post('thisdeptid'));
+                        $data['classes'] = $this->secureadmin->get_department_classes($this->input->post('thisdeptid'));
+                    else if($this->secureusers->is_hod_of_dept($this->input->post('thisdeptid'),$this->session->userdata('bioid')))
+                        $data['classes'] = $this->secureadmin->get_department_classes($this->input->post('thisdeptid'));
                     else
-                        $data['classes'] = $this->secureUsers->get_selective_dept_classes($this->input->post('thisdeptid'),$this->session->userdata('bioid'));
+                        $data['classes'] = $this->secureusers->get_selective_dept_classes($this->input->post('thisdeptid'),$this->session->userdata('bioid'));
             }
             else if($this->input->post('thisdeptid') && $this->input->post('thisdeptid')=="others")
             {
                 $data['thisdeptid'] = $this->input->post('thisdeptid');
                 if($this->is_PRV_admin()) //If the user is admin get all non department classes
-                    $data['classes'] = $this->secureAdmin->get_non_department_classes();
+                    $data['classes'] = $this->secureadmin->get_non_department_classes();
                 else
-                    $data['classes'] = $this->secureUsers->get_selective_non_dept_classes($this->session->userdata('bioid'));
+                    $data['classes'] = $this->secureusers->get_selective_non_dept_classes($this->session->userdata('bioid'));
             }
             else
             {
                 $data['thisdeptid'] = $data['departments'][0]['id'];
                 if($this->is_PRV_admin()) //If the user is admin get all classes
-                    $data['classes'] = $this->secureAdmin->get_department_classes($data['departments'][0]['id']);
-                else if($this->secureUsers->is_hod_of_dept($data['departments'][0]['id'],$this->session->userdata('bioid')))
-                    $data['classes'] = $this->secureAdmin->get_department_classes($data['departments'][0]['id']);
+                    $data['classes'] = $this->secureadmin->get_department_classes($data['departments'][0]['id']);
+                else if($this->secureusers->is_hod_of_dept($data['departments'][0]['id'],$this->session->userdata('bioid')))
+                    $data['classes'] = $this->secureadmin->get_department_classes($data['departments'][0]['id']);
                 else
-                    $data['classes'] = $this->secureUsers->get_selective_dept_classes($data['departments'][0]['id'],$this->session->userdata('bioid'));
+                    $data['classes'] = $this->secureusers->get_selective_dept_classes($data['departments'][0]['id'],$this->session->userdata('bioid'));
             }
         }
         else
         {
             $data['thisdeptid'] = "others";
             if($this->is_PRV_admin()) //If the user is admin get all non department classes
-                $data['classes'] = $this->secureAdmin->get_non_department_classes();
+                $data['classes'] = $this->secureadmin->get_non_department_classes();
             else
-                $data['classes'] = $this->secureUsers->get_selective_non_dept_classes($this->session->userdata('bioid'));
+                $data['classes'] = $this->secureusers->get_selective_non_dept_classes($this->session->userdata('bioid'));
         }
         return $data;
     }
     public function intime_stats()
     {
         $this->session->set_userdata('selected_menu','intime_stats');
-        $this->load->model('secureUsers');  //For getting classes
-        $this->load->model('secureAdmin');  //For getting departments 
+        $this->load->model('secureusers');  //For getting classes
+        $this->load->model('secureadmin');  //For getting departments 
         
         $data = $this->get_departments_and_classes();
         
         if(isset($data['classes']))
         {
             $data['thisclasscode'] = $data['classes'][0]['class_code'];
-            $data['students'] = $this->secureUsers->get_students_ofa_class($data['classes'][0]['class_code']);
+            $data['students'] = $this->secureusers->get_students_ofa_class($data['classes'][0]['class_code']);
         }
         $this->load->view('intime_stats',$data);
     }
@@ -705,29 +705,29 @@ class Secure extends CI_Controller {
     public function outtime_stats()
     {
         $this->session->set_userdata('selected_menu','outtime_stats');
-        $this->load->model('secureUsers');
-        $this->load->model('secureAdmin');  //For getting departments 
+        $this->load->model('secureusers');
+        $this->load->model('secureadmin');  //For getting departments 
         
         $data = $this->get_departments_and_classes();
         
         if(isset($data['classes']))
         {
             $data['thisclasscode'] = $data['classes'][0]['class_code'];
-            $data['students'] = $this->secureUsers->get_students_ofa_class($data['classes'][0]['class_code']);
+            $data['students'] = $this->secureusers->get_students_ofa_class($data['classes'][0]['class_code']);
         }
         $this->load->view('outtime_stats',$data);
     }
     
     public function get_intime_ofa_student()
     {
-        $this->load->model('secureUsers');
-        echo json_encode($this->secureUsers->get_intime_ofa_student($this->input->post('class_code'),$this->input->post('bio_id'),$this->input->post('date_from'),$this->input->post('date_to')));
+        $this->load->model('secureusers');
+        echo json_encode($this->secureusers->get_intime_ofa_student($this->input->post('class_code'),$this->input->post('bio_id'),$this->input->post('date_from'),$this->input->post('date_to')));
     }
     
     public function get_outtime_ofa_student()
     {
-        $this->load->model('secureUsers');
-        echo json_encode($this->secureUsers->get_outtime_ofa_student($this->input->post('class_code'),$this->input->post('bio_id'),$this->input->post('date_from'),$this->input->post('date_to')));
+        $this->load->model('secureusers');
+        echo json_encode($this->secureusers->get_outtime_ofa_student($this->input->post('class_code'),$this->input->post('bio_id'),$this->input->post('date_from'),$this->input->post('date_to')));
     }
     
     public function manage_students_profile()
@@ -737,16 +737,16 @@ class Secure extends CI_Controller {
         {
             $student_bioid = $this->session->userdata('bioid');
         }
-        $this->load->model('secureUsers');
-        $data['student_details'] = $this->secureUsers->get_student_details($student_bioid);
+        $this->load->model('secureusers');
+        $data['student_details'] = $this->secureusers->get_student_details($student_bioid);
         $this->load->view('student_profile',$data);
     }
             
     public function manage_classes()
     {
         $this->session->set_userdata('selected_menu','manage_classes');
-        $this->load->model('secureAdmin');  //For getting departments 
-        $this->load->model('secureUsers');  //For getting classes
+        $this->load->model('secureadmin');  //For getting departments 
+        $this->load->model('secureusers');  //For getting classes
         
         $data = $this->get_departments_and_classes();
         
@@ -756,8 +756,8 @@ class Secure extends CI_Controller {
             $data['date_to'] = date('Y')."-".date('m')."-31";
             if($this->session->userdata('atttype')=="inout")
             {
-                $data['students'] = $this->secureUsers->get_students_ofa_class($data['classes'][0]['class_code']);
-                $data['inout_att_records'] = $this->secureUsers->get_inout_att_records($data['classes'][0]['class_code'],$data['date_from'],$data['date_to']);
+                $data['students'] = $this->secureusers->get_students_ofa_class($data['classes'][0]['class_code']);
+                $data['inout_att_records'] = $this->secureusers->get_inout_att_records($data['classes'][0]['class_code'],$data['date_from'],$data['date_to']);
             }
         }
         //var_dump($data);

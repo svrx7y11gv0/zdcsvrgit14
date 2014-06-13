@@ -3,7 +3,8 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta charset="utf-8">
-	<title>Cloud Responsive Bootstrap Theme - Home</title>
+	<link rel="icon" type="image/ico" href="<?php echo base_url('favicon.ico');?>"/>
+	<title>Edbeans - The Seeds of Success</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="">
 	<meta name="author" content="">
@@ -54,7 +55,7 @@
 						<h1>
 							<img src="<?php echo base_url('resources/resources_fp/img/logo/logo.png');?>" height="50" alt="logo name">
 						</h1>
-						<h1 class="page-title">Beautiful responsive frontend theme</h1>
+						<h1 class="page-title">Edbeans - the seeds of success</h1>
 						<h4 class="page-sub-title">In the end, it's not going to matter how many breath you took, 
 						<br>
 							but how many moments took your breath away.
