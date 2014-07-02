@@ -37,7 +37,7 @@
 				   <div class="content">
 					  <h3>Page not Found</h3>
 					  <p>
-						 Sorry, but the page you're looking for has not been found.<br />
+						 Sorry, but the page you're looking for has not been found or is under construction.<br />
 						 Try checking the URL for errors, <a href="<?php echo base_url('secure');?>">goto dashboard</a> or try following.
 					  </p>
 					  <div class="btn-group">

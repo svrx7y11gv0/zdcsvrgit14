@@ -193,5 +193,10 @@ class Secureadmin extends CI_Model
         
         return $gauge_array;
     }
+    
+    function mark_attendance($bio_id,$date,$in_time,$out_time,$class_code)
+    {
+        $this->db->insert($class_code,array('bio_id'=>$bio_id,'date'=>$date,'in_time'=>$in_time,'out_time'=>$out_time));
+    }
 }
 ?>

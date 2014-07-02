@@ -752,12 +752,31 @@ class Secure extends CI_Controller {
         
         if(isset($data['classes']))
         {
-            $data['date_from'] = date('Y')."-".date('m')."-01";
-            $data['date_to'] = date('Y')."-".date('m')."-31";
-            if($this->session->userdata('atttype')=="inout")
+            if($this->input->post('thisclasscode'))
             {
-                $data['students'] = $this->secureusers->get_students_ofa_class($data['classes'][0]['class_code']);
-                $data['inout_att_records'] = $this->secureusers->get_inout_att_records($data['classes'][0]['class_code'],$data['date_from'],$data['date_to']);
+                $data['date_from'] = $this->input->post('year')."-".$this->input->post('month')."-01";
+                $data['date_to'] = $this->input->post('year')."-".$this->input->post('month')."-31";
+                if($this->session->userdata('atttype')=="inout")
+                {
+                    $data['students'] = $this->secureusers->get_students_ofa_class($this->input->post('thisclasscode'));
+                    $data['inout_att_records'] = $this->secureusers->get_inout_att_records($this->input->post('thisclasscode'),$data['date_from'],$data['date_to']);
+                }
+                $data['thisclasscode'] = $this->input->post('thisclasscode');
+                $data['thismonth'] = $this->input->post('month');
+                $data['thisyear'] = $this->input->post('year');
+            }
+            else
+            {
+                $data['date_from'] = date('Y')."-".date('m')."-01";
+                $data['date_to'] = date('Y')."-".date('m')."-31";
+                if($this->session->userdata('atttype')=="inout")
+                {
+                    $data['students'] = $this->secureusers->get_students_ofa_class($data['classes'][0]['class_code']);
+                    $data['inout_att_records'] = $this->secureusers->get_inout_att_records($data['classes'][0]['class_code'],$data['date_from'],$data['date_to']);
+                }
+                $data['thisclasscode'] = $data['classes'][0]['class_code'];
+                $data['thismonth'] = date('m');
+                $data['thisyear'] = date('Y');
             }
         }
         //var_dump($data);
@@ -786,5 +805,11 @@ class Secure extends CI_Controller {
         $data['total_teachers'] = $this->secureadmin->get_total_nof_teachers();
         $data['gauge_data'] = $this->secureadmin->get_gauge_data();
         $this->load->view('admin_dashboard',$data);
+    }
+    
+    public function mark_attendance()
+    {
+        $this->load->model('secureadmin');
+        $this->secureadmin->mark_attendance($this->input->post('bio_id'),$this->input->post('date'),$this->input->post('in_time'),$this->input->post('out_time'),$this->input->post('class_code'));
     }
 }

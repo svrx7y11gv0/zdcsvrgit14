@@ -7,6 +7,32 @@
     {
         background: #FFFFB0;
     }
+    
+    .att_modal .modal
+    {
+        overflow-y: hidden;
+    }
+    
+    .att_modal input
+    {
+        margin-bottom: 10px;
+    }
+    .att_markable
+    {
+        cursor:pointer;
+        display: block;
+        width: 100%;
+        min-height: 67px;
+    }
+    table.inout_att_table tbody h6
+    {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    table td
+    {
+        min-width: 48px;
+    }
 </style>
 									<div class="clearfix">
 										<h3 class="content-title pull-left">Manage Classes</h3>
@@ -35,7 +61,7 @@
 												</div>
 											</div>
 											<div class="box-body big">
-                                                                                            <form class="form-horizontal" id="manage_classes" name="manage_classes" >
+                                                                                            <form class="form-horizontal" id="manage_classes" name="manage_classes" method="post" action="<?php echo base_url('secure/manage_classes');?>">
 												<div class="row">
                                                                                                     <div class="col-md-12">
                                                                                                         <div class="form-group">
@@ -57,7 +83,7 @@
                                                                                                                  <select id="class_code" name="thisclasscode" data-placeholder="Choose a Class..." class="form-control">
                                                                                                                      <?php if(isset($classes)):?>
                                                                                                                          <?php foreach($classes as $class):?>
-                                                                                                                             <option value="<?php echo $class['class_code'];?>"> <?php echo $class['classname']." ".$class['section']; ?></option>
+                                                                                                                             <option value="<?php echo $class['class_code'];?>" <?php if(isset($thisclasscode) && $thisclasscode==$class['class_code']) echo " selected ";?>> <?php echo $class['classname']." ".$class['section']; ?></option>
                                                                                                                          <?php endforeach;?>
                                                                                                                      <?php endif; ?>
                                                                                                                  </select>
@@ -68,24 +94,19 @@
                                                                                                              <div class="col-md-10">
                                                                                                                  <div class="col-sm-6" style="padding-left:0;"> 
                                                                                                                     <select id="month" name="month" data-placeholder="Choose Month..." class="form-control">
-                                                                                                                        <option value="01" <?php if(date('F')=='January') echo " selected " ?> >January</option>
-                                                                                                                        <option value="02" <?php if(date('F')=='February') echo " selected " ?> >February</option>
-                                                                                                                        <option value="03" <?php if(date('F')=='March') echo " selected " ?> >March</option>
-                                                                                                                        <option value="04" <?php if(date('F')=='April') echo " selected " ?> >April</option>
-                                                                                                                        <option value="05" <?php if(date('F')=='May') echo " selected " ?> >May</option>
-                                                                                                                        <option value="06" <?php if(date('F')=='June') echo " selected " ?> >June</option>
-                                                                                                                        <option value="07" <?php if(date('F')=='July') echo " selected " ?> >July</option>
-                                                                                                                        <option value="08" <?php if(date('F')=='August') echo " selected " ?> >August</option>
-                                                                                                                        <option value="09" <?php if(date('F')=='September') echo " selected " ?> >September</option>
-                                                                                                                        <option value="10" <?php if(date('F')=='October') echo " selected " ?> >October</option>
-                                                                                                                        <option value="11" <?php if(date('F')=='November') echo " selected " ?> >November</option>
-                                                                                                                        <option value="12" <?php if(date('F')=='December') echo " selected " ?> >December</option>
+                                                                                                                        <?php for($i = 1; $i<=12; $i++):?>
+                                                                                                                            <?php $monthNum = sprintf("%02s", $i);
+                                                                                                                                  $dateObj   = DateTime::createFromFormat('!m', $monthNum);
+                                                                                                                                  $monthName = $dateObj->format('F'); // March
+                                                                                                                            ?>
+                                                                                                                            <option value="<?php echo $monthNum;?>" <?php if($thismonth==$monthNum) echo " selected ";?> ><?php echo $monthName;?></option>
+                                                                                                                        <?php endfor; ?>    
                                                                                                                     </select>
                                                                                                                  </div>
                                                                                                                  <div class="col-sm-6" style="padding:0 0;"> 
                                                                                                                     <select id="year" name="year" data-placeholder="Choose Year..." class="form-control">
                                                                                                                         <?php for($i=2010; $i<=2050; $i++): ?>
-                                                                                                                            <option value="<?php echo $i;?>" <?php if(date('Y')==$i) echo " selected " ?>><?php echo $i;?></option>
+                                                                                                                            <option value="<?php echo $i;?>" <?php if($thisyear==$i) echo " selected " ?>><?php echo $i;?></option>
                                                                                                                         <?php endfor;?>
                                                                                                                     </select>
                                                                                                                  </div>
@@ -102,7 +123,46 @@
                                                                 </div>
                                                         </div>
                                                 </div>
-                                                
+                                                <div class="att_modal">
+                                                    <div class="bootbox modal fade in hide" tabindex="-1" role="dialog" style="display: block;" aria-hidden="false">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body">
+                                                                    <button type="button" class="bootbox-close-button close" style="margin-top: -10px;">×</button>
+                                                                    <div class="bootbox-body">
+                                                                        <h3 style="margin:10px 0 0 0;">Enter Attendance Details</h3>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-2 control-label">Date</label> 
+                                                                        <div class="col-md-10">
+                                                                            <input type="text" class="form-control" id="att_date" placeholder="Enter date as yyyy-mm-dd" />
+                                                                            <span id="att_date_error" class="help-block"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-2 control-label">In-Time</label> 
+                                                                        <div class="col-md-10">
+                                                                            <input type="text" class="form-control" id="att_intime" placeholder="Enter in-time as hh:mm e.g. 15:00" />
+                                                                            <span id="att_intime_error" class="help-block"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label class="col-md-2 control-label">Out-Time</label> 
+                                                                        <div class="col-md-10">
+                                                                            <input type="text" class="form-control" id="att_outtime" placeholder="Enter out-time as hh:mm e.g. 20:00" />
+                                                                            <span id="att_outtime_error" class="help-block"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <input type="hidden" id="att_bioid" />
+                                                                    <button data-bb-handler="ok" type="button" class="btn btn-primary btn_mark_attendance">MARK ATTENDANCE</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-backdrop fade in hide"></div>
+                                                </div>
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <?php if(isset($students)):?>
@@ -136,7 +196,10 @@
                                                                             ?>
 
                                                                             <?php for($i=1; $i <= cal_days_in_month(CAL_GREGORIAN, $month, $year); $i++):?>
-                                                                                <td class="<?php echo $year."-".$month."-".$i;?>" style="text-align:center; padding:5px;"></th>
+                                                                                <?php $day = sprintf("%02s", $i); ?>
+                                                                                <td class="<?php echo $year."-".$month."-".$day;?>" style="text-align:center; padding:2px;">
+                                                                                    <span class="att_markable"></span>
+                                                                                </td>
                                                                             <?php endfor;?>
                                                                         </tr>
                                                                     <?php endforeach;?>
@@ -302,6 +365,93 @@
                             jQuery(".inout_att_table tr").eq(parseInt(index+1)).addClass('highlighted');
                     });
                     
+                    jQuery("#btn_show_records").click(function(){
+                        jQuery("form#manage_classes").submit();
+                    });
+                    
+                    jQuery(".att_modal .modal .bootbox-close-button").click(function(){
+                        jQuery(".att_modal .bootbox").addClass('hide');
+                        jQuery(".att_modal .modal-backdrop").addClass('hide');
+                    });
+                    
+                    jQuery(".att_markable").mouseenter(function(){
+                        var index = jQuery(".att_markable").index(this);
+                        jQuery(".att_markable").eq(index).css({'backgroundColor': '#ddd'});
+                    });
+                    
+                    jQuery(".att_markable").mouseleave(function(){
+                        var index = jQuery(".att_markable").index(this);
+                        jQuery(".att_markable").eq(index).css({'backgroundColor': 'transparent'});
+                    });
+                    
+                    jQuery(".att_markable").click(function(){
+                        var index = jQuery(".att_markable").index(this);
+                        var classes = jQuery(".att_markable").eq(index).parent().attr('class').split(' ');
+                        jQuery("#att_date").val(classes[0]);
+                        jQuery("#att_bioid").val(jQuery(".att_markable").eq(index).parent().parent().attr('id'));
+                        jQuery(".att_modal .bootbox").removeClass('hide');
+                        jQuery(".att_modal .modal-backdrop").removeClass('hide');
+                    });
+                    
+                    jQuery(".btn_mark_attendance").click(function(){
+                        var error_flag = 0;
+                        jQuery('#att_date').parent().parent().removeClass("has-error");
+                        jQuery('#att_date_error').text(''); 
+                        jQuery('#att_intime').parent().parent().removeClass("has-error");
+                        jQuery('#att_intime_error').text(''); 
+                        jQuery('#att_outtime').parent().parent().removeClass("has-error");
+                        jQuery('#att_outtime_error').text(''); 
+                        var re = /^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$/;
+                        if(!re.test(jQuery('#att_date').val()))
+                        {
+                            error_flag = 1;
+                            jQuery('#att_date').parent().parent().addClass("has-error");
+                            jQuery('#att_date_error').text('This date is invalid.');
+                        }    
+                        var in_time = jQuery('#att_intime').val();
+                        var t = in_time.split(':');
+                        re = /^\d\d:\d\d$/;
+                        if(re.test(in_time) && t[0] >= 0 && t[0] < 25 && t[1] >= 0 && t[1] < 60)
+                               error_flag = 0;
+                        else
+                        {
+                            error_flag = 1;
+                            jQuery('#att_intime').parent().parent().addClass("has-error");
+                            jQuery('#att_intime_error').text('This time format is invalid.');
+                        }   
+                        
+                        var out_time = jQuery('#att_outtime').val();
+                        var t = out_time.split(':');
+                        re = /^\d\d:\d\d$/;
+                        if(!(re.test(out_time) && t[0] >= 0 && t[0] < 25 && t[1] >= 0 && t[1] < 60))
+                        {
+                            error_flag = 1;
+                            jQuery('#att_outtime').parent().parent().addClass("has-error");
+                            jQuery('#att_outtime_error').text('This time format is invalid.');
+                        }   
+                        if(error_flag == 0)
+                        {
+                            if(jQuery("#att_bioid").val()!="multi")
+                            {
+                                var dataString = 'bio_id='+jQuery("#att_bioid").val()+'&date='+jQuery("#att_date").val()+'&in_time='+jQuery("#att_intime").val()+'&out_time='+jQuery("#att_outtime").val()+'&class_code=<?php echo $thisclasscode;?>';
+                                var url = "<?php echo base_url('secure/mark_attendance');?>";
+                                jQuery.ajax({
+                                     type: "POST",
+                                     url: url,
+                                     data: dataString, // serializes the form's elements.
+                                     success: function()
+                                     {
+                                         var IN = "<h6><strong>In </strong><span style='color:#942170;font-weight:600;'>"+in_time+"</span></h6>";
+                                         var OUT = "<h6><strong>Out </strong><span style='color:#942170;font-weight:600;'>"+out_time+"</span></h6>"; 
+                                         jQuery(".inout_att_table tr#"+jQuery("#att_bioid").val()+" td."+jQuery('#att_date').val()).html(IN + OUT);
+                                         jQuery(".att_modal .bootbox").addClass('hide');
+                                         jQuery(".att_modal .modal-backdrop").addClass('hide');
+                                     }
+                                });
+                                
+                            }
+                        }
+                    });
             });
         </script>
         
