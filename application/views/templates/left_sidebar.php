@@ -47,8 +47,8 @@
                                                 <?php $prv = $this->session->userdata('privilege');?>
 						<!-- SIDEBAR MENU -->
 						<ul>
-							<li>
-								<a href="index.html">
+                                                        <li <?php if($this->session->userdata('selected_menu')=='dashboard') echo ' class="active" ';?> >
+								<a href="<?php echo base_url('secure/dashboard');?>">
 									<i class="fa fa-tachometer fa-fw"></i> <span class="menu-text">Dashboard</span>
 								</a>					
 							</li>

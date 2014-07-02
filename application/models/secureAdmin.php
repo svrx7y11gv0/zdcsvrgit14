@@ -145,5 +145,53 @@ class Secureadmin extends CI_Model
 
         return "all_good";
     }
+    
+    function get_total_nof_students()
+    {
+        $row = $this->db->query("select count(*) as count from users where type = '".STUDENT_TYPE."'")->row_array();
+        return $row['count'];
+    }
+    
+    function get_total_nof_teachers()
+    {
+        $row = $this->db->query("select count(*) as count from users where type = '".TEACHER_TYPE."'")->row_array();
+        return $row['count'];
+    }
+    
+    function get_todays_all_present_students()
+    {
+        $this->db->select('class_code');
+        $classes = $this->db->get('classes')->result_array();
+        
+        $total = 0;
+        
+        foreach($classes as $class)
+        {
+            $row = $this->db->query("select count(*) as count from ".$class['class_code']." where date = '".date('Y-m-d')."'")->row_array();
+            $total += $row['count'];
+        }
+        
+        return $total;
+    }
+    
+    function get_gauge_data()
+    {
+        $this->db->select('class_code,class,section');
+        $classes = $this->db->get('classes')->result_array();
+        
+        $gauge_array = array();
+        foreach($classes as $class)
+        {
+            $row_for_total = $this->db->query("select count(*) as count from users where class_code = '".$class['class_code']."' AND type = '".STUDENT_TYPE."'")->row_array();
+            $row_for_present = $this->db->query("select count(*) as count from ".$class['class_code']." where date = '".date('Y-m-d')."'")->row_array();
+            if($row_for_present['count']=="0")
+                $percentage_present = 0;
+            else
+                $percentage_present = ($row_for_present['count'] / $row_for_total['count']) * 100;
+            $gauge_array[] = array('class_code' => $class['class_code'],'class_name' => $class['class']." ".$class['section'], 'percentage' => $percentage_present);
+        }
+        
+        return $gauge_array;
+    }
 }
 ?>

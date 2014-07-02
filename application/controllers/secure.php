@@ -770,4 +770,21 @@ class Secure extends CI_Controller {
         $this->session->set_userdata('selected_menu','faq');
         $this->load->view('faq');
     }
+    
+    public function dashboard()
+    {
+        $this->session->set_userdata('selected_menu','dashboard');
+        if($this->is_admin())
+            $this->admin_dashboard();
+    }
+    
+    public function admin_dashboard()
+    {
+        $this->load->model('secureadmin');
+        $data['total_students'] = $this->secureadmin->get_total_nof_students();
+        $data['todays_present_students'] = $this->secureadmin->get_todays_all_present_students();
+        $data['total_teachers'] = $this->secureadmin->get_total_nof_teachers();
+        $data['gauge_data'] = $this->secureadmin->get_gauge_data();
+        $this->load->view('admin_dashboard',$data);
+    }
 }
