@@ -184,8 +184,8 @@ class Secureusers extends CI_Model
         $this->db->select('*');
         $this->db->from('users');
         $this->db->join($class_code, "users.bioid = ".$class_code.".bio_id");
+        $this->db->where(array($class_code.'.date'=>$date,'users.type'=>STUDENT_TYPE));
         $this->db->group_by(array("users.id")); 
-        $this->db->having(array($class_code.'.date'=>$date,'users.type'=>STUDENT_TYPE));
         $query = $this->db->get();
         if($this->db->affected_rows()==0)
         {

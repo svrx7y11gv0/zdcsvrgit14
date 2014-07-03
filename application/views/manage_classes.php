@@ -169,8 +169,11 @@
                                                             <table class="table table-bordered inout_att_table" style="background:#fff; overflow: auto;">
                                                                 <thead>
                                                                         <tr>
-                                                                                <th style="text-align:center;">Roll No.</th>
-                                                                                <th style="text-align:center;">Name</th>
+                                                                                <th style="min-width:70px; vertical-align: middle;">
+                                                                                    <input type="checkbox" value="" id="bulk_selector" />
+                                                                                    Roll#
+                                                                                </th>
+                                                                                <th style="text-align:center; vertical-align: middle;">Name</th>
                                                                                 <?php 
                                                                                         $dateTime = new DateTime($date_from);
                                                                                         $year = $dateTime->format('Y');
@@ -187,7 +190,10 @@
                                                                 <tbody>
                                                                     <?php foreach($students as $student):?>
                                                                         <tr id="<?php echo $student['bioid'];?>">
-                                                                            <td><?php echo $student['rollno'];?></td>
+                                                                            <td>
+                                                                                <input type="checkbox" value="<?php echo $student['bioid'];?>" name="bulk_check[]" />
+                                                                                <?php echo $student['rollno'];?>
+                                                                            </td>
                                                                             <td><?php echo $student['firstname']." ".$student['lastname'];?></td>
                                                                             <?php 
                                                                                     $dateTime = new DateTime($date_from);
@@ -318,7 +324,7 @@
                         
                     jQuery(".inout_att_table th").css( 'cursor', 'url('+base_url+'/resources/img/arrow-down.png), auto' );
                     jQuery(".inout_att_table tr td:first-child").css( 'cursor', 'url('+base_url+'/resources/img/arrow-right.png), auto' );
-                    
+
                     jQuery(".inout_att_table th").mouseenter(function(){
                         var index = jQuery(".inout_att_table th").index(this);
                         jQuery(".inout_att_table tr > :nth-child("+parseInt(index+1)+")").css({'backgroundColor': '#FFFFB0'});
@@ -338,7 +344,10 @@
                             jQuery(".inout_att_table tr > :nth-child("+parseInt(index+1)+")").css({'backgroundColor': 'transparent'});
                         }
                         else
+                        {
                             jQuery(".inout_att_table tr > :nth-child("+parseInt(index+1)+")").addClass('highlighted');
+                            jQuery(".inout_att_table tr > :nth-child("+parseInt(index+1)+")").css({'backgroundColor': '#FFFFB0'});
+                        }
                     });
                     
                     
@@ -362,7 +371,10 @@
                             jQuery(".inout_att_table tr").eq(parseInt(index+1)).css({'backgroundColor': 'transparent'});
                         }
                         else
+                        {
                             jQuery(".inout_att_table tr").eq(parseInt(index+1)).addClass('highlighted');
+                            jQuery(".inout_att_table tr").eq(parseInt(index+1)).css({'backgroundColor': '#FFFFB0'});
+                        }
                     });
                     
                     jQuery("#btn_show_records").click(function(){
@@ -385,6 +397,16 @@
                     });
                     
                     jQuery(".att_markable").click(function(){
+                        jQuery('#att_date').parent().parent().removeClass("has-error");
+                        jQuery('#att_date_error').text(''); 
+                        jQuery('#att_intime').parent().parent().removeClass("has-error");
+                        jQuery('#att_intime_error').text(''); 
+                        jQuery('#att_outtime').parent().parent().removeClass("has-error");
+                        jQuery('#att_outtime_error').text(''); 
+                        jQuery("#att_date").val('');
+                        jQuery("#att_intime").val('');
+                        jQuery("#att_outtime").val('');
+                        
                         var index = jQuery(".att_markable").index(this);
                         var classes = jQuery(".att_markable").eq(index).parent().attr('class').split(' ');
                         jQuery("#att_date").val(classes[0]);
@@ -451,6 +473,13 @@
                                 
                             }
                         }
+                    });
+                    
+                    jQuery("#bulk_selector").click(function(){
+                        if( jQuery(this).is(':checked') )
+                            jQuery("input[name=bulk_check\\[\\]]").prop('checked', true);
+                        else
+                            jQuery("input[name=bulk_check\\[\\]]").prop('checked', false);
                     });
             });
         </script>
