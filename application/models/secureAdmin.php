@@ -198,5 +198,19 @@ class Secureadmin extends CI_Model
     {
         $this->db->insert($class_code,array('bio_id'=>$bio_id,'date'=>$date,'in_time'=>$in_time,'out_time'=>$out_time));
     }
+    
+    function assign_rollnos($class_code)
+    {
+        $this->db->order_by('firstname ASC,middlename ASC, lastname ASC');
+        $result = $this->db->get_where('users',array('class_code'=>$class_code,'type'=>STUDENT_TYPE))->result_array();
+        
+        $i = 0;
+        foreach($result as $row)
+        {
+            $i++;
+            $this->db->where('id',$row['id']);
+            $this->db->update('users',array('rollno'=>$i));
+        }
+    }
 }
 ?>

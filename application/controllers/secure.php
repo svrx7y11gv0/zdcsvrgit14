@@ -187,7 +187,7 @@ class Secure extends CI_Controller {
                 $this->load->view('institute_setup',$data);
             }
             else
-                $this->user_manager();
+                $this->admin_dashboard();
         }
         else
         {
@@ -811,5 +811,11 @@ class Secure extends CI_Controller {
     {
         $this->load->model('secureadmin');
         $this->secureadmin->mark_attendance($this->input->post('bio_id'),$this->input->post('date'),$this->input->post('in_time'),$this->input->post('out_time'),$this->input->post('class_code'));
+    }
+    
+    public function assign_rollnos()
+    {
+        $this->load->model('secureadmin');
+        $this->secureadmin->assign_rollnos($this->input->post('class_code'));
     }
 }

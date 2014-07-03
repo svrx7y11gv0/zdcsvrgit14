@@ -115,7 +115,10 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </form>
-                                                                                            <div class="form-actions clearfix"> <input type="submit" value="Show Records" id="btn_show_records" class="btn btn-primary pull-right"> </div>
+                                                                                            <div class="form-actions clearfix"> 
+                                                                                                <input type="submit" value="Show Records" id="btn_show_records" class="btn btn-primary pull-right"> 
+                                                                                                <button id="assign_rollnos" class="btn btn-grey pull-right" style="margin-right:10px;"><i class="fa fa-pencil-square-o"></i> Assign / Re-Assign Roll Nos in Alphabetical Order</button>
+                                                                                            </div>
                                                                                             
 											</div>
 										</div>
@@ -162,6 +165,11 @@
                                                         </div>
                                                     </div>
                                                     <div class="modal-backdrop fade in hide"></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <button id="btn_bulk_att_modal" class="btn btn-default" style="margin-bottom:10px;"><i class="fa fa-bar-chart-o"></i> Mark Bulk Attendance</button>
+                                                    </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-12">
@@ -413,6 +421,42 @@
                         jQuery("#att_bioid").val(jQuery(".att_markable").eq(index).parent().parent().attr('id'));
                         jQuery(".att_modal .bootbox").removeClass('hide');
                         jQuery(".att_modal .modal-backdrop").removeClass('hide');
+                        jQuery("#att_date").focus();
+                    });
+                    
+                    jQuery("#btn_bulk_att_modal").click(function(){
+                        if(! (jQuery('input[name="bulk_check[]"]:checked').length > 0))
+                        {
+                            var mytheme = "flat";
+                            var mypos = "messenger-on-top messenger-on-right";
+                            //Set theme
+                            Messenger.options = {
+                                    extraClasses: 'messenger-fixed '+mypos,
+                                    theme: mytheme
+                            }
+                            Messenger().post({
+                                    message:"Please select atleast one student",
+                                    type: "error",
+                                    showCloseButton: true
+                            });
+                        }
+                        else
+                        {
+                            jQuery('#att_date').parent().parent().removeClass("has-error");
+                            jQuery('#att_date_error').text(''); 
+                            jQuery('#att_intime').parent().parent().removeClass("has-error");
+                            jQuery('#att_intime_error').text(''); 
+                            jQuery('#att_outtime').parent().parent().removeClass("has-error");
+                            jQuery('#att_outtime_error').text(''); 
+                            jQuery("#att_date").val('');
+                            jQuery("#att_intime").val('');
+                            jQuery("#att_outtime").val('');
+
+                            jQuery("#att_bioid").val('multi');
+                            jQuery(".att_modal .bootbox").removeClass('hide');
+                            jQuery(".att_modal .modal-backdrop").removeClass('hide');
+                            jQuery("#att_date").focus();
+                        }
                     });
                     
                     jQuery(".btn_mark_attendance").click(function(){
@@ -466,12 +510,31 @@
                                          var IN = "<h6><strong>In </strong><span style='color:#942170;font-weight:600;'>"+in_time+"</span></h6>";
                                          var OUT = "<h6><strong>Out </strong><span style='color:#942170;font-weight:600;'>"+out_time+"</span></h6>"; 
                                          jQuery(".inout_att_table tr#"+jQuery("#att_bioid").val()+" td."+jQuery('#att_date').val()).html(IN + OUT);
-                                         jQuery(".att_modal .bootbox").addClass('hide');
-                                         jQuery(".att_modal .modal-backdrop").addClass('hide');
                                      }
                                 });
                                 
                             }
+                            else
+                            {
+                                jQuery.each($("input[name='bulk_check[]']:checked"), function() {
+                                    var bio_id = jQuery(this).val();
+                                    var dataString = 'bio_id='+bio_id+'&date='+jQuery("#att_date").val()+'&in_time='+jQuery("#att_intime").val()+'&out_time='+jQuery("#att_outtime").val()+'&class_code=<?php echo $thisclasscode;?>';
+                                    var url = "<?php echo base_url('secure/mark_attendance');?>";
+                                    jQuery.ajax({
+                                         type: "POST",
+                                         url: url,
+                                         data: dataString, // serializes the form's elements.
+                                         success: function()
+                                         {
+                                             var IN = "<h6><strong>In </strong><span style='color:#942170;font-weight:600;'>"+in_time+"</span></h6>";
+                                             var OUT = "<h6><strong>Out </strong><span style='color:#942170;font-weight:600;'>"+out_time+"</span></h6>"; 
+                                             jQuery(".inout_att_table tr#"+bio_id+" td."+jQuery('#att_date').val()).html(IN + OUT);
+                                         }
+                                    });
+                                });
+                            }
+                            jQuery(".att_modal .bootbox").addClass('hide');
+                            jQuery(".att_modal .modal-backdrop").addClass('hide');
                         }
                     });
                     
@@ -480,6 +543,25 @@
                             jQuery("input[name=bulk_check\\[\\]]").prop('checked', true);
                         else
                             jQuery("input[name=bulk_check\\[\\]]").prop('checked', false);
+                    });
+                    
+                    jQuery("#assign_rollnos").click(function(){
+                        if(confirm("Are you sure you wish to asign / re-assign roll numbers to\nstudents in ascending alphabetical order."))
+                        {
+                            var el = jQuery(this).parents(".box");
+                            App.blockUI(el);
+                            var dataString = 'class_code='+jQuery('#class_code').val();
+                            var url = "<?php echo base_url('secure/assign_rollnos');?>";
+                            jQuery.ajax({
+                                 type: "POST",
+                                 url: url,
+                                 data: dataString, // serializes the form's elements.
+                                 success: function()
+                                 {
+                                     jQuery("form#manage_classes").submit();
+                                 }
+                            });
+                        }
                     });
             });
         </script>
