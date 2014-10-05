@@ -756,10 +756,14 @@ class Secure extends CI_Controller {
             {
                 $data['date_from'] = $this->input->post('year')."-".$this->input->post('month')."-01";
                 $data['date_to'] = $this->input->post('year')."-".$this->input->post('month')."-31";
+                $data['students'] = $this->secureusers->get_students_ofa_class($this->input->post('thisclasscode'));
                 if($this->session->userdata('atttype')=="inout")
                 {
-                    $data['students'] = $this->secureusers->get_students_ofa_class($this->input->post('thisclasscode'));
                     $data['inout_att_records'] = $this->secureusers->get_inout_att_records($this->input->post('thisclasscode'),$data['date_from'],$data['date_to']);
+                }
+                elseif($this->session->userdata('atttype')=="lecturewise")
+                {
+                    
                 }
                 $data['thisclasscode'] = $this->input->post('thisclasscode');
                 $data['thismonth'] = $this->input->post('month');
@@ -769,10 +773,22 @@ class Secure extends CI_Controller {
             {
                 $data['date_from'] = date('Y')."-".date('m')."-01";
                 $data['date_to'] = date('Y')."-".date('m')."-31";
+                $data['students'] = $this->secureusers->get_students_ofa_class($data['classes'][0]['class_code']);
                 if($this->session->userdata('atttype')=="inout")
                 {
-                    $data['students'] = $this->secureusers->get_students_ofa_class($data['classes'][0]['class_code']);
                     $data['inout_att_records'] = $this->secureusers->get_inout_att_records($data['classes'][0]['class_code'],$data['date_from'],$data['date_to']);
+                }
+                elseif($this->session->userdata('atttype')=="lecturewise")
+                {
+                    if($this->is_PRV_admin() || $this->is_PRV_GFM_teacher() || $this->is_PRV_head_teacher()) //If the user is admin, GFM or head get all subjects of the class
+                        $data['subjects_of_this_class'] = $this->secureusers->get_all_subjects_of_this_class($data['classes'][0]['class_code']);
+                    elseif($this->is_PRV_GENERAL_teacher())
+                        $data['subjects_of_this_class'] = $this->secureusers->get_selective_subjects_of_this_class($data['classes'][0]['class_code']);
+                    if(isset($data['subjects_of_this_class']))
+                    {
+                        $data['thissubject'] = $data['subjects_of_this_class'][0]['subject'];
+                        $data['subj_att_records'] = $this->secureusers->get_subj_att_records($data['classes'][0]['class_code'],$data['subjects_of_this_class'][0]['subject'],$data['date_from'],$data['date_to']);
+                    }
                 }
                 $data['thisclasscode'] = $data['classes'][0]['class_code'];
                 $data['thismonth'] = date('m');

@@ -167,7 +167,7 @@ class Secureadmin extends CI_Model
         
         foreach($classes as $class)
         {
-            $row = $this->db->query("select count(*) as count from ".$class['class_code']." where date = '".date('Y-m-d')."'")->row_array();
+            $row = $this->db->query("select count(*) as count from (SELECT id from ".$class['class_code']." GROUP BY bio_id, date HAVING date = '".date('Y-m-d')."') AS ROWS")->row_array();
             $total += $row['count'];
         }
         
@@ -183,7 +183,7 @@ class Secureadmin extends CI_Model
         foreach($classes as $class)
         {
             $row_for_total = $this->db->query("select count(*) as count from users where class_code = '".$class['class_code']."' AND type = '".STUDENT_TYPE."'")->row_array();
-            $row_for_present = $this->db->query("select count(*) as count from ".$class['class_code']." where date = '".date('Y-m-d')."'")->row_array();
+            $row_for_present = $this->db->query("select count(*) as count from (SELECT id from ".$class['class_code']." GROUP BY bio_id, date HAVING date = '".date('Y-m-d')."') AS ROWS")->row_array();
             if($row_for_present['count']=="0")
                 $percentage_present = 0;
             else

@@ -89,6 +89,21 @@
                                                                                                                  </select>
                                                                                                              </div>
                                                                                                         </div>
+                                                                                                        <?php if($this->session->userdata('atttype')=="lecturewise"):?>
+                                                                                                            <div class="form-group">
+                                                                                                                <label class="col-md-2 control-label">Select Subject</label> 
+                                                                                                                 <div class="col-md-10">
+                                                                                                                     <select id="subject" name="thissubject" data-placeholder="Choose a Subject..." class="form-control">
+                                                                                                                         <?php if(isset($subjects_of_this_class)):?>
+                                                                                                                             <?php foreach($subjects_of_this_class as $subject):?>
+                                                                                                                                 <option value="<?php echo $subject['subject'];?>" <?php if(isset($thissubject) && $thissubject==$subject['subject']) echo " selected ";?>> <?php echo $subject['subject']; ?></option>
+                                                                                                                             <?php endforeach;?>
+                                                                                                                         <?php endif; ?>
+                                                                                                                     </select>
+                                                                                                                 </div>
+                                                                                                            </div>
+                                                                                                        <?php endif;?>
+                                                                                                        
                                                                                                         <div class="form-group">
                                                                                                             <label class="col-md-2 control-label">Select Month & Year</label> 
                                                                                                              <div class="col-md-10">
@@ -99,14 +114,14 @@
                                                                                                                                   $dateObj   = DateTime::createFromFormat('!m', $monthNum);
                                                                                                                                   $monthName = $dateObj->format('F'); // March
                                                                                                                             ?>
-                                                                                                                            <option value="<?php echo $monthNum;?>" <?php if($thismonth==$monthNum) echo " selected ";?> ><?php echo $monthName;?></option>
+                                                                                                                            <option value="<?php echo $monthNum;?>" <?php if(isset($thismonth) && $thismonth==$monthNum) echo " selected ";?> ><?php echo $monthName;?></option>
                                                                                                                         <?php endfor; ?>    
                                                                                                                     </select>
                                                                                                                  </div>
                                                                                                                  <div class="col-sm-6" style="padding:0 0;"> 
                                                                                                                     <select id="year" name="year" data-placeholder="Choose Year..." class="form-control">
                                                                                                                         <?php for($i=2010; $i<=2050; $i++): ?>
-                                                                                                                            <option value="<?php echo $i;?>" <?php if($thisyear==$i) echo " selected " ?>><?php echo $i;?></option>
+                                                                                                                            <option value="<?php echo $i;?>" <?php if(isset($thisyear) && $thisyear==$i) echo " selected " ?>><?php echo $i;?></option>
                                                                                                                         <?php endfor;?>
                                                                                                                     </select>
                                                                                                                  </div>
@@ -166,11 +181,13 @@
                                                     </div>
                                                     <div class="modal-backdrop fade in hide"></div>
                                                 </div>
+                                                <?php if(isset($students)):?>
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <button id="btn_bulk_att_modal" class="btn btn-default" style="margin-bottom:10px;"><i class="fa fa-bar-chart-o"></i> Mark Bulk Attendance</button>
                                                     </div>
                                                 </div>
+                                                <?php endif; ?>
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <?php if(isset($students)):?>

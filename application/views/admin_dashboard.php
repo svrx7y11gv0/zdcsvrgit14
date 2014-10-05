@@ -30,7 +30,13 @@
 										   <div class="panel-right">
 												<div class="number"><?php echo $total_students; ?></div>
 												<div class="title">Students</div>
-                                                                                                <?php $present_percentage = ($todays_present_students / $total_students) * 100;?>
+                                                                                                <?php 
+                                                                                                if($total_students!=0)
+                                                                                                    $present_percentage = ($todays_present_students / $total_students) * 100;
+                                                                                                else {
+                                                                                                    $present_percentage = 0;
+                                                                                                }
+                                                                                                ?>
 												<span title="Percentage of today's present students" class="label <?php if($present_percentage<=50) echo 'label-warning'; else echo 'label-success';?>">
 													<?php echo $present_percentage;?>% <i class="fa fa-arrow-up"></i>
 												</span>
@@ -65,7 +71,7 @@
 								<!-- BOX -->
 								<div class="box border blue">
 									<div class="box-title">
-										<h4><i class="fa fa-bars"></i>Today's Attendance Percentage Class Wise</h4>
+										<h4><i class="fa fa-bars"></i>Today's Attendance Percentage of Students (Class Wise)</h4>
 										<div class="tools">
 											<a href="#box-config" data-toggle="modal" class="config">
 												<i class="fa fa-cog"></i>

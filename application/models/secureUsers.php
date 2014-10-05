@@ -301,6 +301,57 @@ class Secureusers extends CI_Model
         $this->db->where('users.type =',STUDENT_TYPE);
         $this->db->where($class_code.'.date >=',$date_from);
         $this->db->where($class_code.'.date <=',$date_to);
+        $this->db->group_by('bio_id , date');
+        $query = $this->db->get();
+        if($this->db->affected_rows()==0)
+        {
+            return null;
+        }
+        else
+            return $query->result_array();
+    }
+    
+    public function get_all_subjects_of_this_class($class_code)
+    {
+        $this->db->select('subject');
+        $this->db->from('teachers_subjects');
+        $this->db->where('class_code = ',$class_code);
+        $this->db->group_by('class_code');
+        $query = $this->db->get();
+        if($this->db->affected_rows()==0)
+        {
+            return null;
+        }
+        else
+            return $query->result_array();
+    }
+    
+    public function get_selective_subjects_of_this_class($class_code)
+    {
+        $this->db->select('subject');
+        $this->db->from('teachers_subjects');
+        $this->db->where('class_code = ',$class_code);
+        $this->db->where('bio_id = ',$this->session->userdata('bioid'));
+        $this->db->group_by('class_code');
+        $query = $this->db->get();
+        if($this->db->affected_rows()==0)
+        {
+            return null;
+        }
+        else
+            return $query->result_array();
+    }
+    
+    public function get_subj_att_records($class_code,$subject,$date_from,$date_to)
+    {
+        $this->db->select($class_code.'.bio_id,time,slot,date');
+        $this->db->from($class_code);
+        $this->db->join('users','users.bioid = '.$class_code.".bio_id");
+        $this->db->where('users.type =',STUDENT_TYPE);
+        $this->db->where($class_code.'.date >=',$date_from);
+        $this->db->where($class_code.'.date <=',$date_to);
+        $this->db->where($class_code.'.subject = ',$subject);
+        $this->db->group_by($class_code.'.bio_id , '.$class_code.'.date');
         $query = $this->db->get();
         if($this->db->affected_rows()==0)
         {
