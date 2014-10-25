@@ -83,7 +83,7 @@
                                                                                                                  <select id="class_code" name="thisclasscode" data-placeholder="Choose a Class..." class="form-control">
                                                                                                                      <?php if(isset($classes)):?>
                                                                                                                          <?php foreach($classes as $class):?>
-                                                                                                                             <option value="<?php echo $class['class_code'];?>" <?php if(isset($thisclasscode) && $thisclasscode==$class['class_code']) echo " selected ";?>> <?php echo $class['classname']." ".$class['section']; ?></option>
+                                                                                                                             <option value="<?php echo $class['class_code'];?>" <?php if(isset($thisclasscode) && $thisclasscode==$class['class_code']) { echo " selected "; $curr_class=$class['classname']." ".$class['section'];}?>> <?php echo $class['classname']." ".$class['section']; ?></option>
                                                                                                                          <?php endforeach;?>
                                                                                                                      <?php endif; ?>
                                                                                                                  </select>
@@ -96,7 +96,7 @@
                                                                                                                      <select id="subject" name="thissubject" data-placeholder="Choose a Subject..." class="form-control">
                                                                                                                          <?php if(isset($subjects_of_this_class)):?>
                                                                                                                              <?php foreach($subjects_of_this_class as $subject):?>
-                                                                                                                                 <option value="<?php echo $subject['subject'];?>" <?php if(isset($thissubject) && $thissubject==$subject['subject']) echo " selected ";?>> <?php echo $subject['subject']; ?></option>
+                                                                                                                                 <option value="<?php echo $subject['subject'];?>" <?php if(isset($thissubject) && $thissubject==$subject['subject']) { echo " selected "; $curr_subject = $subject['subject'];}?>> <?php echo $subject['subject']; ?></option>
                                                                                                                              <?php endforeach;?>
                                                                                                                          <?php endif; ?>
                                                                                                                      </select>
@@ -159,20 +159,38 @@
                                                                             <span id="att_date_error" class="help-block"></span>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="form-group">
-                                                                        <label class="col-md-2 control-label">In-Time</label> 
-                                                                        <div class="col-md-10">
-                                                                            <input type="text" class="form-control" id="att_intime" placeholder="Enter in-time as hh:mm e.g. 15:00" />
-                                                                            <span id="att_intime_error" class="help-block"></span>
+                                                                    <?php if($this->session->userdata('atttype')=="lecturewise"):?>
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-2 control-label">Time</label> 
+                                                                            <div class="col-md-10">
+                                                                                <input type="text" class="form-control" id="att_time" placeholder="Enter time as hh:mm e.g. 15:00" />
+                                                                                <span id="att_time_error" class="help-block"></span>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label class="col-md-2 control-label">Out-Time</label> 
-                                                                        <div class="col-md-10">
-                                                                            <input type="text" class="form-control" id="att_outtime" placeholder="Enter out-time as hh:mm e.g. 20:00" />
-                                                                            <span id="att_outtime_error" class="help-block"></span>
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-2 control-label">Slot</label> 
+                                                                            <div class="col-md-10">
+                                                                                <input type="text" class="form-control" id="att_slot" placeholder="Enter slot number" />
+                                                                                <span id="att_slot_error" class="help-block"></span>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
+                                                                    <?php endif; ?>
+                                                                    <?php if($this->session->userdata('atttype')=="inout"):?>
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-2 control-label">In-Time</label> 
+                                                                            <div class="col-md-10">
+                                                                                <input type="text" class="form-control" id="att_intime" placeholder="Enter in-time as hh:mm e.g. 15:00" />
+                                                                                <span id="att_intime_error" class="help-block"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label class="col-md-2 control-label">Out-Time</label> 
+                                                                            <div class="col-md-10">
+                                                                                <input type="text" class="form-control" id="att_outtime" placeholder="Enter out-time as hh:mm e.g. 20:00" />
+                                                                                <span id="att_outtime_error" class="help-block"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    <?php endif;?>
                                                                     <input type="hidden" id="att_bioid" />
                                                                     <button data-bb-handler="ok" type="button" class="btn btn-primary btn_mark_attendance">MARK ATTENDANCE</button>
                                                                 </div>
@@ -184,6 +202,7 @@
                                                 <?php if(isset($students)):?>
                                                 <div class="row">
                                                     <div class="col-md-12">
+                                                        <h3><?php if(isset($curr_class)) echo "<strong>Class : </strong>".$curr_class;?> <?php if(isset($curr_subject)) echo "<strong> Subject : </strong>".$curr_subject;?> </h3>
                                                         <button id="btn_bulk_att_modal" class="btn btn-default" style="margin-bottom:10px;"><i class="fa fa-bar-chart-o"></i> Mark Bulk Attendance</button>
                                                     </div>
                                                 </div>
@@ -271,7 +290,7 @@
         <script>
     
             jQuery(document).ready(function(){
-                 jQuery( "#select_department" ).change(function() {
+                jQuery( "#select_department" ).change(function() {
                     var el = jQuery(this).parents(".box");
                     App.blockUI(el);
                     var dataString = "deptid="+jQuery("#select_department").val();
@@ -333,7 +352,37 @@
                                 }
                            });
                     });
-                    
+                
+                <?php if($this->session->userdata('atttype')=="lecturewise"):?>
+                    jQuery( "#class_code" ).change(function() {
+                        var el = jQuery(this).parents(".box");
+                        App.blockUI(el);
+                        var dataString = "class_code="+jQuery("#class_code").val();
+                        var url = "<?php echo base_url('secure/get_subjects_ofa_class');?>";
+                               jQuery.ajax({
+                                    type: "POST",
+                                    url: url,
+                                    data: dataString, 
+                                    dataType: "json",
+                                    success: function(data)
+                                    {
+                                       jQuery("#subject option").remove();
+                                       if(data)
+                                       {
+                                            for(var i = 0; i < data.length; i++)
+                                            {
+                                               var obj = data[i];
+                                               var option = new Option(obj.subject,obj.subject);
+                                               /// jquerify the DOM object 'option' so we can use the html method
+                                               jQuery(option).html(obj.subject);
+                                               jQuery("#subject").append(option);
+                                            }
+                                       }
+                                       App.unblockUI(el);
+                                    }
+                               });
+                    });
+                <?php endif; ?>
                     <?php if(isset($inout_att_records)): ?>
                         <?php foreach($inout_att_records as $record):?>
                             <?php $in = "<h6><strong>In </strong><span style='color:#942170;font-weight:600;'>".substr($record['in_time'],0,5)."</span></h6>";?>
@@ -344,6 +393,22 @@
                                     $out = "<h6><strong>Out </strong><span style='color:#942170;font-weight:600;'>".substr($record['out_time'],0,5)."</span></h6>"; 
                             ?>
                             jQuery(".inout_att_table tr#<?php echo $record['bio_id'];?> td.<?php echo $record['date'];?>").html("<?php echo $in.$out;?>");
+                        <?php endforeach;?>
+                    <?php endif;?>
+                        
+                    <?php if(isset($subj_att_records)): ?>
+                        <?php foreach($subj_att_records as $record):?>
+                            <?php $tick = "<h6><i class='fa fa-check'></i><h6>"; ?>
+                            <?php $time = "<h6><strong>Time </strong><span style='color:#942170;font-weight:600;'>".substr($record['time'],0,5)."</span></h6>";?>
+                            <?php
+                                if($record['slot']=="0")
+                                    $slot="";
+                                else
+                                    $slot = "<h6><strong>Slot </strong><span style='color:#942170;font-weight:600;'>".$record['slot']."</span></h6>"; 
+                            ?>
+                            if(jQuery(".inout_att_table tr#<?php echo $record['bio_id'];?> td.<?php echo $record['date'];?> span").hasClass('att_markable'))
+                                jQuery(".inout_att_table tr#<?php echo $record['bio_id'];?> td.<?php echo $record['date'];?>").html("");
+                            jQuery(".inout_att_table tr#<?php echo $record['bio_id'];?> td.<?php echo $record['date'];?>").append("<?php echo $tick.$time.$slot;?>");
                         <?php endforeach;?>
                     <?php endif;?>
                         
@@ -480,10 +545,18 @@
                         var error_flag = 0;
                         jQuery('#att_date').parent().parent().removeClass("has-error");
                         jQuery('#att_date_error').text(''); 
-                        jQuery('#att_intime').parent().parent().removeClass("has-error");
-                        jQuery('#att_intime_error').text(''); 
-                        jQuery('#att_outtime').parent().parent().removeClass("has-error");
-                        jQuery('#att_outtime_error').text(''); 
+                        <?php if($this->session->userdata('atttype')=="inout"):?>
+                            jQuery('#att_intime').parent().parent().removeClass("has-error");
+                            jQuery('#att_intime_error').text(''); 
+                            jQuery('#att_outtime').parent().parent().removeClass("has-error");
+                            jQuery('#att_outtime_error').text(''); 
+                        <?php endif;?>
+                        <?php if($this->session->userdata('atttype')=="lecturewise"):?>
+                            jQuery('#att_time').parent().parent().removeClass("has-error");
+                            jQuery('#att_time_error').text(''); 
+                            jQuery('#att_slot').parent().parent().removeClass("has-error");
+                            jQuery('#att_slot_error').text(''); 
+                        <?php endif;?>    
                         var re = /^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$/;
                         if(!re.test(jQuery('#att_date').val()))
                         {
@@ -491,32 +564,60 @@
                             jQuery('#att_date').parent().parent().addClass("has-error");
                             jQuery('#att_date_error').text('This date is invalid.');
                         }    
-                        var in_time = jQuery('#att_intime').val();
-                        var t = in_time.split(':');
-                        re = /^\d\d:\d\d$/;
-                        if(re.test(in_time) && t[0] >= 0 && t[0] < 25 && t[1] >= 0 && t[1] < 60)
-                               error_flag = 0;
-                        else
-                        {
-                            error_flag = 1;
-                            jQuery('#att_intime').parent().parent().addClass("has-error");
-                            jQuery('#att_intime_error').text('This time format is invalid.');
-                        }   
-                        
-                        var out_time = jQuery('#att_outtime').val();
-                        var t = out_time.split(':');
-                        re = /^\d\d:\d\d$/;
-                        if(!(re.test(out_time) && t[0] >= 0 && t[0] < 25 && t[1] >= 0 && t[1] < 60))
-                        {
-                            error_flag = 1;
-                            jQuery('#att_outtime').parent().parent().addClass("has-error");
-                            jQuery('#att_outtime_error').text('This time format is invalid.');
-                        }   
+                        <?php if($this->session->userdata('atttype')=="inout"):?>
+                            var in_time = jQuery('#att_intime').val();
+                            var t = in_time.split(':');
+                            re = /^\d\d:\d\d$/;
+                            if(re.test(in_time) && t[0] >= 0 && t[0] < 25 && t[1] >= 0 && t[1] < 60)
+                                   error_flag = 0;
+                            else
+                            {
+                                error_flag = 1;
+                                jQuery('#att_intime').parent().parent().addClass("has-error");
+                                jQuery('#att_intime_error').text('This time format is invalid.');
+                            }   
+
+                            var out_time = jQuery('#att_outtime').val();
+                            var t = out_time.split(':');
+                            re = /^\d\d:\d\d$/;
+                            if(!(re.test(out_time) && t[0] >= 0 && t[0] < 25 && t[1] >= 0 && t[1] < 60))
+                            {
+                                error_flag = 1;
+                                jQuery('#att_outtime').parent().parent().addClass("has-error");
+                                jQuery('#att_outtime_error').text('This time format is invalid.');
+                            }   
+                        <?php endif; ?>
+                        <?php if($this->session->userdata('atttype')=="lecturewise"):?> 
+                            var att_time = jQuery('#att_time').val();
+                            var t = att_time.split(':');
+                            re = /^\d\d:\d\d$/;
+                            if(re.test(att_time) && t[0] >= 0 && t[0] < 25 && t[1] >= 0 && t[1] < 60)
+                                   error_flag = 0;
+                            else
+                            {
+                                error_flag = 1;
+                                jQuery('#att_time').parent().parent().addClass("has-error");
+                                jQuery('#att_time_error').text('This time format is invalid.');
+                            }   
+                            
+                            if(jQuery('#att_slot').val()=="")
+                            {
+                                error_flag = 1;
+                                jQuery('#att_slot').parent().parent().addClass("has-error");
+                                jQuery('#att_slot').text('Please enter the slot number.');
+                            }
+                        <?php endif;?>
+                            
                         if(error_flag == 0)
                         {
                             if(jQuery("#att_bioid").val()!="multi")
                             {
-                                var dataString = 'bio_id='+jQuery("#att_bioid").val()+'&date='+jQuery("#att_date").val()+'&in_time='+jQuery("#att_intime").val()+'&out_time='+jQuery("#att_outtime").val()+'&class_code=<?php echo $thisclasscode;?>';
+                                <?php if($this->session->userdata('atttype')=="inout"):?> 
+                                    var dataString = 'bio_id='+jQuery("#att_bioid").val()+'&date='+jQuery("#att_date").val()+'&in_time='+jQuery("#att_intime").val()+'&out_time='+jQuery("#att_outtime").val()+'&class_code=<?php echo $thisclasscode;?>';
+                                <?php endif; ?>
+                                <?php if($this->session->userdata('atttype')=="lecturewise" && isset($thissubject)):?> 
+                                    var dataString = 'bio_id='+jQuery("#att_bioid").val()+'&date='+jQuery("#att_date").val()+'&time='+jQuery("#att_time").val()+'&att_slot='+jQuery("#att_slot").val()+'&class_code=<?php echo $thisclasscode;?>&subject=<?php echo $thissubject;?>';
+                                <?php endif; ?>    
                                 var url = "<?php echo base_url('secure/mark_attendance');?>";
                                 jQuery.ajax({
                                      type: "POST",
@@ -524,9 +625,17 @@
                                      data: dataString, // serializes the form's elements.
                                      success: function()
                                      {
-                                         var IN = "<h6><strong>In </strong><span style='color:#942170;font-weight:600;'>"+in_time+"</span></h6>";
-                                         var OUT = "<h6><strong>Out </strong><span style='color:#942170;font-weight:600;'>"+out_time+"</span></h6>"; 
-                                         jQuery(".inout_att_table tr#"+jQuery("#att_bioid").val()+" td."+jQuery('#att_date').val()).html(IN + OUT);
+                                         <?php if($this->session->userdata('atttype')=="inout"):?> 
+                                            var IN = "<h6><strong>In </strong><span style='color:#942170;font-weight:600;'>"+in_time+"</span></h6>";
+                                            var OUT = "<h6><strong>Out </strong><span style='color:#942170;font-weight:600;'>"+out_time+"</span></h6>"; 
+                                            jQuery(".inout_att_table tr#"+jQuery("#att_bioid").val()+" td."+jQuery('#att_date').val()).html(IN + OUT);
+                                         <?php endif; ?>
+                                         <?php if($this->session->userdata('atttype')=="lecturewise"):?>
+                                            var tick = "<h6><i class='fa fa-check'></i><h6>";
+                                            var time = "<h6><strong>Time </strong><span style='color:#942170;font-weight:600;'>"+att_time+"</span></h6>";
+                                            var slot = "<h6><strong>Slot </strong><span style='color:#942170;font-weight:600;'>"+jQuery('#att_slot').val()+"</span></h6>"; 
+                                            jQuery(".inout_att_table tr#"+jQuery("#att_bioid").val()+" td."+jQuery('#att_date').val()).html(tick + time + slot);
+                                         <?php endif; ?>
                                      }
                                 });
                                 
@@ -535,7 +644,12 @@
                             {
                                 jQuery.each($("input[name='bulk_check[]']:checked"), function() {
                                     var bio_id = jQuery(this).val();
-                                    var dataString = 'bio_id='+bio_id+'&date='+jQuery("#att_date").val()+'&in_time='+jQuery("#att_intime").val()+'&out_time='+jQuery("#att_outtime").val()+'&class_code=<?php echo $thisclasscode;?>';
+                                    <?php if($this->session->userdata('atttype')=="inout"):?> 
+                                        var dataString = 'bio_id='+bio_id+'&date='+jQuery("#att_date").val()+'&in_time='+jQuery("#att_intime").val()+'&out_time='+jQuery("#att_outtime").val()+'&class_code=<?php echo $thisclasscode;?>';
+                                    <?php endif; ?>
+                                    <?php if($this->session->userdata('atttype')=="lecturewise"  && isset($thissubject)):?>
+                                        var dataString = 'bio_id='+bio_id+'&date='+jQuery("#att_date").val()+'&time='+jQuery("#att_time").val()+'&att_slot='+jQuery("#att_slot").val()+'&class_code=<?php echo $thisclasscode;?>&subject=<?php echo $thissubject;?>';
+                                    <?php endif;?>    
                                     var url = "<?php echo base_url('secure/mark_attendance');?>";
                                     jQuery.ajax({
                                          type: "POST",
@@ -543,9 +657,17 @@
                                          data: dataString, // serializes the form's elements.
                                          success: function()
                                          {
-                                             var IN = "<h6><strong>In </strong><span style='color:#942170;font-weight:600;'>"+in_time+"</span></h6>";
-                                             var OUT = "<h6><strong>Out </strong><span style='color:#942170;font-weight:600;'>"+out_time+"</span></h6>"; 
-                                             jQuery(".inout_att_table tr#"+bio_id+" td."+jQuery('#att_date').val()).html(IN + OUT);
+                                             <?php if($this->session->userdata('atttype')=="inout"):?> 
+                                                var IN = "<h6><strong>In </strong><span style='color:#942170;font-weight:600;'>"+in_time+"</span></h6>";
+                                                var OUT = "<h6><strong>Out </strong><span style='color:#942170;font-weight:600;'>"+out_time+"</span></h6>"; 
+                                                jQuery(".inout_att_table tr#"+bio_id+" td."+jQuery('#att_date').val()).html(IN + OUT);
+                                             <?php endif;?>
+                                             <?php if($this->session->userdata('atttype')=="lecturewise"):?> 
+                                                var tick = "<h6><i class='fa fa-check'></i><h6>";
+                                                var time = "<h6><strong>Time </strong><span style='color:#942170;font-weight:600;'>"+time+"</span></h6>";
+                                                var slot = "<h6><strong>Slot </strong><span style='color:#942170;font-weight:600;'>"+jQuery('#att_slot').val()+"</span></h6>"; 
+                                                jQuery(".inout_att_table tr#"+bio_id+" td."+jQuery('#att_date').val()).html(tick + time + slot);
+                                             <?php endif;?>    
                                          }
                                     });
                                 });

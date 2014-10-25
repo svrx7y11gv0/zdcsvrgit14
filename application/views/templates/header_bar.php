@@ -65,7 +65,7 @@
 					<li class="dropdown">
 						<a href="#" class="team-status-toggle dropdown-toggle tip-bottom" data-toggle="tooltip" title="Toggle Team View">
 							<i class="fa fa-users"></i>
-							<span class="name">Team Status</span>
+							<span class="name">Our Team</span>
 							<i class="fa fa-angle-down"></i>
 						</a>
 					</li>
@@ -365,7 +365,7 @@
 					  <img src="<?php echo base_url('resources/img/avatars/avatar3.jpg');?>" alt="" />
 				  </span>
 				  <span class="title">
-					You
+					Utkarsh G.
 				  </span>
 					<div class="progress">
 					  <div class="progress-bar progress-bar-success" style="width: 35%">
@@ -400,7 +400,7 @@
 					  <img src="<?php echo base_url('resources/img/avatars/avatar1.jpg');?>" alt="" />
 				  </span>
 				  <span class="title">
-					Max Doe
+					Abhishek K.
 				  </span>
 					<div class="progress">
 					  <div class="progress-bar progress-bar-success" style="width: 15%">
@@ -435,7 +435,7 @@
 					  <img src="<?php echo base_url('resources/img/avatars/avatar2.jpg');?>" alt="" />
 				  </span>
 				  <span class="title">
-					Jane Doe
+					Sudeep P.
 				  </span>
 					<div class="progress">
 					  <div class="progress-bar progress-bar-success" style="width: 65%">
@@ -470,7 +470,7 @@
 					  <img src="<?php echo base_url('resources/img/avatars/avatar4.jpg');?>" alt="" />
 				  </span>
 				  <span class="title">
-					Ellie Doe
+					Pranav D.
 				  </span>
 					<div class="progress">
 					  <div class="progress-bar progress-bar-success" style="width: 5%">
@@ -499,146 +499,7 @@
 				    </span>
 				  </a>
 				</li>
-				<li>
-				  <a href="javascript:void(0);">
-				  <span class="image">
-					  <img src="<?php echo base_url('resources/img/avatars/avatar5.jpg');?>" alt="" />
-				  </span>
-				  <span class="title">
-					Lisa Doe
-				  </span>
-					<div class="progress">
-					  <div class="progress-bar progress-bar-success" style="width: 21%">
-						<span class="sr-only">35% Complete (success)</span>
-					  </div>
-					  <div class="progress-bar progress-bar-warning" style="width: 20%">
-						<span class="sr-only">20% Complete (warning)</span>
-					  </div>
-					  <div class="progress-bar progress-bar-danger" style="width: 40%">
-						<span class="sr-only">10% Complete (danger)</span>
-					  </div>
-					</div>
-					<span class="status">
-						<div class="field">
-							<span class="badge badge-green">4</span> completed
-							<span class="pull-right fa fa-check"></span>
-						</div>
-						<div class="field">
-							<span class="badge badge-orange">5</span> in-progress
-							<span class="pull-right fa fa-adjust"></span>
-						</div>
-						<div class="field">
-							<span class="badge badge-red">9</span> pending
-							<span class="pull-right fa fa-list-ul"></span>
-						</div>
-				    </span>
-				  </a>
-				</li>
-				<li>
-				  <a href="javascript:void(0);">
-				  <span class="image">
-					  <img src="<?php echo base_url('resources/img/avatars/avatar6.jpg');?>" alt="" />
-				  </span>
-				  <span class="title">
-					Kelly Doe
-				  </span>
-					<div class="progress">
-					  <div class="progress-bar progress-bar-success" style="width: 45%">
-						<span class="sr-only">35% Complete (success)</span>
-					  </div>
-					  <div class="progress-bar progress-bar-warning" style="width: 21%">
-						<span class="sr-only">20% Complete (warning)</span>
-					  </div>
-					  <div class="progress-bar progress-bar-danger" style="width: 10%">
-						<span class="sr-only">10% Complete (danger)</span>
-					  </div>
-					</div>
-					<span class="status">
-						<div class="field">
-							<span class="badge badge-green">6</span> completed
-							<span class="pull-right fa fa-check"></span>
-						</div>
-						<div class="field">
-							<span class="badge badge-orange">3</span> in-progress
-							<span class="pull-right fa fa-adjust"></span>
-						</div>
-						<div class="field">
-							<span class="badge badge-red">1</span> pending
-							<span class="pull-right fa fa-list-ul"></span>
-						</div>
-				    </span>
-				  </a>
-				</li>
-				<li>
-				  <a href="javascript:void(0);">
-				  <span class="image">
-					  <img src="<?php echo base_url('resources/img/avatars/avatar7.jpg');?>" alt="" />
-				  </span>
-				  <span class="title">
-					Jessy Doe
-				  </span>
-					<div class="progress">
-					  <div class="progress-bar progress-bar-success" style="width: 7%">
-						<span class="sr-only">35% Complete (success)</span>
-					  </div>
-					  <div class="progress-bar progress-bar-warning" style="width: 30%">
-						<span class="sr-only">20% Complete (warning)</span>
-					  </div>
-					  <div class="progress-bar progress-bar-danger" style="width: 10%">
-						<span class="sr-only">10% Complete (danger)</span>
-					  </div>
-					</div>
-					<span class="status">
-						<div class="field">
-							<span class="badge badge-green">1</span> completed
-							<span class="pull-right fa fa-check"></span>
-						</div>
-						<div class="field">
-							<span class="badge badge-orange">6</span> in-progress
-							<span class="pull-right fa fa-adjust"></span>
-						</div>
-						<div class="field">
-							<span class="badge badge-red">2</span> pending
-							<span class="pull-right fa fa-list-ul"></span>
-						</div>
-				    </span>
-				  </a>
-				</li>
-				<li>
-				  <a href="javascript:void(0);">
-				  <span class="image">
-					  <img src="<?php echo base_url('resources/img/avatars/avatar8.jpg');?>" alt="" />
-				  </span>
-				  <span class="title">
-					Debby Doe
-				  </span>
-					<div class="progress">
-					  <div class="progress-bar progress-bar-success" style="width: 70%">
-						<span class="sr-only">35% Complete (success)</span>
-					  </div>
-					  <div class="progress-bar progress-bar-warning" style="width: 20%">
-						<span class="sr-only">20% Complete (warning)</span>
-					  </div>
-					  <div class="progress-bar progress-bar-danger" style="width: 5%">
-						<span class="sr-only">10% Complete (danger)</span>
-					  </div>
-					</div>
-					<span class="status">
-						<div class="field">
-							<span class="badge badge-green">13</span> completed
-							<span class="pull-right fa fa-check"></span>
-						</div>
-						<div class="field">
-							<span class="badge badge-orange">7</span> in-progress
-							<span class="pull-right fa fa-adjust"></span>
-						</div>
-						<div class="field">
-							<span class="badge badge-red">1</span> pending
-							<span class="pull-right fa fa-list-ul"></span>
-						</div>
-				    </span>
-				  </a>
-				</li>
+				
 			  </ul>
 			</div>
 		  </div>

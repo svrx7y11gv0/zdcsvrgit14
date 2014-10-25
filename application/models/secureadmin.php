@@ -174,29 +174,33 @@ class Secureadmin extends CI_Model
         return $total;
     }
     
-    function get_gauge_data()
+    function get_gauge_data($classes)
     {
-        $this->db->select('class_code,class,section');
-        $classes = $this->db->get('classes')->result_array();
-        
         $gauge_array = array();
-        foreach($classes as $class)
+        if(count($classes)!=0)
         {
-            $row_for_total = $this->db->query("select count(*) as count from users where class_code = '".$class['class_code']."' AND type = '".STUDENT_TYPE."'")->row_array();
-            $row_for_present = $this->db->query("select count(*) as count from (SELECT id from ".$class['class_code']." GROUP BY bio_id, date HAVING date = '".date('Y-m-d')."') AS ROWS")->row_array();
-            if($row_for_present['count']=="0")
-                $percentage_present = 0;
-            else
-                $percentage_present = ($row_for_present['count'] / $row_for_total['count']) * 100;
-            $gauge_array[] = array('class_code' => $class['class_code'],'class_name' => $class['class']." ".$class['section'], 'percentage' => $percentage_present);
+            foreach($classes as $class)
+            {
+                $row_for_total = $this->db->query("select count(*) as count from users where class_code = '".$class['class_code']."' AND type = '".STUDENT_TYPE."'")->row_array();
+                $row_for_present = $this->db->query("select count(*) as count from (SELECT id from ".$class['class_code']." GROUP BY bio_id, date HAVING date = '".date('Y-m-d')."') AS ROWS")->row_array();
+                if($row_for_present['count']=="0")
+                    $percentage_present = 0;
+                else
+                    $percentage_present = ($row_for_present['count'] / $row_for_total['count']) * 100;
+                $gauge_array[] = array('class_code' => $class['class_code'],'class_name' => $class['classname']." ".$class['section'], 'percentage' => $percentage_present);
+            }
         }
-        
         return $gauge_array;
     }
     
-    function mark_attendance($bio_id,$date,$in_time,$out_time,$class_code)
+    function mark_inout_attendance($bio_id,$date,$in_time,$out_time,$class_code)
     {
         $this->db->insert($class_code,array('bio_id'=>$bio_id,'date'=>$date,'in_time'=>$in_time,'out_time'=>$out_time));
+    }
+    
+    function mark_lecturewise_attendance($bio_id,$date,$time,$att_slot,$class_code,$subject)
+    {
+        $this->db->insert($class_code,array('bio_id'=>$bio_id,'date'=>$date,'time'=>$time,'slot'=>$att_slot,'subject'=>$subject));
     }
     
     function assign_rollnos($class_code)

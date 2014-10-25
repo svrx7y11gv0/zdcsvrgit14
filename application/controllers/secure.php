@@ -741,6 +741,12 @@ class Secure extends CI_Controller {
         $data['student_details'] = $this->secureusers->get_student_details($student_bioid);
         $this->load->view('student_profile',$data);
     }
+    
+    public function get_subjects_ofa_class()
+    {
+        $this->load->model('secureusers');
+        echo json_encode($this->secureusers->get_subjects_ofa_class($this->input->post('class_code')));
+    }
             
     public function manage_classes()
     {
@@ -763,7 +769,15 @@ class Secure extends CI_Controller {
                 }
                 elseif($this->session->userdata('atttype')=="lecturewise")
                 {
-                    
+                    if($this->is_PRV_admin() || $this->is_PRV_GFM_teacher() || $this->is_PRV_head_teacher()) //If the user is admin, GFM or head get all subjects of the class
+                        $data['subjects_of_this_class'] = $this->secureusers->get_all_subjects_of_this_class($this->input->post('thisclasscode'));
+                    elseif($this->is_PRV_GENERAL_teacher())
+                        $data['subjects_of_this_class'] = $this->secureusers->get_selective_subjects_of_this_class($this->input->post('thisclasscode'));
+                    $data['thissubject'] = $this->input->post('thissubject');
+                    if(isset($data['thissubject']))
+                    {
+                        $data['subj_att_records'] = $this->secureusers->get_subj_att_records($this->input->post('thisclasscode'),$data['thissubject'],$data['date_from'],$data['date_to']);
+                    }
                 }
                 $data['thisclasscode'] = $this->input->post('thisclasscode');
                 $data['thismonth'] = $this->input->post('month');
@@ -816,17 +830,25 @@ class Secure extends CI_Controller {
     public function admin_dashboard()
     {
         $this->load->model('secureadmin');
+        $this->load->model('secureusers');  //For getting classes
+        
+        $data = $this->get_departments_and_classes();
+        
         $data['total_students'] = $this->secureadmin->get_total_nof_students();
         $data['todays_present_students'] = $this->secureadmin->get_todays_all_present_students();
         $data['total_teachers'] = $this->secureadmin->get_total_nof_teachers();
-        $data['gauge_data'] = $this->secureadmin->get_gauge_data();
+        $data['gauge_data'] = $this->secureadmin->get_gauge_data($data['classes']);
         $this->load->view('admin_dashboard',$data);
+        //var_dump($data);
     }
     
     public function mark_attendance()
     {
         $this->load->model('secureadmin');
-        $this->secureadmin->mark_attendance($this->input->post('bio_id'),$this->input->post('date'),$this->input->post('in_time'),$this->input->post('out_time'),$this->input->post('class_code'));
+        if($this->session->userdata('atttype')=="inout")
+            $this->secureadmin->mark_inout_attendance($this->input->post('bio_id'),$this->input->post('date'),$this->input->post('in_time'),$this->input->post('out_time'),$this->input->post('class_code'));
+        elseif($this->session->userdata('atttype')=="lecturewise")
+            $this->secureadmin->mark_lecturewise_attendance($this->input->post('bio_id'),$this->input->post('date'),$this->input->post('time'),$this->input->post('att_slot'),$this->input->post('class_code'),$this->input->post('subject'));
     }
     
     public function assign_rollnos()

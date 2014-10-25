@@ -208,6 +208,19 @@ class Secureusers extends CI_Model
             return $query->result_array();
     }
     
+    function get_subjects_ofa_class($class_code)
+    {
+        $this->db->select('id,bio_id,subject');
+        $this->db->order_by('id ASC');
+        $query = $this->db->get_where('teachers_subjects',array('class_code'=>$class_code));
+        if($this->db->affected_rows()==0)
+        {
+            return null;
+        }
+        else
+            return $query->result_array();
+    }
+    
     function get_intime_ofa_student($class_code,$bio_id,$date_from,$date_to)
     {
         $query = "select `date` as x, `in_time` as y from `".$class_code."` group by `bio_id`,`date` having `bio_id` = ".$bio_id." and `date` BETWEEN '".$date_from."' AND '".$date_to."' order by `date` ASC";
@@ -316,7 +329,7 @@ class Secureusers extends CI_Model
         $this->db->select('subject');
         $this->db->from('teachers_subjects');
         $this->db->where('class_code = ',$class_code);
-        $this->db->group_by('class_code');
+        //$this->db->group_by('class_code');
         $query = $this->db->get();
         if($this->db->affected_rows()==0)
         {
@@ -351,7 +364,7 @@ class Secureusers extends CI_Model
         $this->db->where($class_code.'.date >=',$date_from);
         $this->db->where($class_code.'.date <=',$date_to);
         $this->db->where($class_code.'.subject = ',$subject);
-        $this->db->group_by($class_code.'.bio_id , '.$class_code.'.date');
+        $this->db->group_by($class_code.'.bio_id , '.$class_code.'.date , '.$class_code.'.slot');
         $query = $this->db->get();
         if($this->db->affected_rows()==0)
         {

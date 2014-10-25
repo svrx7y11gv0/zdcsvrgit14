@@ -32,7 +32,7 @@
 												<div class="title">Students</div>
                                                                                                 <?php 
                                                                                                 if($total_students!=0)
-                                                                                                    $present_percentage = ($todays_present_students / $total_students) * 100;
+                                                                                                    $present_percentage = round(($todays_present_students / $total_students) * 100,2);
                                                                                                 else {
                                                                                                     $present_percentage = 0;
                                                                                                 }
@@ -73,9 +73,6 @@
 									<div class="box-title">
 										<h4><i class="fa fa-bars"></i>Today's Attendance Percentage of Students (Class Wise)</h4>
 										<div class="tools">
-											<a href="#box-config" data-toggle="modal" class="config">
-												<i class="fa fa-cog"></i>
-											</a>
 											<a href="javascript:;" class="reload">
 												<i class="fa fa-refresh"></i>
 											</a>
@@ -88,6 +85,24 @@
 										</div>
 									</div>
 									<div class="box-body">
+                                                                            <form class="form-horizontal" id="dashboard" name="dashboard" method="post" action="<?php echo base_url('secure/dashboard');?>">
+                                                                                <div class="row" style="margin-top:20px;">
+                                                                                    <div class="form-group">
+                                                                                        <label class="col-md-2 control-label" style="font-size:16px; padding: 8px 8px 20px 20px; text-align: right;">Select Department</label> 
+                                                                                        <div class="col-md-9">
+                                                                                            <select id="select_department" name="thisdeptid" data-placeholder="Choose Department..." class="form-control" style="cursor:pointer;">
+                                                                                                <?php if(isset($departments)):?>
+                                                                                                    <?php foreach($departments as $department):?>
+                                                                                                        <option value="<?php echo $department['id'];?>" <?php if($thisdeptid==$department['id']) echo " selected ";?> > <?php echo $department['department_name']; ?> </option>
+                                                                                                    <?php endforeach;?>
+                                                                                                <?php endif; ?>
+                                                                                                        <option value="others" <?php if($thisdeptid=="others") echo " selected ";?> >Others</option>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </form>
+                                                                            <hr/>
                                                                             <?php $i=0; ?>
                                                                             <?php foreach($gauge_data as $gauge):?>
                                                                                 <?php if($i % 3 == 0):?>
@@ -156,6 +171,10 @@
                             <?php $i++; ?>
                       <?php endforeach; ?>
                  };
+                 
+                 jQuery("#select_department").change(function(){
+                     jQuery("form#dashboard").submit();
+                 });
             });
         </script>
         
