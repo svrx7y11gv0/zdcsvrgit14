@@ -823,8 +823,10 @@ class Secure extends CI_Controller {
     public function dashboard()
     {
         $this->session->set_userdata('selected_menu','dashboard');
-        if($this->is_admin())
+        if($this->is_admin() || $this->is_PRV_head_teacher())
             $this->admin_dashboard();
+        if($this->is_PRV_GFM_teacher() || $this->is_PRV_GENERAL_teacher())
+            $this->teacher_dashboard();
     }
     
     public function admin_dashboard()
@@ -840,6 +842,17 @@ class Secure extends CI_Controller {
         $data['gauge_data'] = $this->secureadmin->get_gauge_data($data['classes']);
         $this->load->view('admin_dashboard',$data);
         //var_dump($data);
+    }
+    
+    public function teacher_dashboard()
+    {
+        $this->load->model('secureusers');  //For getting classes
+        
+        $data = $this->get_departments_and_classes();
+        
+        $data['gauge_data'] = $this->secureusers->get_gauge_teacher_dashboard($data['classes']);
+        //var_dump($data);
+        $this->load->view('teacher_dashboard',$data);
     }
     
     public function mark_attendance()

@@ -373,6 +373,32 @@ class Secureusers extends CI_Model
         else
             return $query->result_array();
     }
+    
+    public function get_gauge_teacher_dashboard($classes)
+    {
+        $gauge_array = array();
+        if(count($classes)!=0)
+        {
+            foreach($classes as $class)
+            {
+                $row_for_total = $this->db->query("select count(*) as count from users where class_code = '".$class['class_code']."' AND type = '".STUDENT_TYPE."'")->row_array();
+                $subjects = $this->get_selective_subjects_of_this_class($class['class_code']);
+                if(count($subjects)!=0)
+                {
+                    foreach($subjects as $subject)
+                    {
+                        $row_for_present = $this->db->query("select count(*) as count from (SELECT id from ".$class['class_code']." GROUP BY bio_id, date, slot, subject HAVING date = '".date('Y-m-d')."' and subject = '".$subject['subject']."') AS ROWS")->row_array();
+                        if($row_for_present['count']=="0")
+                            $percentage_present = 0;
+                        else
+                            $percentage_present = ($row_for_present['count'] / $row_for_total['count']) * 100;
+                        $gauge_array[] = array('class_code' => $class['class_code'],'class_name' => $class['classname']." ".$class['section'],'subject' => $subject['subject'], 'percentage' => $percentage_present);
+                    }
+                }
+            }
+        }
+        return $gauge_array;
+    }
 }
 
 
