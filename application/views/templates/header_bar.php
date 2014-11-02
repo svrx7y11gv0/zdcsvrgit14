@@ -95,10 +95,10 @@
 					<li class="dropdown" id="header-notification">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 							<i class="fa fa-bell"></i>
-							<span class="badge">7</span>
+							<!--<span class="badge">7</span>-->
 							
 						</a>
-						<ul class="dropdown-menu notification">
+						<!--<ul class="dropdown-menu notification">
 							<li class="dropdown-title">
 								<span><i class="fa fa-bell"></i> 7 Notifications</span>
 							</li>
@@ -177,16 +177,16 @@
 							<li class="footer">
 								<a href="#">See all notifications <i class="fa fa-arrow-circle-right"></i></a>
 							</li>
-						</ul>
+						</ul>-->
 					</li>
 					<!-- END NOTIFICATION DROPDOWN -->
 					<!-- BEGIN INBOX DROPDOWN -->
 					<li class="dropdown" id="header-message">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 						<i class="fa fa-envelope"></i>
-						<span class="badge">3</span>
+						<!--<span class="badge">3</span>-->
 						</a>
-						<ul class="dropdown-menu inbox">
+						<!--<ul class="dropdown-menu inbox">
 							<li class="dropdown-title">
 								<span><i class="fa fa-envelope-o"></i> 3 Messages</span>
 								<span class="compose pull-right tip-right" title="Compose message"><i class="fa fa-pencil-square-o"></i></span>
@@ -242,16 +242,16 @@
 							<li class="footer">
 								<a href="#">See all messages <i class="fa fa-arrow-circle-right"></i></a>
 							</li>
-						</ul>
+						</ul>-->
 					</li>
 					<!-- END INBOX DROPDOWN -->
 					<!-- BEGIN TODO DROPDOWN -->
 					<li class="dropdown" id="header-tasks">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 						<i class="fa fa-tasks"></i>
-						<span class="badge">3</span>
+						<!--<span class="badge">3</span>-->
 						</a>
-						<ul class="dropdown-menu tasks">
+						<!--<ul class="dropdown-menu tasks">
 							<li class="dropdown-title">
 								<span><i class="fa fa-check"></i> 6 tasks in progress</span>
 							</li>
@@ -329,7 +329,7 @@
 							<li class="footer">
 								<a href="#">See all tasks <i class="fa fa-arrow-circle-right"></i></a>
 							</li>
-						</ul>
+						</ul>-->
 					</li>
 					<!-- END TODO DROPDOWN -->
 					<!-- BEGIN USER LOGIN DROPDOWN -->
@@ -340,7 +340,7 @@
 							<i class="fa fa-angle-down"></i>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="<?php echo base_url('secure/user_manager/overview');?>"><i class="fa fa-dot-circle-o"></i> My Overview</a></li>
+							<!--<li><a href="< ?php echo base_url('secure/user_manager/overview');?>"><i class="fa fa-dot-circle-o"></i> My Overview</a></li>-->
 							<li><a href="<?php echo base_url('secure/user_manager/profile');?>"><i class="fa fa-user"></i> My Profile</a></li>
 							<li><a href="<?php echo base_url('secure/user_manager/account');?>"><i class="fa fa-cog"></i> Account Settings</a></li>
 							<li><a href="<?php echo base_url('secure/logout');?>"><i class="fa fa-power-off"></i> Log Out</a></li>
