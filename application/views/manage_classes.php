@@ -205,6 +205,7 @@
                                                         <h3><?php if(isset($curr_class)) echo "<strong>Class : </strong>".$curr_class;?> <?php if(isset($curr_subject)) echo "<strong> Subject : </strong>".$curr_subject;?> </h3>
                                                         <button id="btn_bulk_att_modal" class="btn btn-default" style="margin-bottom:10px;"><i class="fa fa-bar-chart-o"></i> Mark Bulk Attendance</button>
                                                         <button id="btn_generate_pdf" class="btn btn-default" style="margin-bottom:10px;"><i class="fa fa-file"></i> Generate PDF Report</button>
+                                                        <button id="btn_generate_pdf_forall" class="btn btn-default" style="margin-bottom:10px;"><i class="fa fa-file"></i> Generate PDF Report for All Classes</button>
                                                     </div>
                                                 </div>
                                                 <?php endif; ?>
@@ -551,6 +552,14 @@
                         else
                             alert("Please show records first")
                     });
+                    jQuery("#btn_generate_pdf_forall").click(function(){
+                        var month = jQuery("#month").val();
+                        var year = jQuery("#year").val();
+                        alert("This operation may take few seconds to few minutes. Click ok to proceed.");
+                        window.open(base_url+"secure/generate_lec_att_report_forall/"+month+"/"+year, '_blank');
+                        
+                    });
+                    
                     jQuery(".btn_mark_attendance").click(function(){
                         var error_flag = 0;
                         jQuery('#att_date').parent().parent().removeClass("has-error");
