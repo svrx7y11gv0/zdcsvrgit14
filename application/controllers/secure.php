@@ -869,4 +869,78 @@ class Secure extends CI_Controller {
         $this->load->model('secureadmin');
         $this->secureadmin->assign_rollnos($this->input->post('class_code'));
     }
+    
+    public function generate_lec_att_report($class_code,$subject,$date_from,$date_to)
+    {
+        $dateTime = new DateTime($date_from);
+        $year = $dateTime->format('Y');
+        $month = $dateTime->format('m');
+        $this->load->model('secureusers');
+        $students = $this->secureusers->get_students_ofa_class($class_code);
+        
+        $total_no_classes = $this->secureusers->get_total_no_classes($class_code,$subject,$date_from,$date_to);
+        
+        $table = "<table style='border: 1px solid black;'><thead>";
+        $table .= "<tr style='border: 1px solid black;'><th></th>";
+        for($i=1; $i <= cal_days_in_month(CAL_GREGORIAN, $month, $year); $i++)
+        {
+            $timestamp = strtotime($year."-".$month."-".$i);
+            $table .= "<th style='text-align:center;'><h5 style='margin: 5px 0 5px 0;'><strong>".date('D',$timestamp)."</strong></h5><h5 style='margin: 10px 0 10px 0;'>".$i."</h5></th>";
+        }
+        $table .= "<th style='text-align:center;'><h5><strong>Total</strong></h5></th>";
+        $table .= "<th style='text-align:center;'><h5><strong>Attended</strong></h5></th>";
+        $table .= "<th style='text-align:center;'><h5><strong>Percentage</strong></h5></th>";
+        $table .= "</tr></thead><tbody>";
+        foreach($students as $student)
+        {
+            $table .= "<tr style='border: 1px solid black;'>";
+            $table .= "<td>".$student['firstname']." ".$student['lastname']."</td>";
+            $his_or_her_attcount = 0;
+            for($i=1; $i <= cal_days_in_month(CAL_GREGORIAN, $month, $year); $i++)
+            {
+                $day = sprintf("%02s", $i);
+                $thisdate = $year."-".$month."-".$day;
+                $subj_att_records = $this->secureusers->get_this_subj_date_bioid_att($class_code,$subject,$thisdate,$student['bioid']);
+                if(count($subj_att_records)>0)
+                {
+                    $table .= "<td style='border: 1px solid black;'>";
+                    foreach($subj_att_records as $record)
+                    {
+                        $his_or_her_attcount++;
+                        $time = "<h6 style='margin: 10px 0 10px 0;'><span style='color:#942170;font-weight:600;'>".substr($record['time'],0,5)."</span></h6>";
+                        
+                        if($record['slot']=="0")
+                            $slot="";
+                        else
+                            $slot = "<h6 style='margin: 10px 0 10px 0;'><strong>Slot </strong><span style='color:#942170;font-weight:600;'>".$record['slot']."</span></h6>"; 
+                        
+                        $table .= $time.$slot;
+                    }
+                    $table .= "</td>";
+                }
+                else
+                    $table .= "<td style='border: 1px solid black;'></td>";
+            }
+            $table .= "<td>".$total_no_classes['count']."</td>";
+            $table .= "<td>".$his_or_her_attcount."</td>";
+            if($total_no_classes['count'] == 0)
+                $table .= "<td>-</td>";
+            else
+                $table .= "<td>".(($his_or_her_attcount/$total_no_classes['count'])*100)."%</td>";
+            $table .= "</tr>";
+        }
+        $table .= "</tbody></table>";
+        $this->load->library('mpdf');
+        $this->mpdf->WriteHTML("<h3><strong>Class : </strong>".$class_code."<strong> Subject : </strong>".$subject."</h3>");
+        $this->mpdf->WriteHTML("<span style='float:right;'>Month & Year: <strong>".$dateTime->format('M').$dateTime->format('Y')."</strong></span>");
+        $this->mpdf->WriteHTML($table);
+        $this->mpdf->Output();
+    }
+    
+    public function test()
+    {
+        $this->load->library('mpdf');
+        $this->mpdf->WriteHTML('<p>Hello There</p>');
+        $this->mpdf->Output();
+    }
 }

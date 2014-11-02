@@ -48,7 +48,7 @@
 								<div class="row">
 									<div class="col-md-12">
 										<!-- BASIC -->
-										<div class="box border blue">
+										<div class="box border blue" id="filterbox">
 											<div class="box-title">
 												<h4><i class="fa fa-bars"></i>Select a Class</h4>
 												<div class="tools hidden-xs">
@@ -204,6 +204,7 @@
                                                     <div class="col-md-12">
                                                         <h3><?php if(isset($curr_class)) echo "<strong>Class : </strong>".$curr_class;?> <?php if(isset($curr_subject)) echo "<strong> Subject : </strong>".$curr_subject;?> </h3>
                                                         <button id="btn_bulk_att_modal" class="btn btn-default" style="margin-bottom:10px;"><i class="fa fa-bar-chart-o"></i> Mark Bulk Attendance</button>
+                                                        <button id="btn_generate_pdf" class="btn btn-default" style="margin-bottom:10px;"><i class="fa fa-file"></i> Generate PDF Report</button>
                                                     </div>
                                                 </div>
                                                 <?php endif; ?>
@@ -392,7 +393,7 @@
                                 else
                                     $out = "<h6><strong>Out </strong><span style='color:#942170;font-weight:600;'>".substr($record['out_time'],0,5)."</span></h6>"; 
                             ?>
-                            jQuery(".inout_att_table tr#<?php echo $record['bio_id'];?> td.<?php echo $record['date'];?>").html("<?php echo $in.$out;?>");
+                            jQuery(".inout_att_table tr#<?php echo $record['bio_id'];?> td.<?php echo $record['date'];?>").html("<?php echo $in.$out;?>");    
                         <?php endforeach;?>
                     <?php endif;?>
                         
@@ -540,7 +541,16 @@
                             jQuery("#att_date").focus();
                         }
                     });
-                    
+                    jQuery("#btn_generate_pdf").click(function(){
+                        var class_code = "<?php if(isset($thisclasscode)) echo $thisclasscode;?>";
+                        var subject = "<?php if(isset($thissubject)) echo $thissubject;?>";
+                        var date_from = "<?php if(isset($date_from)) echo $date_from;?>";
+                        var date_to = "<?php if(isset($date_to)) echo $date_to;?>";
+                        if(class_code!="" && subject!="" && date_from!="" && date_to!="")
+                            window.open(base_url+"secure/generate_lec_att_report/"+class_code+"/"+subject+"/"+date_from+"/"+date_to, '_blank');
+                        else
+                            alert("Please show records first")
+                    });
                     jQuery(".btn_mark_attendance").click(function(){
                         var error_flag = 0;
                         jQuery('#att_date').parent().parent().removeClass("has-error");

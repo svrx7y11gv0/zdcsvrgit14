@@ -399,6 +399,31 @@ class Secureusers extends CI_Model
         }
         return $gauge_array;
     }
+    
+    public function get_total_no_classes($class_code,$subject,$date_from,$date_to)
+    {
+        $query = "Select count(*) as count from (SELECT count(*), subject FROM ".$class_code." WHERE date >= '".$date_from."' AND date <= '".$date_to."' AND subject='".$subject."' Group by date,slot,subject) as ROWS";
+        return $this->db->query($query)->row_array();
+    }
+    
+    public function get_this_subj_date_bioid_att($class_code,$subject,$thisdate,$bioid)
+    {
+        $this->db->select($class_code.'.bio_id,time,slot,date');
+        $this->db->from($class_code);
+        $this->db->join('users','users.bioid = '.$class_code.".bio_id");
+        $this->db->where('users.type =',STUDENT_TYPE);
+        $this->db->where($class_code.'.date =',$thisdate);
+        $this->db->where($class_code.'.subject = ',$subject);
+        $this->db->where($class_code.'.bio_id = ',$bioid);
+        $this->db->group_by($class_code.'.bio_id , '.$class_code.'.date , '.$class_code.'.slot');
+        $query = $this->db->get();
+        if($this->db->affected_rows()==0)
+        {
+            return null;
+        }
+        else
+            return $query->result_array();
+    }
 }
 
 

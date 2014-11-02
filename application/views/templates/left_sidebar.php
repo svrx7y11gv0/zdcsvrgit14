@@ -79,11 +79,11 @@
                                                         <?php endif; ?>
                                                         
                                                         <?php if($prv==PRV_ADMIN || $prv==PRV_HEAD_TEACHER):?>
-                                                        <li <?php if($this->session->userdata('selected_menu')=='manage_teachers') echo ' class="active" ';?> >
+                                                        <!--<li <?php if($this->session->userdata('selected_menu')=='manage_teachers') echo ' class="active" ';?> >
 								<a href="<?php echo base_url('secure/manage_teachers');?>">
 									<i class="fa fa-user fa-fw"></i> <span class="menu-text">Manage Teachers</span>
 								</a>					
-							</li>
+							</li>-->
                                                         <?php endif; ?>
                                                         
                                                         <?php if($prv==PRV_ADMIN || $prv==PRV_HEAD_TEACHER || $prv==PRV_GFM_TEACHER || $prv==PRV_GEN_TEACHER):?>
