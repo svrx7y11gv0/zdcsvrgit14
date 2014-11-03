@@ -877,6 +877,7 @@ class Secure extends CI_Controller {
         $month = $dateTime->format('m');
         $this->load->model('secureusers');
         $students = $this->secureusers->get_students_ofa_class($class_code);
+        $subject = str_replace('%20', ' ', $subject);
         
         $total_no_classes = $this->secureusers->get_total_no_classes($class_code,$subject,$date_from,$date_to);
         
