@@ -163,7 +163,7 @@
 /* Notification */
 .dropdown-menu.notification {
   border-top: 1px solid #292929;
-  width: 270px;
+  width: 300px;
 }
 .dropdown-menu.notification .label {
   color: #FFFFFF;
@@ -186,7 +186,6 @@
   vertical-align: middle;
   white-space: normal;
   margin: 5px 5px 5px 40px;
-  width: 100%;
 }
 .dropdown-menu.notification .message {
   line-height: 16px;

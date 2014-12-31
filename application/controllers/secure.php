@@ -67,14 +67,15 @@ class Secure extends CI_Controller {
         // is stored as present in login function, next time if user opens browser, the cookie
         // is checked and cookie data is set as above. So if cookie data is not null then get
         // all userdata and create user session.
+        $this->load->model('secureusers');
         if($cookie_data!=null)
         {
-            $this->load->model('secureusers');
             $result = $this->secureusers->validate_username($cookie_data[1]);
             if(isset($result))
             {
                 $userInfo = array('id'=>$result->id,'username'=>$result->username,'firstname'=>$result->firstname,'lastname'=>$result->lastname,'type'=>$result->type,'privilege'=>$result->privilege,'bioid'=>$result->bioid,'multilanguage'=>$result->multilanguage,'photourl'=>$result->photourl);
                 $this->session->set_userdata($userInfo);
+                $this->session->set_userdata('notifications_count',$this->secureusers->get_unread_notifications_count());
             }
         }
     }
@@ -101,7 +102,7 @@ class Secure extends CI_Controller {
             }
             $userInfo = array('id'=>$result->id,'username'=>$result->username,'firstname'=>$result->firstname,'lastname'=>$result->lastname,'type'=>$result->type,'privilege'=>$result->privilege,'bioid'=>$result->bioid,'multilanguage'=>$result->multilanguage,'photourl'=>$result->photourl);
             $this->session->set_userdata($userInfo);
-
+            $this->session->set_userdata('notifications_count',$this->secureusers->get_unread_notifications_count());
             echo "true";
         }
         else
@@ -827,6 +828,8 @@ class Secure extends CI_Controller {
             $this->admin_dashboard();
         if($this->is_PRV_GFM_teacher() || $this->is_PRV_GENERAL_teacher())
             $this->teacher_dashboard();
+        if($this->is_student() || $this->is_guardian())
+            $this->student_dashboard();
     }
     
     public function admin_dashboard()
@@ -1134,10 +1137,186 @@ class Secure extends CI_Controller {
         $this->mpdf->Output();
     }
     
+    public function create_quiz()
+    {
+        $this->session->set_userdata('selected_menu','create_quiz');
+        
+        $this->load->model('secureadmin');  //For getting departments 
+        $this->load->model('secureusers');  //For getting classes
+        
+        $data = $this->get_departments_and_classes();
+        
+        $this->load->view('create_quiz',$data);
+    }
+    
+    public function edit_quiz($quiz_id = NULL)
+    {
+        $this->session->set_userdata('selected_menu','edit_quiz');
+        $this->load->model('secureusers');
+        
+        $data['quizes'] = $this->secureusers->get_created_quizes($this->session->userdata('username')); //Get quizes created by logged in user
+        if(! isset($quiz_id) && count($data['quizes'])>0)
+        {
+            $quiz_id = $data['quizes'][0]['quiz_id'];
+        }
+        $data['thisquizid'] = $quiz_id;
+        $data['quiz_details'] = $this->secureusers->get_quiz_details($quiz_id);
+        if(count($data['quizes'])>0)
+            $data['quiz_question_numbers'] = $this->secureusers->get_question_numbers($quiz_id);
+        $this->load->view('edit_quiz',$data);
+    }
+    
+    public function get_created_quizes()
+    {
+        $this->load->model('secureusers');
+        $data['quiz_details'] = $this->secureusers->get_quiz_details($this->input->post('quiz_id'));
+        $data['quiz_question_numbers'] = $this->secureusers->get_question_numbers($this->input->post('quiz_id'));
+        echo json_encode($data);
+    }
+    
+    public function update_quiz_db()
+    {
+        $quiz_id = $this->input->post('quiz_id');
+        $quiz_type = $this->input->post('quiz_type');
+        $quiz_title = $this->input->post('quiz_title');
+        $num_questions = $this->input->post('num_questions');
+        $is_timed = $this->input->post('is_timed');
+        $time_period = $this->input->post('time_period');
+        $is_active = $this->input->post('is_active');
+        $this->load->model('secureusers');
+        
+        $this->secureusers->update_quiz_db($quiz_id,$quiz_type,$quiz_title,$num_questions,$is_timed,$time_period,$is_active);
+        
+        echo "success";
+    }
+    
+    public function create_quiz_db()
+    {
+        $multi_classes = $this->input->post('multi_classes');
+        $quiz_type = $this->input->post('quiz_type');
+        $quiz_title = $this->input->post('quiz_title');
+        $num_questions = $this->input->post('num_questions');
+        $is_timed = $this->input->post('is_timed');
+        $time_period = $this->input->post('time_period');
+        $this->load->model('secureusers');
+        $this->load->dbforge();
+        
+        $quiz_id = $this->secureusers->create_quiz_db($multi_classes,$quiz_type,$quiz_title,$num_questions,$is_timed,$time_period);
+        
+        $this->edit_quiz($quiz_id);
+    }
+    
+    public function submit_question()
+    {
+        $this->load->model('secureusers');
+        $question_id_flag = $this->input->post('question_id_flag');
+                
+        $this->secureusers->submit_question($_POST['quiz_id'],$question_id_flag,$_POST['question'],$_POST['opt_1'],$_POST['opt_2'],$_POST['opt_3'],$_POST['opt_4'],$_POST['answer'],$_POST['explanation']);
+        $this->edit_quiz($_POST['quiz_id']);
+    }
+    
+    public function get_specific_question()
+    {
+        $this->load->model('secureusers');
+        echo json_encode($this->secureusers->get_specific_question($this->input->post('quiz_id'),$this->input->post('question_id')));
+    }
+    
+    public function publishquiz_notify()
+    {
+        $this->load->model('secureusers');
+        $this->secureusers->publishquiz_notify($this->input->post('quiz_id'));
+        echo 'success';
+    }
+    
+    public function get_notifications()
+    {
+        $this->load->model('secureusers');
+        $data['total_notifications_count'] = $this->secureusers->get_total_notifications_count($this->input->post('user_id'));
+        $data['notifications'] = $this->secureusers->get_five_notifications($this->input->post('user_id'));
+        echo json_encode($data);
+    }
+    
+    public function quizzes()
+    {
+        $this->session->set_userdata('selected_menu','quizzes');
+        $this->load->model('secureusers');
+        $data['exam_quizzes'] = $this->secureusers->get_exam_quizes($this->session->userdata('id'));
+        $data['practice_quizzes'] = $this->secureusers->get_practice_quizes($this->session->userdata('id'));
+        $this->load->view('quizzes',$data);
+    }
+    public function grant_specific_quiz()
+    {
+        $this->load->model('secureusers');
+        echo $this->secureusers->grant_specific_quiz($this->input->post('username'),$this->input->post('password'),$this->input->post('idq'),$this->input->post('bioid'));
+    }
+    
+    public function attempt_quiz($idq,$quiz_id)
+    {
+        $this->load->model('secureusers');
+        $data['quiz_details'] = $this->secureusers->get_quiz_details($quiz_id);
+        if($data['quiz_details']['quiz_type']=='e')
+        {
+            $attempts = $this->secureusers->check_quiz_attempts($idq,$this->session->userdata('bioid'));
+            if($attempts>0)
+            {
+                redirect('secure/quizzes');
+            }
+        }
+        //Make entry into quiz_idq_scores for the logged user as an attempt
+        $data['idq'] = $idq;
+        $data['attempt_id'] = $this->secureusers->attempt_entry_in_quiz($idq,$this->session->userdata('bioid'));
+        $data['questions'] = $this->secureusers->get_quiz_questions($quiz_id,$data['quiz_details']['questions_tobe_solved']);
+        $data['start_time'] = time();
+        $this->load->view('quiz_interface',$data);
+    }
+    
+    public function quiz_over()
+    {
+        $idq = $this->input->post('idq');
+        $quiz_id = $this->input->post('quiz_id');
+        $attempt_id = $this->input->post('attempt_id');
+        $num_questions = $this->input->post('num_questions');
+        $start_time = $this->input->post('start_time');
+        $curr_time = time();
+        $diff = $curr_time - $start_time;
+        
+        $score = 0;
+        $questions_attempted = 0;
+        $correctly_answered = 0;
+        
+        $this->load->model('secureusers');
+        
+        for($i=0; $i<$num_questions; $i++)
+        {
+            if($this->input->post('qop_'.$i))
+            {
+                $questions_attempted++;
+                $is_correct = $this->secureusers->check_answer($quiz_id,$this->input->post('qid_'.$i),$this->input->post('qop_'.$i));
+                if($is_correct==1)
+                {
+                    $correctly_answered++;
+                    $score++;
+                }
+            }
+        }
+        $score = ($score / $num_questions) * 100;
+        $return = $this->secureusers->submit_score($idq,$attempt_id,$questions_attempted,$correctly_answered,$num_questions,$diff,$score);
+
+        redirect('secure/quizzes');
+    }
+    
+    public function student_dashboard()
+    {
+        $this->load->model('secureusers');
+        if($this->session->userdata('atttype')=="lecturewise")
+            $data['subjects'] = $this->secureusers->get_att_dboard($this->session->userdata('bioid'));
+        $data['escores'] = $this->secureusers->get_escores_dboard($this->session->userdata('bioid'));
+        $this->load->view('student_dashboard',$data);
+    }
+    
     public function test()
     {
-        $this->load->library('mpdf');
-        $this->mpdf->WriteHTML('<p>Hello There</p>');
-        $this->mpdf->Output();
+        $data['minutes'] = 120;
+        $this->load->view('timer',$data);
     }
 }

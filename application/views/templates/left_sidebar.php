@@ -52,6 +52,15 @@
 									<i class="fa fa-tachometer fa-fw"></i> <span class="menu-text">Dashboard</span>
 								</a>					
 							</li>
+                                                        
+                                                        <?php if($prv==PRV_STUDENT):?>
+                                                        <li <?php if($this->session->userdata('selected_menu')=='quizzes') echo ' class="active" ';?> >
+								<a href="<?php echo base_url('secure/quizzes');?>">
+									<i class="fa fa-puzzle-piece fa-fw"></i> <span class="menu-text">Quizzes</span>
+								</a>					
+							</li>
+                                                        <?php endif; ?>
+                                                        
                                                         <?php if($prv==PRV_GUARDIAN):?>
                                                         <li <?php if($this->session->userdata('selected_menu')=='my_childs_profile') echo ' class="active" ';?> >
 								<a href="<?php echo base_url('secure/manage_students_profile');?>">
@@ -112,11 +121,26 @@
 							</li>
                                                         <?php endif; ?>
                                                         
+                                                        <?php if($prv==PRV_ADMIN || $prv==PRV_HEAD_TEACHER || $prv==PRV_GFM_TEACHER || $prv==PRV_GEN_TEACHER):?>
+                                                        <li class="has-sub <?php if($this->session->userdata('selected_menu')=='create_quiz' || $this->session->userdata('selected_menu')=='edit_quiz' || $this->session->userdata('selected_menu')=='delete_quiz') echo ' active ';?>">
+								<a href="javascript:;" class="">
+								<i class="fa fa-puzzle-piece fa-fw"></i> <span class="menu-text">Manage QUIZES</span>
+								<span class="arrow"></span>
+								</a>
+								<ul class="sub">
+                                                                        <li <?php if($this->session->userdata('selected_menu')=='create_quiz') echo ' class="current" ';?> ><a class="" href="<?php echo base_url('secure/create_quiz');?>"><span class="sub-menu-text">Create Quiz</span></a></li>
+									<li <?php if($this->session->userdata('selected_menu')=='edit_quiz') echo ' class="current" ';?> ><a class="" href="<?php echo base_url('secure/edit_quiz');?>"><span class="sub-menu-text">Edit Quiz</span></a></li>
+									<li <?php if($this->session->userdata('selected_menu')=='delete_quiz') echo ' class="current" ';?> ><a class="" href="<?php echo base_url('secure/delete_quiz');?>"><span class="sub-menu-text">Delete Quiz</span></a></li>
+								</ul>
+							</li>
+                                                        <?php endif; ?>
+                                                        
                                                         <li <?php if($this->session->userdata('selected_menu')=='faq') echo ' class="active" ';?> >
 								<a href="<?php echo base_url('secure/faq');?>">
 									<i class="fa fa-question fa-fw"></i> <span class="menu-text">FAQs</span>
 								</a>					
 							</li>
+                                                        
                                                         
 							<li class="has-sub">
 								<a href="javascript:;" class="">

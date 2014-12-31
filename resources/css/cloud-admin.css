@@ -6100,8 +6100,8 @@ fieldset[disabled] .btn-inverse.active {
 }
 .btn-purple {
   color: #ffffff;
-  background-color: #a696ce;
-  border-color: #9785c6;
+  background-color: #893261;
+  border-color: #CBCBCB;
 }
 .btn-purple:hover,
 .btn-purple:focus,
@@ -6109,8 +6109,8 @@ fieldset[disabled] .btn-inverse.active {
 .btn-purple.active,
 .open .dropdown-toggle.btn-purple {
   color: #ffffff;
-  background-color: #8e7ac1;
-  border-color: #745bb2;
+  background-color: #88275C;
+  border-color: #CBCBCB;
 }
 .btn-purple:active,
 .btn-purple.active,
@@ -9001,3 +9001,14 @@ ul.stats li small {
 .well.well-bottom {
   border-radius: 0 0 4px 4px;
 }
+.bookmarker
+            {
+                position: absolute;
+                height:64px;
+                width:57px;
+                right: -10px;
+                top: -5px;
+                background-image: url('../img/bookmarker.png');
+                background-repeat: no-repeat;
+                background-position: 0 0px;
+            }

@@ -683,7 +683,7 @@
                                              <?php endif;?>
                                              <?php if($this->session->userdata('atttype')=="lecturewise"):?> 
                                                 var tick = "<h6><i class='fa fa-check'></i><h6>";
-                                                var time = "<h6><strong>Time </strong><span style='color:#942170;font-weight:600;'>"+time+"</span></h6>";
+                                                var time = "<h6><strong>Time </strong><span style='color:#942170;font-weight:600;'>"+att_time+"</span></h6>";
                                                 var slot = "<h6><strong>Slot </strong><span style='color:#942170;font-weight:600;'>"+jQuery('#att_slot').val()+"</span></h6>"; 
                                                 jQuery(".inout_att_table tr#"+bio_id+" td."+jQuery('#att_date').val()).html(tick + time + slot);
                                              <?php endif;?>    
