@@ -557,15 +557,55 @@
             if (annyang) {
               // Let's define our first command. First the text we expect, and then the function it should call
               var commands = {
-                'write *term': function(term) {
+                'query *term': function(term) {
                   CKEDITOR.instances['question'].setData(term);
                 },
-                'empty': function() {
+                'empty query': function() {
                   CKEDITOR.instances['question'].setData('');
                 },
-                'append *term': function(term) {
+                'append query *term': function(term) {
                   var data  = CKEDITOR.instances['question'].getData();
                   CKEDITOR.instances['question'].setData(data + " " + term);
+                },
+                'option one *term': function(term) {
+                  CKEDITOR.instances['opt_1'].setData(term);
+                },
+                'empty option one': function() {
+                  CKEDITOR.instances['opt_1'].setData('');
+                },
+                'append option one *term': function(term) {
+                  var data  = CKEDITOR.instances['opt_1'].getData();
+                  CKEDITOR.instances['opt_1'].setData(data + " " + term);
+                },
+                'option two *term': function(term) {
+                  CKEDITOR.instances['opt_2'].setData(term);
+                },
+                'empty option two': function() {
+                  CKEDITOR.instances['opt_2'].setData('');
+                },
+                'append option two *term': function(term) {
+                  var data  = CKEDITOR.instances['opt_2'].getData();
+                  CKEDITOR.instances['opt_2'].setData(data + " " + term);
+                },
+                'option three *term': function(term) {
+                  CKEDITOR.instances['opt_3'].setData(term);
+                },
+                'empty option three': function() {
+                  CKEDITOR.instances['opt_3'].setData('');
+                },
+                'append option three *term': function(term) {
+                  var data  = CKEDITOR.instances['opt_3'].getData();
+                  CKEDITOR.instances['opt_3'].setData(data + " " + term);
+                },
+                'option four *term': function(term) {
+                  CKEDITOR.instances['opt_4'].setData(term);
+                },
+                'empty option four': function() {
+                  CKEDITOR.instances['opt_4'].setData('');
+                },
+                'append option four *term': function(term) {
+                  var data  = CKEDITOR.instances['opt_4'].getData();
+                  CKEDITOR.instances['opt_4'].setData(data + " " + term);
                 },
               };
 

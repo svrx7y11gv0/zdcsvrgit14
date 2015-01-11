@@ -30,10 +30,6 @@
         
 	<link href="<?php echo base_url('resources/font-awesome/css/font-awesome.min.css');?>" rel="stylesheet">
         <style>
-            .question
-            {
-                font-size: 2em;
-            }
             .wrapper
             {
                 position: relative;
@@ -42,6 +38,7 @@
             }
             .question
             {
+                font-size: 2em;
                 position: relative;
                 padding: 20px 20px 20px 20px;
                 border: 2px solid #454545;
@@ -72,7 +69,7 @@
             }
             .question_icon
             {
-                margin: 20px 0 0 15px;
+                margin: 20px 15px 0 0;
                 float: left;
                 height: 50px;
                 width: 50px;
@@ -126,6 +123,29 @@
                                                     <div class="col-md-2" style="text-align: center;">
                                                         <div id="countdowntimer"><span id="future_date"><span></div>
                                                     </div>
+                                                    <div style="width: 1024px; margin:0 auto;">
+                                                        <?php for($i=1; $i<=count($questions); $i++): ?>
+                                                            <div class="question_icon"><?php echo $i;?></div>
+                                                        <?php endfor; ?>   
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                    <br/>
+                                                    <div class="form-actions clearfix" style="width: 1024px; margin:0 auto;"> 
+                                                        <input type="submit" value="Submit the Quiz" id="btn_submit_quiz" class="btn btn-primary pull-right"> 
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                    <hr/>
+                                                <?php else: ?>
+                                                    <div style="width: 1024px; margin:0 auto;">
+                                                        <?php for($i=1; $i<=count($questions); $i++): ?>
+                                                            <div class="question_icon"><?php echo $i;?></div>
+                                                        <?php endfor; ?>   
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                    <br/>
+                                                    <div class="form-actions clearfix" style="width: 1024px; margin:0 auto;"> 
+                                                        <input type="submit" value="Submit the Quiz" id="btn_submit_quiz" class="btn btn-primary pull-right"> 
+                                                    </div>
                                                     <div class="clearfix"></div>
                                                     <hr/>
                                                 <?php endif;?>
@@ -171,14 +191,9 @@
                                                             <button class="btn btn-purple btn-lg" id="btn_bookmark"><i class="fa fa-bookmark"></i><span> Bookmark this question</span></button>
                                                         </div>
                                                         
-                                                        <?php for($i=1; $i<=count($questions); $i++): ?>
-                                                            <div class="question_icon"><?php echo $i;?></div>
-                                                        <?php endfor; ?>    
+                                                         
                                                     </form>
-                                                    <div class="clearfix"></div>
-                                                    <div class="form-actions clearfix"> 
-                                                        <input type="submit" value="Submit the Quiz" id="btn_submit_quiz" class="btn btn-primary pull-right"> 
-                                                    </div>
+                                                    
                                                     <div class="bookmarker hide"></div>
                                                 </div>
                                             </div>

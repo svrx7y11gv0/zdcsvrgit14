@@ -1288,8 +1288,10 @@ class Secure extends CI_Controller {
         
         for($i=0; $i<$num_questions; $i++)
         {
+            $data['questions'][$i]['tuple'] = $this->secureusers->get_this_question($quiz_id,$this->input->post('qid_'.$i));
             if($this->input->post('qop_'.$i))
             {
+                $data['questions'][$i]['useranswer'] = $this->input->post('qop_'.$i);
                 $questions_attempted++;
                 $is_correct = $this->secureusers->check_answer($quiz_id,$this->input->post('qid_'.$i),$this->input->post('qop_'.$i));
                 if($is_correct==1)
@@ -1298,11 +1300,21 @@ class Secure extends CI_Controller {
                     $score++;
                 }
             }
+            else
+            {
+                $data['questions'][$i]['useranswer'] = "none";
+            }
         }
         $score = ($score / $num_questions) * 100;
         $return = $this->secureusers->submit_score($idq,$attempt_id,$questions_attempted,$correctly_answered,$num_questions,$diff,$score);
-
-        redirect('secure/quizzes');
+        $data['idq'] = $idq;
+        $data['attempt_id'] = $attempt_id;
+        $data['questions_attempted'] = $questions_attempted;
+        $data['correctly_answered'] = $correctly_answered;
+        $data['num_questions'] = $num_questions;
+        $data['timediff'] = $diff;
+        $data['score'] = $score;
+        $this->load->view('quiz_review',$data);
     }
     
     public function student_dashboard()

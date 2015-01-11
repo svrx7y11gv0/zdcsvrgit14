@@ -682,6 +682,10 @@ class Secureusers extends CI_Model
         $row = $this->db->query("SELECT count(*) as count FROM quiz_".$quiz_id."_questions WHERE id=$qid AND answer=$qop")->row_array();
         return $row['count'];
     }
+    public function get_this_question($quiz_id,$qid)
+    {
+        return $this->db->query("SELECT * FROM quiz_".$quiz_id."_questions WHERE id=$qid")->row_array();
+    }
     public function submit_score($idq,$attempt_id,$questions_attempted,$correctly_answered,$num_questions,$diff,$score)
     {
         $data = array(
