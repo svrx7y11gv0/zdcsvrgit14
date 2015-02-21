@@ -6213,7 +6213,7 @@ ul.list-inline {
 }
 #header ul.heronav.left {
   left: 50%;
-  margin-left: -420px;
+  margin-left: -300px;
   position: absolute;
   top: 50px;
 }

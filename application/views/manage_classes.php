@@ -131,7 +131,7 @@
                                                                                                 </div>
                                                                                             </form>
                                                                                             <div class="form-actions clearfix"> 
-                                                                                                <input type="submit" value="Show Records / Display Attendance" id="btn_show_records" class="btn btn-primary pull-right"> 
+                                                                                                <input type="submit" value="Show Records" id="btn_show_records" class="btn btn-primary pull-right"> 
                                                                                                 <button id="assign_rollnos" class="btn btn-grey pull-right" style="margin-right:10px;"><i class="fa fa-pencil-square-o"></i> Assign / Re-Assign Roll Nos in Alphabetical Order</button>
                                                                                             </div>
                                                                                             
@@ -202,9 +202,6 @@
                                                 <?php if(isset($students)):?>
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <div class="well" style="background:#454545; color:#FFF;">
-                                                            <i class="fa fa-exclamation-triangle fa-2x"></i><b><em>  First Press "Show Records / Display Attendance" Button, then mark attendance.</em></b>
-                                                        </div>
                                                         <h3><?php if(isset($curr_class)) echo "<strong>Class : </strong>".$curr_class;?> <?php if(isset($curr_subject)) echo "<strong> Subject : </strong>".$curr_subject;?> </h3>
                                                         <button id="btn_bulk_att_modal" class="btn btn-default" style="margin-bottom:10px;"><i class="fa fa-bar-chart-o"></i> Mark Bulk Attendance</button>
                                                         <button id="btn_generate_pdf" class="btn btn-default" style="margin-bottom:10px;"><i class="fa fa-file"></i> Generate PDF Report</button>
@@ -411,8 +408,9 @@
                                 else
                                     $slot = "<h6><strong>Slot </strong><span style='color:#942170;font-weight:600;'>".$record['slot']."</span></h6>"; 
                             ?>
-                            
-                            jQuery(".inout_att_table tr#<?php echo $record['bio_id'];?> td.<?php echo $record['date'];?> span.att_markable").append("<?php echo $tick.$time.$slot;?>");
+                            if(jQuery(".inout_att_table tr#<?php echo $record['bio_id'];?> td.<?php echo $record['date'];?> span").hasClass('att_markable'))
+                                jQuery(".inout_att_table tr#<?php echo $record['bio_id'];?> td.<?php echo $record['date'];?>").html("");
+                            jQuery(".inout_att_table tr#<?php echo $record['bio_id'];?> td.<?php echo $record['date'];?>").append("<?php echo $tick.$time.$slot;?>");
                         <?php endforeach;?>
                     <?php endif;?>
                         
@@ -490,7 +488,7 @@
                         jQuery(".att_markable").eq(index).css({'backgroundColor': 'transparent'});
                     });
                     
-                    jQuery(document).on('click', '.att_markable', function(){
+                    jQuery(".att_markable").click(function(){
                         jQuery('#att_date').parent().parent().removeClass("has-error");
                         jQuery('#att_date_error').text(''); 
                         jQuery('#att_intime').parent().parent().removeClass("has-error");
@@ -655,7 +653,7 @@
                                             var tick = "<h6><i class='fa fa-check'></i><h6>";
                                             var time = "<h6><strong>Time </strong><span style='color:#942170;font-weight:600;'>"+att_time+"</span></h6>";
                                             var slot = "<h6><strong>Slot </strong><span style='color:#942170;font-weight:600;'>"+jQuery('#att_slot').val()+"</span></h6>"; 
-                                            jQuery(".inout_att_table tr#"+jQuery("#att_bioid").val()+" td."+jQuery('#att_date').val()+" span.att_markable").append(tick + time + slot);
+                                            jQuery(".inout_att_table tr#"+jQuery("#att_bioid").val()+" td."+jQuery('#att_date').val()).html(tick + time + slot);
                                          <?php endif; ?>
                                      }
                                 });
@@ -687,7 +685,7 @@
                                                 var tick = "<h6><i class='fa fa-check'></i><h6>";
                                                 var time = "<h6><strong>Time </strong><span style='color:#942170;font-weight:600;'>"+att_time+"</span></h6>";
                                                 var slot = "<h6><strong>Slot </strong><span style='color:#942170;font-weight:600;'>"+jQuery('#att_slot').val()+"</span></h6>"; 
-                                                jQuery(".inout_att_table tr#"+bio_id+" td."+jQuery('#att_date').val()+" span.att_markable").append(tick + time + slot);
+                                                jQuery(".inout_att_table tr#"+bio_id+" td."+jQuery('#att_date').val()).html(tick + time + slot);
                                              <?php endif;?>    
                                          }
                                     });

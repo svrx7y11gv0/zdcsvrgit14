@@ -470,7 +470,7 @@ class Secureusers extends CI_Model
                     'type' => 'DOUBLE',
                 ),
                 'datetime' => array(
-                    'type' => 'DATETIME DEFAULT CURRENT_TIMESTAMP',
+                    'type' => 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP',
                 ),
             ));
 
@@ -711,7 +711,7 @@ class Secureusers extends CI_Model
         {
             $data = $this->db->query("Select count(*) as count from (SELECT count(*), subject FROM ".$class_code." WHERE date >= '".$date_from."' AND date <= '".$date_to."' AND subject='".$subjects[$i]['subject']."' Group by date,slot,subject) as ROWS")->row_array();
             $subjects[$i]['total'] = $data['count'];
-            $data = $this->db->query("SELECT subject,count(*) as count FROM `$class_code` where bio_id = $bio_id AND date>'$date_from' AND date<'$date_to' AND subject='".$subjects[$i]['subject']."' group by subject")->row_array();
+            $data = $this->db->query("SELECT count(*) as count from (SELECT subject,count(*) as count FROM `$class_code` where bio_id = $bio_id AND date>='$date_from' AND date<='$date_to' AND subject='".$subjects[$i]['subject']."' group by subject,slot,date) as ROWS")->row_array();
             if(count($data)>0)
                 $subjects[$i]['attended'] = $data['count'];
             else

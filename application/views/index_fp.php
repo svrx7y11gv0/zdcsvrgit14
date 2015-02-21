@@ -35,21 +35,20 @@
 				  <a href="#about" class="list-group-item">About</a>
                                   <a href="#features" class="list-group-item">Features</a>
 				  <a href="#contact" class="list-group-item">Contact</a>
-                                  <a href="http://www.wisebrats.com/" class="list-group-item external">Ed-Wisebrats</a>
-				  <a href="<?php echo base_url('guest/loginpage');?>" class="list-group-item external">Ed-CANN</a>
+                                  
+				  <a href="<?php echo base_url('guest/loginpage');?>" class="list-group-item external">LOGIN</a>
 				</div>
 
 					<!-- HERO -->
 					<div class="container-transparent text-center">
 						<ul class="heronav left hidden-xs">
                                                     <li><a href="#about">About</a></li>
-                                                    <li><a href="#parallax-1">Portfolio</a></li>
+                                                    <!--<li><a href="#parallax-1">Portfolio</a></li>-->
                                                     <li><a href="#features">Features</a></li>
 						</ul>
 						<ul class="heronav right hidden-xs">
 							<li><a href="#contact">Contact</a></li>
-                                                        <li><a href="http://www.wisebrats.com/" class="external">Ed-Wisebrats</a></li>
-							<li><a href="<?php echo base_url('guest/loginpage');?>" class="external">Ed-CANN</a></li>
+                                                        	<li><a href="<?php echo base_url('guest/loginpage');?>" class="external">LOGIN</a></li>
 						</ul>
 						<h1>
 							<img src="<?php echo base_url('resources/resources_fp/img/logo/logo.png');?>" height="50" alt="logo name">
@@ -77,7 +76,7 @@
 				<div class="row">
 					<div class="col-sm-3 col-md-4">
 						<div class="logo" >
-							<a href="index.html"><img src="<?php echo base_url('resources/resources_fp/img/logo/logo.png');?>" height="40" alt="logo name"/></a>
+							<a href=""><img src="<?php echo base_url('resources/resources_fp/img/logo/logo.png');?>" height="40" alt="logo name"/></a>
 						</div>
 					</div>
 					<div class="col-sm-9 col-md-8">
@@ -87,8 +86,7 @@
                                                             <li><a href="#parallax-1">Portfolio</a></li>
                                                             <li><a href="#features">Features</a></li>
                                                             <li><a href="#contact">Contact</a></li>
-                                                            <li><a href="http://www.wisebrats.com" class="external">Ed-Wisebrats</a></li>
-                                                            <li><a href="<?php echo base_url('guest/loginpage');?>" class="external">Ed-CANN</a></li>
+                                                            <li><a href="<?php echo base_url('guest/loginpage');?>" class="external">LOGIN</a></li>
 							</ul>
 						</nav>
 					</div>
