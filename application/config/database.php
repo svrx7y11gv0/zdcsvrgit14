@@ -48,10 +48,10 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = '23.229.203.67';
-$db['default']['username'] = 'bspsuperadmin';
-$db['default']['password'] = 'avXjuk123@!';
-$db['default']['database'] = 'cann_ref';
+$db['default']['hostname'] = 'localhost';
+$db['default']['username'] = 'root';
+$db['default']['password'] = 'kinnect';
+$db['default']['database'] = 'cann';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
