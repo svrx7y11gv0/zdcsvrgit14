@@ -1215,6 +1215,62 @@ class Secure extends CI_Controller {
         $this->edit_quiz($_POST['quiz_id']);
     }
     
+    public function quiz_excel_upload()
+    {
+        $this->load->helper('form');
+        
+        $config['upload_path'] = './uploads/quiz_data/';
+        $config['allowed_types'] = 'xls|xlsx|csv';
+        $config['max_size']	= '20480';
+        $config['overwrite'] = false;
+	$config['remove_spaces'] = true;
+
+        $this->load->library('upload', $config);
+
+        if ( ! $this->upload->do_upload())
+        {
+                $error = array('error' => $this->upload->display_errors());
+                if($error['error']=="<p>You did not select a file to upload.</p>")
+                    $error['error'] = "";
+                else
+                {
+                    $this->session->set_flashdata('upload_error1',$error['error']);
+                }
+        }
+        else
+        {
+            $data = array('upload_data' => $this->upload->data());
+            /*******EXCEL DATA FETCHING**********/
+            $file = './uploads/quiz_data/'.$data['upload_data']['file_name'];
+            //load the excel library
+            $this->load->library('excel');
+            //read file from path
+            $objPHPExcel = PHPExcel_IOFactory::load($file);
+            //get only the Cell Collection
+            $cell_collection = $objPHPExcel->getActiveSheet()->getCellCollection();
+            //extract to a PHP readable array format
+            foreach ($cell_collection as $cell) {
+                $column = $objPHPExcel->getActiveSheet()->getCell($cell)->getColumn();
+                $row = $objPHPExcel->getActiveSheet()->getCell($cell)->getRow();
+                $data_value = $objPHPExcel->getActiveSheet()->getCell($cell)->getValue();
+                //header will/should be in row 1 only. of course this can be modified to suit your need.
+                if ($row == 1) {
+                    $header[$row][$column] = $data_value;
+                } else {
+                    $arr_data[$row][$column] = $data_value;
+                }
+            }
+            //send the data in an array format
+            $data['header'] = $header;
+            $data['values'] = $arr_data;
+            /*******EXCEL DATA FETCHING OVER**********/
+            $this->session->set_flashdata('upload_success',"File uploaded successfully!!");
+            
+        }
+        var_dump($data);
+        //redirect('secure/edit_quiz/'.($this->input->post('quiz_id')));
+    }
+    
     public function get_specific_question()
     {
         $this->load->model('secureusers');

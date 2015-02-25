@@ -125,6 +125,24 @@
                                                                                                 <input type="submit" value="Publish Quiz and Notify Students" id="btn_publish_notify" class="btn btn-primary pull-right" /> 
                                                                                             </div>
                                                                                             <hr/><br/>
+                                                                                            <div class="well">
+                                                                                                <h3>Instructions to use Speech Recognition API</h3>
+                                                                                                <ul>
+                                                                                                    <li>Select Allow microphone option, whenever prompted by browser.</li>
+                                                                                                    <li>Use following speech formats</li>
+                                                                                                    <ul>
+                                                                                                        <li style="list-style-type: lower-roman;"><b>query <em>"&lt;sentence / words&gt;"</em></b> : for writing a question</li>
+                                                                                                        <li style="list-style-type: lower-roman;"><b>empty query</b> : for erasing complete question</li>
+                                                                                                        <li style="list-style-type: lower-roman;"><b>append query <em>"&lt;sentence / words&gt;"</em></b> : for appending some statement to question</li>
+                                                                                                        <li style="list-style-type: lower-roman;"><b>option 1 <em>"&lt;sentence / words&gt;"</em></b> : for writing option 1</li>
+                                                                                                        <li style="list-style-type: lower-roman;"><b>empty option 1</b> : for erasing option 1</li>
+                                                                                                        <li style="list-style-type: lower-roman;"><b>append option 1 <em>"&lt;sentence / words&gt;"</em></b> : for appending into option 1</li>
+                                                                                                    </ul>
+                                                                                                    <li>Take a pause before switching to a new field.</li>
+                                                                                                    <li>Be closer to microphone.</li>
+                                                                                                    <li>Recognition of speech depends on the quality of speech and microphone.</li>
+                                                                                                </ul>
+                                                                                            </div>
                                                                                             <form class="form-horizontal" name="question_form" id="question_form" method="post" action="<?php echo base_url('secure/submit_question');?>">
                                                                                                 <div class="row">
                                                                                                     <div class="col-md-12">
@@ -200,6 +218,20 @@
                                                                                             </form>
                                                                                             <div class="form-actions clearfix"> 
                                                                                                 <input type="submit" value="Save the Question" id="btn_save_question" class="btn btn-primary pull-right"> 
+                                                                                                <div class="clearfix"></div>
+                                                                                                <div class='pull-right' style="margin-top:10px;">OR</div>
+                                                                                                <div class="clearfix"></div>
+                                                                                                <button class="btn btn-warning pull-right" style="margin-top:10px;" id="btn_down_template"><i class="fa fa-cloud-download"></i> Download Excel Template</button>
+                                                                                                <div class="clearfix"></div>
+                                                                                                <form class="form-horizontal" id="excel_upload_form" method="post" action="<?php echo base_url('secure/quiz_excel_upload');?>" enctype="multipart/form-data">
+                                                                                                    <button class="btn btn-success pull-right" style="margin-top:10px; margin-left:10px;" id="btn_upload_excel"><i class="fa fa-cloud-upload"></i> Upload Edited Excel Sheet</button>
+                                                                                                    <a class="btn btn-default btn-file pull-right" style="padding:5px 10px; margin-top:10px;">
+                                                                                                        <input type="file" class="file-input" name="userfile" size="20" />
+                                                                                                        <input name="quiz_id" type="hidden" value="<?php echo $thisquizid;?>" />
+                                                                                                    </a>
+                                                                                                    <div class="clearfix"></div>
+                                                                                                    <span id="userfile_error" class="help-block pull-right">File size should be less than 20 MB. Allowed file types are 'xls', 'xlsx' and 'csv' only.</span>
+                                                                                                </form>
                                                                                             </div>
                                                                                             <div class="row">
                                                                                                 <div class="col-md-12" id="questions_panel">
@@ -259,7 +291,57 @@
         <script>
 
             jQuery(document).ready(function(){
-                
+                <?php 
+                $message_type = "";
+                $message="";
+                if($this->session->flashdata('upload_error1'))
+                {
+                        $message = strip_tags($this->session->flashdata('upload_error1'))." ";
+                        $message_type = 'error';
+                }
+                else if($this->session->flashdata('upload_error2'))
+                {
+                        $message .= strip_tags($this->session->flashdata('upload_error2'));
+                        $message_type = 'error';
+                }
+                else if($this->session->flashdata('upload_success'))
+                {
+                        $message .= $this->session->flashdata('upload_success');
+                        $message_type = 'success';
+                }
+                ?>
+                <?php if($message_type=='error'):?>
+                    var mytheme = "flat";
+                    var mypos = "messenger-on-top messenger-on-right";
+                    //Set theme
+                    Messenger.options = {
+                            extraClasses: 'messenger-fixed '+mypos,
+                            theme: mytheme
+                    }
+                    Messenger().post({
+                            message: "<?php echo $message;?>",
+                            type: "error",
+                            showCloseButton: true
+                    });
+                <?php endif; ?>
+                <?php if($message_type=='success'):?>
+                    var mytheme = "flat";
+                    var mypos = "messenger-on-top messenger-on-right";
+                    //Set theme
+                    Messenger.options = {
+                            extraClasses: 'messenger-fixed '+mypos,
+                            theme: mytheme
+                    }
+                    Messenger().post({
+                            message: "<?php echo $message;?>",
+                            showCloseButton: true
+                    });
+                <?php endif; ?>
+                        
+                jQuery("#btn_down_template").click(function(){
+                    var url = base_url + "/uploads/quiz_data/quiz_template.xlsx";
+                    window.open(url, '_blank');
+                });
                 jQuery("#btn_publish_notify").click(function(){
                     if(confirm("Are you sure you wish to publish quiz and notify all students about the quiz?"))
                     {
@@ -442,7 +524,7 @@
                                 {
                                    if(data)
                                    {
-                                        jQuery("#quiz_id").val(jQuery("#thisquizid").val());
+                                        jQuery("input[name='quiz_id']").val(jQuery("#thisquizid").val());
                                         if(data['quiz_details'].quiz_type == 'p')
                                            jQuery("#quiz_type").val("p");
                                         else
@@ -567,43 +649,43 @@
                   var data  = CKEDITOR.instances['question'].getData();
                   CKEDITOR.instances['question'].setData(data + " " + term);
                 },
-                'option one *term': function(term) {
+                'option 1 *term': function(term) {
                   CKEDITOR.instances['opt_1'].setData(term);
                 },
-                'empty option one': function() {
+                'empty option 1': function() {
                   CKEDITOR.instances['opt_1'].setData('');
                 },
-                'append option one *term': function(term) {
+                'append option 1 *term': function(term) {
                   var data  = CKEDITOR.instances['opt_1'].getData();
                   CKEDITOR.instances['opt_1'].setData(data + " " + term);
                 },
-                'option two *term': function(term) {
+                'option 2 *term': function(term) {
                   CKEDITOR.instances['opt_2'].setData(term);
                 },
-                'empty option two': function() {
+                'empty option 2': function() {
                   CKEDITOR.instances['opt_2'].setData('');
                 },
-                'append option two *term': function(term) {
+                'append option 2 *term': function(term) {
                   var data  = CKEDITOR.instances['opt_2'].getData();
                   CKEDITOR.instances['opt_2'].setData(data + " " + term);
                 },
-                'option three *term': function(term) {
+                'option 3 *term': function(term) {
                   CKEDITOR.instances['opt_3'].setData(term);
                 },
-                'empty option three': function() {
+                'empty option 3': function() {
                   CKEDITOR.instances['opt_3'].setData('');
                 },
-                'append option three *term': function(term) {
+                'append option 3 *term': function(term) {
                   var data  = CKEDITOR.instances['opt_3'].getData();
                   CKEDITOR.instances['opt_3'].setData(data + " " + term);
                 },
-                'option four *term': function(term) {
+                'option 4 *term': function(term) {
                   CKEDITOR.instances['opt_4'].setData(term);
                 },
-                'empty option four': function() {
+                'empty option 4': function() {
                   CKEDITOR.instances['opt_4'].setData('');
                 },
-                'append option four *term': function(term) {
+                'append option 4 *term': function(term) {
                   var data  = CKEDITOR.instances['opt_4'].getData();
                   CKEDITOR.instances['opt_4'].setData(data + " " + term);
                 },
