@@ -1260,15 +1260,29 @@ class Secure extends CI_Controller {
                     $arr_data[$row][$column] = $data_value;
                 }
             }
-            //send the data in an array format
-            $data['header'] = $header;
-            $data['values'] = $arr_data;
+            foreach($arr_data as $tuple)
+            {
+                if(!isset($tuple['A']))
+                    $tuple['A'] = "";
+                if(!isset($tuple['B']))
+                    $tuple['B'] = "";
+                if(!isset($tuple['C']))
+                    $tuple['C'] = "";
+                if(!isset($tuple['D']))
+                    $tuple['D'] = "";
+                if(!isset($tuple['E']))
+                    $tuple['E'] = "";
+                if(!isset($tuple['F']))
+                    $tuple['F'] = "";
+                if(!isset($tuple['G']))
+                    $tuple['G'] = "";
+                $this->secureusers->submit_question($_POST['quiz_id'],"",$tuple['A'],$tuple['B'],$tuple['C'],$tuple['D'],$tuple['E'],$tuple['F'],$tuple['G']);
+            }
             /*******EXCEL DATA FETCHING OVER**********/
             $this->session->set_flashdata('upload_success',"File uploaded successfully!!");
             
         }
-        var_dump($data);
-        //redirect('secure/edit_quiz/'.($this->input->post('quiz_id')));
+        redirect('secure/edit_quiz/'.($this->input->post('quiz_id')));
     }
     
     public function get_specific_question()
