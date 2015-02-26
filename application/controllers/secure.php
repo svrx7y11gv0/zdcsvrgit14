@@ -1215,6 +1215,37 @@ class Secure extends CI_Controller {
         $this->edit_quiz($_POST['quiz_id']);
     }
     
+    public function view_class_qscores($quiz_id = NULL, $idq = NULL)
+    {
+        $this->session->set_userdata('selected_menu','view_class_qscores');
+        $this->load->model('secureusers');
+        
+        $data['quizes'] = $this->secureusers->get_created_quizes($this->session->userdata('username')); //Get quizes created by logged in user
+        if(! isset($quiz_id) && count($data['quizes'])>0)
+        {
+            $quiz_id = $data['quizes'][0]['quiz_id'];
+        }
+        $data['thisquizid'] = $quiz_id;
+        
+        if(isset($quiz_id))
+        {
+            $data['quiz_classes'] = $this->secureusers->get_quiz_classes($quiz_id);
+            if(! isset($idq) && isset($data['quiz_classes']) && count($data['quiz_classes'])>0)
+            {
+                $idq = $data['quiz_classes'][0]['id'];
+            }
+            $data['quiz_scores'] = $this->secureusers->get_class_scores($idq);
+            $data['thisclassidq'] = $idq;
+        }
+        //var_dump($data);
+        $this->load->view('view_class_qscores',$data);
+    }
+    
+    public function get_quiz_classes()
+    {
+        echo json_encode($this->secureusers->get_quiz_classes($this->input->post('quiz_id')));
+    }
+    
     public function quiz_excel_upload()
     {
         $this->load->helper('form');

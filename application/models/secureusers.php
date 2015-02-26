@@ -699,6 +699,14 @@ class Secureusers extends CI_Model
         $this->db->where(array('id'=>$attempt_id,'total'=>0));
         $this->db->update('quiz_'.$idq.'_scores', $data); 
     }
+    public function get_quiz_classes($quiz_id)
+    {
+        return $this->db->query("SELECT id,quiz_details.class_code,class as classname,section from quiz_details,classes where quiz_id=$quiz_id AND quiz_details.class_code = classes.class_code")->result_array();
+    }
+    public function get_class_scores($idq)
+    {
+        return $this->db->query("SELECT bio_id,users.firstname,users.middlename,users.lastname,users.rollno,questions_attempted,correctly_answered,total,time_taken,score,datetime from quiz_".$idq."_scores,users where quiz_".$idq."_scores.bio_id=users.bioid AND users.type='".STUDENT_TYPE."' order by score DESC")->result_array();
+    }
     
     public function get_att_dboard($bio_id)
     {

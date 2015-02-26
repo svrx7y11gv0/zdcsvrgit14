@@ -122,7 +122,7 @@
                                                         <?php endif; ?>
                                                         
                                                         <?php if($prv==PRV_ADMIN || $prv==PRV_HEAD_TEACHER || $prv==PRV_GFM_TEACHER || $prv==PRV_GEN_TEACHER):?>
-                                                        <li class="has-sub <?php if($this->session->userdata('selected_menu')=='create_quiz' || $this->session->userdata('selected_menu')=='edit_quiz' || $this->session->userdata('selected_menu')=='delete_quiz') echo ' active ';?>">
+                                                        <li class="has-sub <?php if($this->session->userdata('selected_menu')=='create_quiz' || $this->session->userdata('selected_menu')=='edit_quiz' || $this->session->userdata('selected_menu')=='view_class_qscores') echo ' active ';?>">
 								<a href="javascript:;" class="">
 								<i class="fa fa-puzzle-piece fa-fw"></i> <span class="menu-text">Manage QUIZES</span>
 								<span class="arrow"></span>
@@ -130,7 +130,7 @@
 								<ul class="sub">
                                                                         <li <?php if($this->session->userdata('selected_menu')=='create_quiz') echo ' class="current" ';?> ><a class="" href="<?php echo base_url('secure/create_quiz');?>"><span class="sub-menu-text">Create Quiz</span></a></li>
 									<li <?php if($this->session->userdata('selected_menu')=='edit_quiz') echo ' class="current" ';?> ><a class="" href="<?php echo base_url('secure/edit_quiz');?>"><span class="sub-menu-text">Edit Quiz</span></a></li>
-									<li <?php if($this->session->userdata('selected_menu')=='delete_quiz') echo ' class="current" ';?> ><a class="" href="<?php echo base_url('secure/delete_quiz');?>"><span class="sub-menu-text">Delete Quiz</span></a></li>
+									<li <?php if($this->session->userdata('selected_menu')=='view_class_qscores') echo ' class="current" ';?> ><a class="" href="<?php echo base_url('secure/view_class_qscores');?>"><span class="sub-menu-text">View Classes' Scores</span></a></li>
 								</ul>
 							</li>
                                                         <?php endif; ?>

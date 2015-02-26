@@ -3,6 +3,7 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta charset="utf-8">
+        <link rel="icon" type="image/ico" href="<?php echo base_url('favicon.ico');?>"/>
 	<title>Edbeans - The Seeds of Success</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 	<meta name="description" content="">
