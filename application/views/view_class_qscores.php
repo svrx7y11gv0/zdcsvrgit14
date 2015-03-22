@@ -93,7 +93,7 @@
                                                                                                                             <td><?php echo $detail['questions_attempted'];?></td>
                                                                                                                             <td><?php echo $detail['correctly_answered'];?></td>
                                                                                                                             <td><?php echo $detail['time_taken'];?></td>
-                                                                                                                            <td><?php echo round($detail['score'],2);?></td>
+                                                                                                                            <td><?php echo round($detail['score'],2)."%";?></td>
                                                                                                                             <td><?php echo $detail['datetime'];?></td>
                                                                                                                         </tr> 
                                                                                                                     <?php endforeach;?>
